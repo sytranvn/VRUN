@@ -1,0 +1,17 @@
+{
+  "name": "ai",
+  "scripts": {
+    "start": "platformatic start",
+    "test": "borp"
+  },
+  "devDependencies": {
+    "fastify": "^4.28.1",
+    "borp": "^0.16.0"
+  },
+  "dependencies": {
+    "@platformatic/ai-warp": "https://github.com/sytranvn/ai-warp"
+  },
+  "engines": {
+    "node": "^18.8.0 || >=20.6.0"
+  }
+}

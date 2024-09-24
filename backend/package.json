@@ -1,0 +1,20 @@
+{
+  "name": "backend",
+  "workspaces": [
+    "services/*"
+  ],
+  "scripts": {
+    "start": "platformatic start"
+  },
+  "devDependencies": {
+    "fastify": "^4.28.1",
+    "borp": "^0.16.0"
+  },
+  "dependencies": {
+    "@platformatic/runtime": "^1.53.3",
+    "platformatic": "^1.53.3"
+  },
+  "engines": {
+    "node": "^18.8.0 || >=20.6.0"
+  }
+}

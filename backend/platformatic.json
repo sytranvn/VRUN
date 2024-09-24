@@ -1,0 +1,33 @@
+{
+  "$schema": "https://platformatic.dev/schemas/v1.53.3/runtime",
+  "entrypoint": "api",
+  "allowCycles": false,
+  "hotReload": true,
+  "autoload": {
+    "path": "services",
+    "exclude": [
+      "docs"
+    ]
+  },
+  "server": {
+    "hostname": "{PLT_SERVER_HOSTNAME}",
+    "port": "{PORT}",
+    "logger": {
+      "level": "{PLT_SERVER_LOGGER_LEVEL}"
+    },
+    "cors": {
+      "origin": [
+        {
+          "regexp": "https://[a-z-]*.deploy.space"
+        },
+        "https://platformatic.cloud",
+        "http://localhost:5173"
+      ],
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    }
+  },
+  "managementApi": "{PLT_MANAGEMENT_API}"
+}
