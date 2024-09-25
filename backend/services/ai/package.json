@@ -1,5 +1,6 @@
 {
   "name": "ai",
+  "type": "module",
   "scripts": {
     "start": "platformatic start",
     "test": "borp"

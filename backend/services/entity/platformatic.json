@@ -16,6 +16,20 @@
     "dir": "migrations",
     "autoApply": "{PLT_ENTITY_APPLY_MIGRATIONS}"
   },
+  "authorization": {
+    "jwt": {
+      "secret": "{PLT_SECRET}"
+    },
+    "roleKey": "role",
+    "rules": [
+      {
+        "role": "platformatic-admin",
+        "entity": "user",
+        "find": true,
+        "save": true
+      }
+    ]
+  },
   "plugins": {
     "paths": [
       {
@@ -23,7 +37,10 @@
         "encapsulate": false
       },
       {
-        "path": "./routes"
+        "path": "./routes",
+        "options": {
+          "secret": "{PLT_SECRET}"
+        }
       }
     ],
     "typescript": "{PLT_ENTITY_TYPESCRIPT}"
