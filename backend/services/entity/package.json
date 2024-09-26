@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@fastify/jwt": "^9.0.1",
-    "@platformatic/db": "^1.53.3"
+    "@platformatic/db": "^1.53.3",
+    "argon2": "^0.41.1"
   },
   "engines": {
     "node": "^18.8.0 || >=20.6.0"

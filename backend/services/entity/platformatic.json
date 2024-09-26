@@ -10,7 +10,8 @@
     "ignore": [
       "*.sqlite",
       "*.sqlite-journal"
-    ]
+    ],
+    "enabled": true
   },
   "migrations": {
     "dir": "migrations",

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schemas.platformatic.dev/@platformatic/ai-warp/0.4.3.json",
+  "$schema": "https://schemas.platformatic.dev/@platformatic/ai-warp/0.5.1.json",
   "service": {
     "openapi": true
   },
@@ -8,16 +8,7 @@
   "aiProvider": {
     "ollama": {
       "host": "http://127.0.0.1:11434",
-      "model": "llama3"
-    }
-  },
-  "auth": {
-    "jwt": {
-      "secret": "{PLT_SECRET}",
-      "sign": {
-        "key": "{PLT_SECRET}",
-        "expiresIn": "20m"
-      }
+      "model": "llama3:latest"
     }
   },
   "promptDecorators": {
