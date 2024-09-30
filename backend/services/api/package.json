@@ -5,11 +5,11 @@
     "test": "borp"
   },
   "devDependencies": {
-    "fastify": "^4.28.1",
-    "borp": "^0.16.0"
+    "fastify": "^5.0.0",
+    "borp": "^0.17.0"
   },
   "dependencies": {
-    "@platformatic/composer": "^1.53.3"
+    "@platformatic/composer": "^2.2.1"
   },
   "engines": {
     "node": "^18.8.0 || >=20.6.0"

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://platformatic.dev/schemas/v1.53.3/db",
+  "$schema": "https://schemas.platformatic.dev/@platformatic/db/2.2.1.json",
   "db": {
     "connectionString": "{PLT_ENTITY_DATABASE_URL}",
     "graphql": true,
@@ -10,26 +10,11 @@
     "ignore": [
       "*.sqlite",
       "*.sqlite-journal"
-    ],
-    "enabled": true
+    ]
   },
   "migrations": {
     "dir": "migrations",
     "autoApply": "{PLT_ENTITY_APPLY_MIGRATIONS}"
-  },
-  "authorization": {
-    "jwt": {
-      "secret": "{PLT_SECRET}"
-    },
-    "roleKey": "role",
-    "rules": [
-      {
-        "role": "platformatic-admin",
-        "entity": "user",
-        "find": true,
-        "save": true
-      }
-    ]
   },
   "plugins": {
     "paths": [
@@ -39,6 +24,7 @@
       },
       {
         "path": "./routes",
+        "encapsulate": true,
         "options": {
           "secret": "{PLT_SECRET}"
         }

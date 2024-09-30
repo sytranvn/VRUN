@@ -14,6 +14,5 @@
   "promptDecorators": {
     "prefix": "You are an AI for Acme Corp. here to answer questions anyone has.\nThe question for you to answer is: ",
     "suffix": "Please respond as consisely as possible."
-  },
-  "showAiWarpHomepage": false
+  }
 }

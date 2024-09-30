@@ -36,7 +36,7 @@ export default async function(fastify, opts) {
 			limit: 1,
 		})
 		if (!user) {
-			throw fastify.httpErrors.unauthorized();
+			throw fastify.platformatic.httpErrors.unauthorized();
 		}
 		const { password: hashedPass, ...payload } = user;
 		if (!await argon2.verify(hashedPass, password, { secret })) {

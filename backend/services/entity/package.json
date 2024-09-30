@@ -1,18 +1,16 @@
 {
   "name": "entity",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "start": "platformatic start",
     "test": "borp"
   },
   "devDependencies": {
-    "borp": "^0.16.0",
-    "fastify": "^4.28.1"
+    "fastify": "^5.0.0",
+    "borp": "^0.17.0"
   },
   "dependencies": {
-    "@fastify/jwt": "^9.0.1",
-    "@platformatic/db": "^1.53.3",
-    "argon2": "^0.41.1"
+    "@platformatic/db": "^2.2.1"
   },
   "engines": {
     "node": "^18.8.0 || >=20.6.0"

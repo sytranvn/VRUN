@@ -1,33 +1,19 @@
 {
-  "$schema": "https://platformatic.dev/schemas/v1.53.3/runtime",
+  "$schema": "https://schemas.platformatic.dev/@platformatic/runtime/2.2.1.json",
   "entrypoint": "api",
-  "allowCycles": false,
-  "hotReload": true,
+  "watch": true,
   "autoload": {
     "path": "services",
     "exclude": [
       "docs"
     ]
   },
+  "logger": {
+    "level": "{PLT_SERVER_LOGGER_LEVEL}"
+  },
   "server": {
     "hostname": "{PLT_SERVER_HOSTNAME}",
-    "port": "{PORT}",
-    "logger": {
-      "level": "{PLT_SERVER_LOGGER_LEVEL}"
-    },
-    "cors": {
-      "origin": [
-        {
-          "regexp": "https://[a-z-]*.deploy.space"
-        },
-        "https://platformatic.cloud",
-        "http://localhost:5173"
-      ],
-      "methods": [
-        "GET",
-        "POST"
-      ]
-    }
+    "port": "{PORT}"
   },
   "managementApi": "{PLT_MANAGEMENT_API}"
 }

@@ -1,5 +1,5 @@
 {
-  "$schema": "https://platformatic.dev/schemas/v1.53.3/composer",
+  "$schema": "https://schemas.platformatic.dev/@platformatic/composer/2.2.1.json",
   "composer": {
     "services": [
       {
@@ -19,15 +19,5 @@
     ],
     "refreshTimeout": 1000
   },
-  "watch": true,
-  "plugins": {
-    "paths": [
-      {
-        "path": "./plugins",
-        "encapsulate": false
-      },
-      "./routes"
-    ],
-    "typescript": "{PLT_API_TYPESCRIPT}"
-  }
+  "watch": true
 }
