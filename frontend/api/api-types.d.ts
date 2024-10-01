@@ -4,7 +4,7 @@ export interface FullResponse<T, U extends number> {
   'body': T;
 }
 
-export type EntityGetRoleRequest = {
+export type EntityGetRolesRequest = {
   'limit'?: number;
   'offset'?: number;
   'totalCount'?: boolean;
@@ -51,9 +51,9 @@ export type EntityGetRoleRequest = {
   'orderby.name'?: 'asc' | 'desc';
 }
 
-export type EntityGetRoleResponseOK = Array<{ 'id'?: number | null; 'name'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetRoleResponses =
-  EntityGetRoleResponseOK
+export type EntityGetRolesResponseOK = Array<{ 'id'?: number | null; 'name'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetRolesResponses =
+  EntityGetRolesResponseOK
 
 export type EntityCreateRoleRequest = {
   'id'?: number;
@@ -69,7 +69,7 @@ export type EntityCreateRoleResponseOK = {
 export type EntityCreateRoleResponses =
   EntityCreateRoleResponseOK
 
-export type EntityUpdateRoleRequest = {
+export type EntityUpdateRolesRequest = {
   'fields'?: Array<'createdAt' | 'id' | 'name'>;
   'where.createdAt.eq'?: string;
   'where.createdAt.neq'?: string;
@@ -113,9 +113,9 @@ export type EntityUpdateRoleRequest = {
   'createdAt'?: string | null;
 }
 
-export type EntityUpdateRoleResponseOK = Array<{ 'id'?: number | null; 'name'?: string | null; 'createdAt'?: string | null }>
-export type EntityUpdateRoleResponses =
-  EntityUpdateRoleResponseOK
+export type EntityUpdateRolesResponseOK = Array<{ 'id'?: number | null; 'name'?: string | null; 'createdAt'?: string | null }>
+export type EntityUpdateRolesResponses =
+  EntityUpdateRolesResponseOK
 
 export type EntityGetRoleByIdRequest = {
   'fields'?: Array<'createdAt' | 'id' | 'name'>;
@@ -145,29 +145,29 @@ export type EntityUpdateRoleResponseOK = {
 export type EntityUpdateRoleResponses =
   EntityUpdateRoleResponseOK
 
-export type EntityDeleteRoleRequest = {
+export type EntityDeleteRolesRequest = {
   'fields'?: Array<'createdAt' | 'id' | 'name'>;
   'id': number;
 }
 
-export type EntityDeleteRoleResponseOK = {
+export type EntityDeleteRolesResponseOK = {
   'id': number | null;
   'name': string | null;
   'createdAt': string | null;
 }
-export type EntityDeleteRoleResponses =
-  EntityDeleteRoleResponseOK
+export type EntityDeleteRolesResponses =
+  EntityDeleteRolesResponseOK
 
-export type EntityGetUserForRoleRequest = {
+export type EntityGetUsersForRoleRequest = {
   'fields'?: Array<'createdAt' | 'fullName' | 'id' | 'password' | 'role' | 'username'>;
   'id': number;
 }
 
-export type EntityGetUserForRoleResponseOK = Array<{ 'id'?: number | null; 'username'?: string | null; 'password'?: string | null; 'role'?: number | null; 'fullName'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetUserForRoleResponses =
-  EntityGetUserForRoleResponseOK
+export type EntityGetUsersForRoleResponseOK = Array<{ 'id'?: number | null; 'username'?: string | null; 'password'?: string | null; 'role'?: number | null; 'fullName'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetUsersForRoleResponses =
+  EntityGetUsersForRoleResponseOK
 
-export type EntityGetUserRequest = {
+export type EntityGetUsersRequest = {
   'limit'?: number;
   'offset'?: number;
   'totalCount'?: boolean;
@@ -253,9 +253,9 @@ export type EntityGetUserRequest = {
   'orderby.username'?: 'asc' | 'desc';
 }
 
-export type EntityGetUserResponseOK = Array<{ 'id'?: number | null; 'username'?: string | null; 'password'?: string | null; 'role'?: number | null; 'fullName'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetUserResponses =
-  EntityGetUserResponseOK
+export type EntityGetUsersResponseOK = Array<{ 'id'?: number | null; 'username'?: string | null; 'password'?: string | null; 'role'?: number | null; 'fullName'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetUsersResponses =
+  EntityGetUsersResponseOK
 
 export type EntityCreateUserRequest = {
   'id'?: number;
@@ -277,7 +277,7 @@ export type EntityCreateUserResponseOK = {
 export type EntityCreateUserResponses =
   EntityCreateUserResponseOK
 
-export type EntityUpdateUserRequest = {
+export type EntityUpdateUsersRequest = {
   'fields'?: Array<'createdAt' | 'fullName' | 'id' | 'password' | 'role' | 'username'>;
   'where.createdAt.eq'?: string;
   'where.createdAt.neq'?: string;
@@ -360,9 +360,9 @@ export type EntityUpdateUserRequest = {
   'createdAt'?: string | null;
 }
 
-export type EntityUpdateUserResponseOK = Array<{ 'id'?: number | null; 'username'?: string | null; 'password'?: string | null; 'role'?: number | null; 'fullName'?: string | null; 'createdAt'?: string | null }>
-export type EntityUpdateUserResponses =
-  EntityUpdateUserResponseOK
+export type EntityUpdateUsersResponseOK = Array<{ 'id'?: number | null; 'username'?: string | null; 'password'?: string | null; 'role'?: number | null; 'fullName'?: string | null; 'createdAt'?: string | null }>
+export type EntityUpdateUsersResponses =
+  EntityUpdateUsersResponseOK
 
 export type EntityGetUserByIdRequest = {
   'fields'?: Array<'createdAt' | 'fullName' | 'id' | 'password' | 'role' | 'username'>;
@@ -401,12 +401,12 @@ export type EntityUpdateUserResponseOK = {
 export type EntityUpdateUserResponses =
   EntityUpdateUserResponseOK
 
-export type EntityDeleteUserRequest = {
+export type EntityDeleteUsersRequest = {
   'fields'?: Array<'createdAt' | 'fullName' | 'id' | 'password' | 'role' | 'username'>;
   'id': number;
 }
 
-export type EntityDeleteUserResponseOK = {
+export type EntityDeleteUsersResponseOK = {
   'id': number | null;
   'username': string | null;
   'password': string | null;
@@ -414,26 +414,26 @@ export type EntityDeleteUserResponseOK = {
   'fullName': string | null;
   'createdAt': string | null;
 }
-export type EntityDeleteUserResponses =
-  EntityDeleteUserResponseOK
+export type EntityDeleteUsersResponses =
+  EntityDeleteUsersResponseOK
 
-export type EntityGetExamForUserRequest = {
+export type EntityGetExamsForUserRequest = {
   'fields'?: Array<'createdAt' | 'createdBy' | 'description' | 'id' | 'status' | 'title'>;
   'id': number;
 }
 
-export type EntityGetExamForUserResponseOK = Array<{ 'id'?: number | null; 'createdBy'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetExamForUserResponses =
-  EntityGetExamForUserResponseOK
+export type EntityGetExamsForUserResponseOK = Array<{ 'id'?: number | null; 'createdBy'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetExamsForUserResponses =
+  EntityGetExamsForUserResponseOK
 
-export type EntityGetExamineeExamForUserRequest = {
+export type EntityGetExamineeExamsForUserRequest = {
   'fields'?: Array<'createdAt' | 'duration' | 'examId' | 'examineeId' | 'id' | 'startTime' | 'status'>;
   'id': number;
 }
 
-export type EntityGetExamineeExamForUserResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'examineeId'?: number | null; 'startTime'?: string | null; 'duration'?: number | null; 'status'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetExamineeExamForUserResponses =
-  EntityGetExamineeExamForUserResponseOK
+export type EntityGetExamineeExamsForUserResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'examineeId'?: number | null; 'startTime'?: string | null; 'duration'?: number | null; 'status'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetExamineeExamsForUserResponses =
+  EntityGetExamineeExamsForUserResponseOK
 
 export type EntityGetRoleForUserRequest = {
   'fields'?: Array<'createdAt' | 'id' | 'name'>;
@@ -448,7 +448,7 @@ export type EntityGetRoleForUserResponseOK = {
 export type EntityGetRoleForUserResponses =
   EntityGetRoleForUserResponseOK
 
-export type EntityGetExamRequest = {
+export type EntityGetExamsRequest = {
   'limit'?: number;
   'offset'?: number;
   'totalCount'?: boolean;
@@ -534,9 +534,9 @@ export type EntityGetExamRequest = {
   'orderby.title'?: 'asc' | 'desc';
 }
 
-export type EntityGetExamResponseOK = Array<{ 'id'?: number | null; 'createdBy'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetExamResponses =
-  EntityGetExamResponseOK
+export type EntityGetExamsResponseOK = Array<{ 'id'?: number | null; 'createdBy'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetExamsResponses =
+  EntityGetExamsResponseOK
 
 export type EntityCreateExamRequest = {
   'id'?: number;
@@ -558,7 +558,7 @@ export type EntityCreateExamResponseOK = {
 export type EntityCreateExamResponses =
   EntityCreateExamResponseOK
 
-export type EntityUpdateExamRequest = {
+export type EntityUpdateExamsRequest = {
   'fields'?: Array<'createdAt' | 'createdBy' | 'description' | 'id' | 'status' | 'title'>;
   'where.createdAt.eq'?: string;
   'where.createdAt.neq'?: string;
@@ -641,9 +641,9 @@ export type EntityUpdateExamRequest = {
   'createdAt'?: string | null;
 }
 
-export type EntityUpdateExamResponseOK = Array<{ 'id'?: number | null; 'createdBy'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
-export type EntityUpdateExamResponses =
-  EntityUpdateExamResponseOK
+export type EntityUpdateExamsResponseOK = Array<{ 'id'?: number | null; 'createdBy'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
+export type EntityUpdateExamsResponses =
+  EntityUpdateExamsResponseOK
 
 export type EntityGetExamByIdRequest = {
   'fields'?: Array<'createdAt' | 'createdBy' | 'description' | 'id' | 'status' | 'title'>;
@@ -682,12 +682,12 @@ export type EntityUpdateExamResponseOK = {
 export type EntityUpdateExamResponses =
   EntityUpdateExamResponseOK
 
-export type EntityDeleteExamRequest = {
+export type EntityDeleteExamsRequest = {
   'fields'?: Array<'createdAt' | 'createdBy' | 'description' | 'id' | 'status' | 'title'>;
   'id': number;
 }
 
-export type EntityDeleteExamResponseOK = {
+export type EntityDeleteExamsResponseOK = {
   'id': number | null;
   'createdBy': number | null;
   'title': string | null;
@@ -695,26 +695,26 @@ export type EntityDeleteExamResponseOK = {
   'status': string | null;
   'createdAt': string | null;
 }
-export type EntityDeleteExamResponses =
-  EntityDeleteExamResponseOK
+export type EntityDeleteExamsResponses =
+  EntityDeleteExamsResponseOK
 
-export type EntityGetQuestionForExamRequest = {
+export type EntityGetQuestionsForExamRequest = {
   'fields'?: Array<'createdAt' | 'description' | 'examId' | 'id' | 'status' | 'title'>;
   'id': number;
 }
 
-export type EntityGetQuestionForExamResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetQuestionForExamResponses =
-  EntityGetQuestionForExamResponseOK
+export type EntityGetQuestionsForExamResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetQuestionsForExamResponses =
+  EntityGetQuestionsForExamResponseOK
 
-export type EntityGetExamineeExamForExamRequest = {
+export type EntityGetExamineeExamsForExamRequest = {
   'fields'?: Array<'createdAt' | 'duration' | 'examId' | 'examineeId' | 'id' | 'startTime' | 'status'>;
   'id': number;
 }
 
-export type EntityGetExamineeExamForExamResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'examineeId'?: number | null; 'startTime'?: string | null; 'duration'?: number | null; 'status'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetExamineeExamForExamResponses =
-  EntityGetExamineeExamForExamResponseOK
+export type EntityGetExamineeExamsForExamResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'examineeId'?: number | null; 'startTime'?: string | null; 'duration'?: number | null; 'status'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetExamineeExamsForExamResponses =
+  EntityGetExamineeExamsForExamResponseOK
 
 export type EntityGetUserForExamRequest = {
   'fields'?: Array<'createdAt' | 'fullName' | 'id' | 'password' | 'role' | 'username'>;
@@ -732,7 +732,7 @@ export type EntityGetUserForExamResponseOK = {
 export type EntityGetUserForExamResponses =
   EntityGetUserForExamResponseOK
 
-export type EntityGetQuestionRequest = {
+export type EntityGetQuestionsRequest = {
   'limit'?: number;
   'offset'?: number;
   'totalCount'?: boolean;
@@ -818,9 +818,9 @@ export type EntityGetQuestionRequest = {
   'orderby.title'?: 'asc' | 'desc';
 }
 
-export type EntityGetQuestionResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetQuestionResponses =
-  EntityGetQuestionResponseOK
+export type EntityGetQuestionsResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetQuestionsResponses =
+  EntityGetQuestionsResponseOK
 
 export type EntityCreateQuestionRequest = {
   'id'?: number;
@@ -842,7 +842,7 @@ export type EntityCreateQuestionResponseOK = {
 export type EntityCreateQuestionResponses =
   EntityCreateQuestionResponseOK
 
-export type EntityUpdateQuestionRequest = {
+export type EntityUpdateQuestionsRequest = {
   'fields'?: Array<'createdAt' | 'description' | 'examId' | 'id' | 'status' | 'title'>;
   'where.createdAt.eq'?: string;
   'where.createdAt.neq'?: string;
@@ -925,9 +925,9 @@ export type EntityUpdateQuestionRequest = {
   'createdAt'?: string | null;
 }
 
-export type EntityUpdateQuestionResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
-export type EntityUpdateQuestionResponses =
-  EntityUpdateQuestionResponseOK
+export type EntityUpdateQuestionsResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'title'?: string | null; 'description'?: string | null; 'status'?: string | null; 'createdAt'?: string | null }>
+export type EntityUpdateQuestionsResponses =
+  EntityUpdateQuestionsResponseOK
 
 export type EntityGetQuestionByIdRequest = {
   'fields'?: Array<'createdAt' | 'description' | 'examId' | 'id' | 'status' | 'title'>;
@@ -966,12 +966,12 @@ export type EntityUpdateQuestionResponseOK = {
 export type EntityUpdateQuestionResponses =
   EntityUpdateQuestionResponseOK
 
-export type EntityDeleteQuestionRequest = {
+export type EntityDeleteQuestionsRequest = {
   'fields'?: Array<'createdAt' | 'description' | 'examId' | 'id' | 'status' | 'title'>;
   'id': number;
 }
 
-export type EntityDeleteQuestionResponseOK = {
+export type EntityDeleteQuestionsResponseOK = {
   'id': number | null;
   'examId': number | null;
   'title': string | null;
@@ -979,26 +979,26 @@ export type EntityDeleteQuestionResponseOK = {
   'status': string | null;
   'createdAt': string | null;
 }
-export type EntityDeleteQuestionResponses =
-  EntityDeleteQuestionResponseOK
+export type EntityDeleteQuestionsResponses =
+  EntityDeleteQuestionsResponseOK
 
-export type EntityGetAnswerForQuestionRequest = {
+export type EntityGetAnswersForQuestionRequest = {
   'fields'?: Array<'createdAt' | 'description' | 'id' | 'questionId'>;
   'id': number;
 }
 
-export type EntityGetAnswerForQuestionResponseOK = Array<{ 'id'?: number | null; 'questionId'?: number | null; 'description'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetAnswerForQuestionResponses =
-  EntityGetAnswerForQuestionResponseOK
+export type EntityGetAnswersForQuestionResponseOK = Array<{ 'id'?: number | null; 'questionId'?: number | null; 'description'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetAnswersForQuestionResponses =
+  EntityGetAnswersForQuestionResponseOK
 
-export type EntityGetExamineeExamAnswerForQuestionRequest = {
+export type EntityGetExamineeExamAnswersForQuestionRequest = {
   'fields'?: Array<'answerId' | 'createdAt' | 'examineeExamId' | 'id' | 'questionId'>;
   'id': number;
 }
 
-export type EntityGetExamineeExamAnswerForQuestionResponseOK = Array<{ 'id'?: number | null; 'examineeExamId'?: number | null; 'questionId'?: number | null; 'answerId'?: number | null; 'createdAt'?: string | null }>
-export type EntityGetExamineeExamAnswerForQuestionResponses =
-  EntityGetExamineeExamAnswerForQuestionResponseOK
+export type EntityGetExamineeExamAnswersForQuestionResponseOK = Array<{ 'id'?: number | null; 'examineeExamId'?: number | null; 'questionId'?: number | null; 'answerId'?: number | null; 'createdAt'?: string | null }>
+export type EntityGetExamineeExamAnswersForQuestionResponses =
+  EntityGetExamineeExamAnswersForQuestionResponseOK
 
 export type EntityGetExamForQuestionRequest = {
   'fields'?: Array<'createdAt' | 'createdBy' | 'description' | 'id' | 'status' | 'title'>;
@@ -1016,7 +1016,7 @@ export type EntityGetExamForQuestionResponseOK = {
 export type EntityGetExamForQuestionResponses =
   EntityGetExamForQuestionResponseOK
 
-export type EntityGetAnswerRequest = {
+export type EntityGetAnswersRequest = {
   'limit'?: number;
   'offset'?: number;
   'totalCount'?: boolean;
@@ -1076,9 +1076,9 @@ export type EntityGetAnswerRequest = {
   'orderby.questionId'?: 'asc' | 'desc';
 }
 
-export type EntityGetAnswerResponseOK = Array<{ 'id'?: number | null; 'questionId'?: number | null; 'description'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetAnswerResponses =
-  EntityGetAnswerResponseOK
+export type EntityGetAnswersResponseOK = Array<{ 'id'?: number | null; 'questionId'?: number | null; 'description'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetAnswersResponses =
+  EntityGetAnswersResponseOK
 
 export type EntityCreateAnswerRequest = {
   'id': number;
@@ -1096,7 +1096,7 @@ export type EntityCreateAnswerResponseOK = {
 export type EntityCreateAnswerResponses =
   EntityCreateAnswerResponseOK
 
-export type EntityUpdateAnswerRequest = {
+export type EntityUpdateAnswersRequest = {
   'fields'?: Array<'createdAt' | 'description' | 'id' | 'questionId'>;
   'where.createdAt.eq'?: string;
   'where.createdAt.neq'?: string;
@@ -1153,9 +1153,9 @@ export type EntityUpdateAnswerRequest = {
   'createdAt': string | null;
 }
 
-export type EntityUpdateAnswerResponseOK = Array<{ 'id'?: number | null; 'questionId'?: number | null; 'description'?: string | null; 'createdAt'?: string | null }>
-export type EntityUpdateAnswerResponses =
-  EntityUpdateAnswerResponseOK
+export type EntityUpdateAnswersResponseOK = Array<{ 'id'?: number | null; 'questionId'?: number | null; 'description'?: string | null; 'createdAt'?: string | null }>
+export type EntityUpdateAnswersResponses =
+  EntityUpdateAnswersResponseOK
 
 export type EntityGetAnswerByIdRequest = {
   'fields'?: Array<'createdAt' | 'description' | 'id' | 'questionId'>;
@@ -1188,28 +1188,28 @@ export type EntityUpdateAnswerResponseOK = {
 export type EntityUpdateAnswerResponses =
   EntityUpdateAnswerResponseOK
 
-export type EntityDeleteAnswerRequest = {
+export type EntityDeleteAnswersRequest = {
   'fields'?: Array<'createdAt' | 'description' | 'id' | 'questionId'>;
   'id': number;
 }
 
-export type EntityDeleteAnswerResponseOK = {
+export type EntityDeleteAnswersResponseOK = {
   'id': number | null;
   'questionId': number | null;
   'description': string | null;
   'createdAt': string | null;
 }
-export type EntityDeleteAnswerResponses =
-  EntityDeleteAnswerResponseOK
+export type EntityDeleteAnswersResponses =
+  EntityDeleteAnswersResponseOK
 
-export type EntityGetExamineeExamAnswerForAnswerRequest = {
+export type EntityGetExamineeExamAnswersForAnswerRequest = {
   'fields'?: Array<'answerId' | 'createdAt' | 'examineeExamId' | 'id' | 'questionId'>;
   'id': number;
 }
 
-export type EntityGetExamineeExamAnswerForAnswerResponseOK = Array<{ 'id'?: number | null; 'examineeExamId'?: number | null; 'questionId'?: number | null; 'answerId'?: number | null; 'createdAt'?: string | null }>
-export type EntityGetExamineeExamAnswerForAnswerResponses =
-  EntityGetExamineeExamAnswerForAnswerResponseOK
+export type EntityGetExamineeExamAnswersForAnswerResponseOK = Array<{ 'id'?: number | null; 'examineeExamId'?: number | null; 'questionId'?: number | null; 'answerId'?: number | null; 'createdAt'?: string | null }>
+export type EntityGetExamineeExamAnswersForAnswerResponses =
+  EntityGetExamineeExamAnswersForAnswerResponseOK
 
 export type EntityGetQuestionForAnswerRequest = {
   'fields'?: Array<'createdAt' | 'description' | 'examId' | 'id' | 'status' | 'title'>;
@@ -1227,7 +1227,7 @@ export type EntityGetQuestionForAnswerResponseOK = {
 export type EntityGetQuestionForAnswerResponses =
   EntityGetQuestionForAnswerResponseOK
 
-export type EntityGetExamineeExamRequest = {
+export type EntityGetExamineeExamsRequest = {
   'limit'?: number;
   'offset'?: number;
   'totalCount'?: boolean;
@@ -1326,9 +1326,9 @@ export type EntityGetExamineeExamRequest = {
   'orderby.status'?: 'asc' | 'desc';
 }
 
-export type EntityGetExamineeExamResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'examineeId'?: number | null; 'startTime'?: string | null; 'duration'?: number | null; 'status'?: string | null; 'createdAt'?: string | null }>
-export type EntityGetExamineeExamResponses =
-  EntityGetExamineeExamResponseOK
+export type EntityGetExamineeExamsResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'examineeId'?: number | null; 'startTime'?: string | null; 'duration'?: number | null; 'status'?: string | null; 'createdAt'?: string | null }>
+export type EntityGetExamineeExamsResponses =
+  EntityGetExamineeExamsResponseOK
 
 export type EntityCreateExamineeExamRequest = {
   'id': number;
@@ -1352,7 +1352,7 @@ export type EntityCreateExamineeExamResponseOK = {
 export type EntityCreateExamineeExamResponses =
   EntityCreateExamineeExamResponseOK
 
-export type EntityUpdateExamineeExamRequest = {
+export type EntityUpdateExamineeExamsRequest = {
   'fields'?: Array<'createdAt' | 'duration' | 'examId' | 'examineeId' | 'id' | 'startTime' | 'status'>;
   'where.createdAt.eq'?: string;
   'where.createdAt.neq'?: string;
@@ -1448,9 +1448,9 @@ export type EntityUpdateExamineeExamRequest = {
   'createdAt': string | null;
 }
 
-export type EntityUpdateExamineeExamResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'examineeId'?: number | null; 'startTime'?: string | null; 'duration'?: number | null; 'status'?: string | null; 'createdAt'?: string | null }>
-export type EntityUpdateExamineeExamResponses =
-  EntityUpdateExamineeExamResponseOK
+export type EntityUpdateExamineeExamsResponseOK = Array<{ 'id'?: number | null; 'examId'?: number | null; 'examineeId'?: number | null; 'startTime'?: string | null; 'duration'?: number | null; 'status'?: string | null; 'createdAt'?: string | null }>
+export type EntityUpdateExamineeExamsResponses =
+  EntityUpdateExamineeExamsResponseOK
 
 export type EntityGetExamineeExamByIdRequest = {
   'fields'?: Array<'createdAt' | 'duration' | 'examId' | 'examineeId' | 'id' | 'startTime' | 'status'>;
@@ -1492,12 +1492,12 @@ export type EntityUpdateExamineeExamResponseOK = {
 export type EntityUpdateExamineeExamResponses =
   EntityUpdateExamineeExamResponseOK
 
-export type EntityDeleteExamineeExamRequest = {
+export type EntityDeleteExamineeExamsRequest = {
   'fields'?: Array<'createdAt' | 'duration' | 'examId' | 'examineeId' | 'id' | 'startTime' | 'status'>;
   'id': number;
 }
 
-export type EntityDeleteExamineeExamResponseOK = {
+export type EntityDeleteExamineeExamsResponseOK = {
   'id': number | null;
   'examId': number | null;
   'examineeId': number | null;
@@ -1506,17 +1506,17 @@ export type EntityDeleteExamineeExamResponseOK = {
   'status': string | null;
   'createdAt': string | null;
 }
-export type EntityDeleteExamineeExamResponses =
-  EntityDeleteExamineeExamResponseOK
+export type EntityDeleteExamineeExamsResponses =
+  EntityDeleteExamineeExamsResponseOK
 
-export type EntityGetExamineeExamAnswerForExamineeExamRequest = {
+export type EntityGetExamineeExamAnswersForExamineeExamRequest = {
   'fields'?: Array<'answerId' | 'createdAt' | 'examineeExamId' | 'id' | 'questionId'>;
   'id': number;
 }
 
-export type EntityGetExamineeExamAnswerForExamineeExamResponseOK = Array<{ 'id'?: number | null; 'examineeExamId'?: number | null; 'questionId'?: number | null; 'answerId'?: number | null; 'createdAt'?: string | null }>
-export type EntityGetExamineeExamAnswerForExamineeExamResponses =
-  EntityGetExamineeExamAnswerForExamineeExamResponseOK
+export type EntityGetExamineeExamAnswersForExamineeExamResponseOK = Array<{ 'id'?: number | null; 'examineeExamId'?: number | null; 'questionId'?: number | null; 'answerId'?: number | null; 'createdAt'?: string | null }>
+export type EntityGetExamineeExamAnswersForExamineeExamResponses =
+  EntityGetExamineeExamAnswersForExamineeExamResponseOK
 
 export type EntityGetUserForExamineeExamRequest = {
   'fields'?: Array<'createdAt' | 'fullName' | 'id' | 'password' | 'role' | 'username'>;
@@ -1550,7 +1550,7 @@ export type EntityGetExamForExamineeExamResponseOK = {
 export type EntityGetExamForExamineeExamResponses =
   EntityGetExamForExamineeExamResponseOK
 
-export type EntityGetExamineeExamAnswerRequest = {
+export type EntityGetExamineeExamAnswersRequest = {
   'limit'?: number;
   'offset'?: number;
   'totalCount'?: boolean;
@@ -1623,9 +1623,9 @@ export type EntityGetExamineeExamAnswerRequest = {
   'orderby.questionId'?: 'asc' | 'desc';
 }
 
-export type EntityGetExamineeExamAnswerResponseOK = Array<{ 'id'?: number | null; 'examineeExamId'?: number | null; 'questionId'?: number | null; 'answerId'?: number | null; 'createdAt'?: string | null }>
-export type EntityGetExamineeExamAnswerResponses =
-  EntityGetExamineeExamAnswerResponseOK
+export type EntityGetExamineeExamAnswersResponseOK = Array<{ 'id'?: number | null; 'examineeExamId'?: number | null; 'questionId'?: number | null; 'answerId'?: number | null; 'createdAt'?: string | null }>
+export type EntityGetExamineeExamAnswersResponses =
+  EntityGetExamineeExamAnswersResponseOK
 
 export type EntityCreateExamineeExamAnswerRequest = {
   'id': number;
@@ -1645,7 +1645,7 @@ export type EntityCreateExamineeExamAnswerResponseOK = {
 export type EntityCreateExamineeExamAnswerResponses =
   EntityCreateExamineeExamAnswerResponseOK
 
-export type EntityUpdateExamineeExamAnswerRequest = {
+export type EntityUpdateExamineeExamAnswersRequest = {
   'fields'?: Array<'answerId' | 'createdAt' | 'examineeExamId' | 'id' | 'questionId'>;
   'where.answerId.eq'?: number;
   'where.answerId.neq'?: number;
@@ -1715,9 +1715,9 @@ export type EntityUpdateExamineeExamAnswerRequest = {
   'createdAt': string | null;
 }
 
-export type EntityUpdateExamineeExamAnswerResponseOK = Array<{ 'id'?: number | null; 'examineeExamId'?: number | null; 'questionId'?: number | null; 'answerId'?: number | null; 'createdAt'?: string | null }>
-export type EntityUpdateExamineeExamAnswerResponses =
-  EntityUpdateExamineeExamAnswerResponseOK
+export type EntityUpdateExamineeExamAnswersResponseOK = Array<{ 'id'?: number | null; 'examineeExamId'?: number | null; 'questionId'?: number | null; 'answerId'?: number | null; 'createdAt'?: string | null }>
+export type EntityUpdateExamineeExamAnswersResponses =
+  EntityUpdateExamineeExamAnswersResponseOK
 
 export type EntityGetExamineeExamAnswerByIdRequest = {
   'fields'?: Array<'answerId' | 'createdAt' | 'examineeExamId' | 'id' | 'questionId'>;
@@ -1753,20 +1753,20 @@ export type EntityUpdateExamineeExamAnswerResponseOK = {
 export type EntityUpdateExamineeExamAnswerResponses =
   EntityUpdateExamineeExamAnswerResponseOK
 
-export type EntityDeleteExamineeExamAnswerRequest = {
+export type EntityDeleteExamineeExamAnswersRequest = {
   'fields'?: Array<'answerId' | 'createdAt' | 'examineeExamId' | 'id' | 'questionId'>;
   'id': number;
 }
 
-export type EntityDeleteExamineeExamAnswerResponseOK = {
+export type EntityDeleteExamineeExamAnswersResponseOK = {
   'id': number | null;
   'examineeExamId': number | null;
   'questionId': number | null;
   'answerId': number | null;
   'createdAt': string | null;
 }
-export type EntityDeleteExamineeExamAnswerResponses =
-  EntityDeleteExamineeExamAnswerResponseOK
+export type EntityDeleteExamineeExamAnswersResponses =
+  EntityDeleteExamineeExamAnswersResponseOK
 
 export type EntityGetAnswerForExamineeExamAnswerRequest = {
   'fields'?: Array<'createdAt' | 'description' | 'id' | 'questionId'>;
@@ -1864,63 +1864,63 @@ export type AiStreamResponses =
 export interface Api {
   setBaseUrl(newUrl: string) : void;
   setDefaultHeaders(headers: Object) : void;
-  entityGetRole(req?: EntityGetRoleRequest): Promise<EntityGetRoleResponses>;
+  entityGetRoles(req?: EntityGetRolesRequest): Promise<EntityGetRolesResponses>;
   entityCreateRole(req?: EntityCreateRoleRequest): Promise<EntityCreateRoleResponses>;
-  entityUpdateRole(req?: EntityUpdateRoleRequest): Promise<EntityUpdateRoleResponses>;
+  entityUpdateRoles(req?: EntityUpdateRolesRequest): Promise<EntityUpdateRolesResponses>;
   entityGetRoleById(req?: EntityGetRoleByIdRequest): Promise<EntityGetRoleByIdResponses>;
   entityUpdateRole(req?: EntityUpdateRoleRequest): Promise<EntityUpdateRoleResponses>;
-  entityDeleteRole(req?: EntityDeleteRoleRequest): Promise<EntityDeleteRoleResponses>;
-  entityGetUserForRole(req?: EntityGetUserForRoleRequest): Promise<EntityGetUserForRoleResponses>;
-  entityGetUser(req?: EntityGetUserRequest): Promise<EntityGetUserResponses>;
+  entityDeleteRoles(req?: EntityDeleteRolesRequest): Promise<EntityDeleteRolesResponses>;
+  entityGetUsersForRole(req?: EntityGetUsersForRoleRequest): Promise<EntityGetUsersForRoleResponses>;
+  entityGetUsers(req?: EntityGetUsersRequest): Promise<EntityGetUsersResponses>;
   entityCreateUser(req?: EntityCreateUserRequest): Promise<EntityCreateUserResponses>;
-  entityUpdateUser(req?: EntityUpdateUserRequest): Promise<EntityUpdateUserResponses>;
+  entityUpdateUsers(req?: EntityUpdateUsersRequest): Promise<EntityUpdateUsersResponses>;
   entityGetUserById(req?: EntityGetUserByIdRequest): Promise<EntityGetUserByIdResponses>;
   entityUpdateUser(req?: EntityUpdateUserRequest): Promise<EntityUpdateUserResponses>;
-  entityDeleteUser(req?: EntityDeleteUserRequest): Promise<EntityDeleteUserResponses>;
-  entityGetExamForUser(req?: EntityGetExamForUserRequest): Promise<EntityGetExamForUserResponses>;
-  entityGetExamineeExamForUser(req?: EntityGetExamineeExamForUserRequest): Promise<EntityGetExamineeExamForUserResponses>;
+  entityDeleteUsers(req?: EntityDeleteUsersRequest): Promise<EntityDeleteUsersResponses>;
+  entityGetExamsForUser(req?: EntityGetExamsForUserRequest): Promise<EntityGetExamsForUserResponses>;
+  entityGetExamineeExamsForUser(req?: EntityGetExamineeExamsForUserRequest): Promise<EntityGetExamineeExamsForUserResponses>;
   entityGetRoleForUser(req?: EntityGetRoleForUserRequest): Promise<EntityGetRoleForUserResponses>;
-  entityGetExam(req?: EntityGetExamRequest): Promise<EntityGetExamResponses>;
+  entityGetExams(req?: EntityGetExamsRequest): Promise<EntityGetExamsResponses>;
   entityCreateExam(req?: EntityCreateExamRequest): Promise<EntityCreateExamResponses>;
-  entityUpdateExam(req?: EntityUpdateExamRequest): Promise<EntityUpdateExamResponses>;
+  entityUpdateExams(req?: EntityUpdateExamsRequest): Promise<EntityUpdateExamsResponses>;
   entityGetExamById(req?: EntityGetExamByIdRequest): Promise<EntityGetExamByIdResponses>;
   entityUpdateExam(req?: EntityUpdateExamRequest): Promise<EntityUpdateExamResponses>;
-  entityDeleteExam(req?: EntityDeleteExamRequest): Promise<EntityDeleteExamResponses>;
-  entityGetQuestionForExam(req?: EntityGetQuestionForExamRequest): Promise<EntityGetQuestionForExamResponses>;
-  entityGetExamineeExamForExam(req?: EntityGetExamineeExamForExamRequest): Promise<EntityGetExamineeExamForExamResponses>;
+  entityDeleteExams(req?: EntityDeleteExamsRequest): Promise<EntityDeleteExamsResponses>;
+  entityGetQuestionsForExam(req?: EntityGetQuestionsForExamRequest): Promise<EntityGetQuestionsForExamResponses>;
+  entityGetExamineeExamsForExam(req?: EntityGetExamineeExamsForExamRequest): Promise<EntityGetExamineeExamsForExamResponses>;
   entityGetUserForExam(req?: EntityGetUserForExamRequest): Promise<EntityGetUserForExamResponses>;
-  entityGetQuestion(req?: EntityGetQuestionRequest): Promise<EntityGetQuestionResponses>;
+  entityGetQuestions(req?: EntityGetQuestionsRequest): Promise<EntityGetQuestionsResponses>;
   entityCreateQuestion(req?: EntityCreateQuestionRequest): Promise<EntityCreateQuestionResponses>;
-  entityUpdateQuestion(req?: EntityUpdateQuestionRequest): Promise<EntityUpdateQuestionResponses>;
+  entityUpdateQuestions(req?: EntityUpdateQuestionsRequest): Promise<EntityUpdateQuestionsResponses>;
   entityGetQuestionById(req?: EntityGetQuestionByIdRequest): Promise<EntityGetQuestionByIdResponses>;
   entityUpdateQuestion(req?: EntityUpdateQuestionRequest): Promise<EntityUpdateQuestionResponses>;
-  entityDeleteQuestion(req?: EntityDeleteQuestionRequest): Promise<EntityDeleteQuestionResponses>;
-  entityGetAnswerForQuestion(req?: EntityGetAnswerForQuestionRequest): Promise<EntityGetAnswerForQuestionResponses>;
-  entityGetExamineeExamAnswerForQuestion(req?: EntityGetExamineeExamAnswerForQuestionRequest): Promise<EntityGetExamineeExamAnswerForQuestionResponses>;
+  entityDeleteQuestions(req?: EntityDeleteQuestionsRequest): Promise<EntityDeleteQuestionsResponses>;
+  entityGetAnswersForQuestion(req?: EntityGetAnswersForQuestionRequest): Promise<EntityGetAnswersForQuestionResponses>;
+  entityGetExamineeExamAnswersForQuestion(req?: EntityGetExamineeExamAnswersForQuestionRequest): Promise<EntityGetExamineeExamAnswersForQuestionResponses>;
   entityGetExamForQuestion(req?: EntityGetExamForQuestionRequest): Promise<EntityGetExamForQuestionResponses>;
-  entityGetAnswer(req?: EntityGetAnswerRequest): Promise<EntityGetAnswerResponses>;
+  entityGetAnswers(req?: EntityGetAnswersRequest): Promise<EntityGetAnswersResponses>;
   entityCreateAnswer(req?: EntityCreateAnswerRequest): Promise<EntityCreateAnswerResponses>;
-  entityUpdateAnswer(req?: EntityUpdateAnswerRequest): Promise<EntityUpdateAnswerResponses>;
+  entityUpdateAnswers(req?: EntityUpdateAnswersRequest): Promise<EntityUpdateAnswersResponses>;
   entityGetAnswerById(req?: EntityGetAnswerByIdRequest): Promise<EntityGetAnswerByIdResponses>;
   entityUpdateAnswer(req?: EntityUpdateAnswerRequest): Promise<EntityUpdateAnswerResponses>;
-  entityDeleteAnswer(req?: EntityDeleteAnswerRequest): Promise<EntityDeleteAnswerResponses>;
-  entityGetExamineeExamAnswerForAnswer(req?: EntityGetExamineeExamAnswerForAnswerRequest): Promise<EntityGetExamineeExamAnswerForAnswerResponses>;
+  entityDeleteAnswers(req?: EntityDeleteAnswersRequest): Promise<EntityDeleteAnswersResponses>;
+  entityGetExamineeExamAnswersForAnswer(req?: EntityGetExamineeExamAnswersForAnswerRequest): Promise<EntityGetExamineeExamAnswersForAnswerResponses>;
   entityGetQuestionForAnswer(req?: EntityGetQuestionForAnswerRequest): Promise<EntityGetQuestionForAnswerResponses>;
-  entityGetExamineeExam(req?: EntityGetExamineeExamRequest): Promise<EntityGetExamineeExamResponses>;
+  entityGetExamineeExams(req?: EntityGetExamineeExamsRequest): Promise<EntityGetExamineeExamsResponses>;
   entityCreateExamineeExam(req?: EntityCreateExamineeExamRequest): Promise<EntityCreateExamineeExamResponses>;
-  entityUpdateExamineeExam(req?: EntityUpdateExamineeExamRequest): Promise<EntityUpdateExamineeExamResponses>;
+  entityUpdateExamineeExams(req?: EntityUpdateExamineeExamsRequest): Promise<EntityUpdateExamineeExamsResponses>;
   entityGetExamineeExamById(req?: EntityGetExamineeExamByIdRequest): Promise<EntityGetExamineeExamByIdResponses>;
   entityUpdateExamineeExam(req?: EntityUpdateExamineeExamRequest): Promise<EntityUpdateExamineeExamResponses>;
-  entityDeleteExamineeExam(req?: EntityDeleteExamineeExamRequest): Promise<EntityDeleteExamineeExamResponses>;
-  entityGetExamineeExamAnswerForExamineeExam(req?: EntityGetExamineeExamAnswerForExamineeExamRequest): Promise<EntityGetExamineeExamAnswerForExamineeExamResponses>;
+  entityDeleteExamineeExams(req?: EntityDeleteExamineeExamsRequest): Promise<EntityDeleteExamineeExamsResponses>;
+  entityGetExamineeExamAnswersForExamineeExam(req?: EntityGetExamineeExamAnswersForExamineeExamRequest): Promise<EntityGetExamineeExamAnswersForExamineeExamResponses>;
   entityGetUserForExamineeExam(req?: EntityGetUserForExamineeExamRequest): Promise<EntityGetUserForExamineeExamResponses>;
   entityGetExamForExamineeExam(req?: EntityGetExamForExamineeExamRequest): Promise<EntityGetExamForExamineeExamResponses>;
-  entityGetExamineeExamAnswer(req?: EntityGetExamineeExamAnswerRequest): Promise<EntityGetExamineeExamAnswerResponses>;
+  entityGetExamineeExamAnswers(req?: EntityGetExamineeExamAnswersRequest): Promise<EntityGetExamineeExamAnswersResponses>;
   entityCreateExamineeExamAnswer(req?: EntityCreateExamineeExamAnswerRequest): Promise<EntityCreateExamineeExamAnswerResponses>;
-  entityUpdateExamineeExamAnswer(req?: EntityUpdateExamineeExamAnswerRequest): Promise<EntityUpdateExamineeExamAnswerResponses>;
+  entityUpdateExamineeExamAnswers(req?: EntityUpdateExamineeExamAnswersRequest): Promise<EntityUpdateExamineeExamAnswersResponses>;
   entityGetExamineeExamAnswerById(req?: EntityGetExamineeExamAnswerByIdRequest): Promise<EntityGetExamineeExamAnswerByIdResponses>;
   entityUpdateExamineeExamAnswer(req?: EntityUpdateExamineeExamAnswerRequest): Promise<EntityUpdateExamineeExamAnswerResponses>;
-  entityDeleteExamineeExamAnswer(req?: EntityDeleteExamineeExamAnswerRequest): Promise<EntityDeleteExamineeExamAnswerResponses>;
+  entityDeleteExamineeExamAnswers(req?: EntityDeleteExamineeExamAnswersRequest): Promise<EntityDeleteExamineeExamAnswersResponses>;
   entityGetAnswerForExamineeExamAnswer(req?: EntityGetAnswerForExamineeExamAnswerRequest): Promise<EntityGetAnswerForExamineeExamAnswerResponses>;
   entityGetQuestionForExamineeExamAnswer(req?: EntityGetQuestionForExamineeExamAnswerRequest): Promise<EntityGetQuestionForExamineeExamAnswerResponses>;
   entityGetExamineeExamForExamineeExamAnswer(req?: EntityGetExamineeExamForExamineeExamAnswerRequest): Promise<EntityGetExamineeExamForExamineeExamAnswerResponses>;

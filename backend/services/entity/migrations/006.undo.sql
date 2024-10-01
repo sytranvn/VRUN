@@ -1,1 +1,1 @@
-DROP TABLE Examinee_Exam;
+DROP TABLE Examinee_Exams;

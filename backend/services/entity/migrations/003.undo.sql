@@ -1,1 +1,1 @@
-DROP TABLE Exam;
+DROP TABLE Exams;

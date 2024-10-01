@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS Examinee_Exam (
+CREATE TABLE IF NOT EXISTS Examinee_Exams (
     id INTEGER PRIMARY KEY,
     exam_id INTEGER,
     examinee_id INTEGER,
@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS Examinee_Exam (
     duration INTEGER, -- minutes
     status TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (exam_id) REFERENCES Exam(id),
-    FOREIGN KEY (examinee_id) REFERENCES User(id)
+    FOREIGN KEY (exam_id) REFERENCES Exams(id),
+    FOREIGN KEY (examinee_id) REFERENCES Users(id)
 );

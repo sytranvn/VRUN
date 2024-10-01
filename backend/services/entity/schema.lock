@@ -65,7 +65,7 @@
   },
   {
     "schema": null,
-    "table": "Role",
+    "table": "Roles",
     "constraints": [
       {
         "column_name": "id",
@@ -120,7 +120,7 @@
   },
   {
     "schema": null,
-    "table": "User",
+    "table": "Users",
     "constraints": [
       {
         "column_name": "id",
@@ -131,12 +131,12 @@
         "constraint_type": "UNIQUE"
       },
       {
-        "table_name": "User",
+        "table_name": "Users",
         "column_name": "role",
         "constraint_type": "FOREIGN KEY",
-        "foreign_table_name": "Role",
+        "foreign_table_name": "Roles",
         "foreign_column_name": "id",
-        "loweredTableWithSchemaName": "user",
+        "loweredTableWithSchemaName": "users",
         "foreignEntityName": "role",
         "entityName": "user"
       }
@@ -224,19 +224,19 @@
   },
   {
     "schema": null,
-    "table": "Exam",
+    "table": "Exams",
     "constraints": [
       {
         "column_name": "id",
         "constraint_type": "PRIMARY KEY"
       },
       {
-        "table_name": "Exam",
+        "table_name": "Exams",
         "column_name": "created_by",
         "constraint_type": "FOREIGN KEY",
-        "foreign_table_name": "User",
+        "foreign_table_name": "Users",
         "foreign_column_name": "id",
-        "loweredTableWithSchemaName": "exam",
+        "loweredTableWithSchemaName": "exams",
         "foreignEntityName": "user",
         "entityName": "exam"
       }
@@ -324,19 +324,19 @@
   },
   {
     "schema": null,
-    "table": "Question",
+    "table": "Questions",
     "constraints": [
       {
         "column_name": "id",
         "constraint_type": "PRIMARY KEY"
       },
       {
-        "table_name": "Question",
+        "table_name": "Questions",
         "column_name": "exam_id",
         "constraint_type": "FOREIGN KEY",
-        "foreign_table_name": "Exam",
+        "foreign_table_name": "Exams",
         "foreign_column_name": "id",
-        "loweredTableWithSchemaName": "question",
+        "loweredTableWithSchemaName": "questions",
         "foreignEntityName": "exam",
         "entityName": "question"
       }
@@ -424,19 +424,19 @@
   },
   {
     "schema": null,
-    "table": "Answer",
+    "table": "Answers",
     "constraints": [
       {
         "column_name": "id",
         "constraint_type": "PRIMARY KEY"
       },
       {
-        "table_name": "Answer",
+        "table_name": "Answers",
         "column_name": "question_id",
         "constraint_type": "FOREIGN KEY",
-        "foreign_table_name": "Question",
+        "foreign_table_name": "Questions",
         "foreign_column_name": "id",
-        "loweredTableWithSchemaName": "answer",
+        "loweredTableWithSchemaName": "answers",
         "foreignEntityName": "question",
         "entityName": "answer"
       }
@@ -498,29 +498,29 @@
   },
   {
     "schema": null,
-    "table": "Examinee_Exam",
+    "table": "Examinee_Exams",
     "constraints": [
       {
         "column_name": "id",
         "constraint_type": "PRIMARY KEY"
       },
       {
-        "table_name": "Examinee_Exam",
+        "table_name": "Examinee_Exams",
         "column_name": "examinee_id",
         "constraint_type": "FOREIGN KEY",
-        "foreign_table_name": "User",
+        "foreign_table_name": "Users",
         "foreign_column_name": "id",
-        "loweredTableWithSchemaName": "examineeExam",
+        "loweredTableWithSchemaName": "examineeExams",
         "foreignEntityName": "user",
         "entityName": "examineeExam"
       },
       {
-        "table_name": "Examinee_Exam",
+        "table_name": "Examinee_Exams",
         "column_name": "exam_id",
         "constraint_type": "FOREIGN KEY",
-        "foreign_table_name": "Exam",
+        "foreign_table_name": "Exams",
         "foreign_column_name": "id",
-        "loweredTableWithSchemaName": "examineeExam",
+        "loweredTableWithSchemaName": "examineeExams",
         "foreignEntityName": "exam",
         "entityName": "examineeExam"
       }
@@ -621,39 +621,39 @@
   },
   {
     "schema": null,
-    "table": "Examinee_Exam_Answer",
+    "table": "Examinee_Exam_Answers",
     "constraints": [
       {
         "column_name": "id",
         "constraint_type": "PRIMARY KEY"
       },
       {
-        "table_name": "Examinee_Exam_Answer",
+        "table_name": "Examinee_Exam_Answers",
         "column_name": "answer_id",
         "constraint_type": "FOREIGN KEY",
-        "foreign_table_name": "Answer",
+        "foreign_table_name": "Answers",
         "foreign_column_name": "id",
-        "loweredTableWithSchemaName": "examineeExamAnswer",
+        "loweredTableWithSchemaName": "examineeExamAnswers",
         "foreignEntityName": "answer",
         "entityName": "examineeExamAnswer"
       },
       {
-        "table_name": "Examinee_Exam_Answer",
+        "table_name": "Examinee_Exam_Answers",
         "column_name": "question_id",
         "constraint_type": "FOREIGN KEY",
-        "foreign_table_name": "Question",
+        "foreign_table_name": "Questions",
         "foreign_column_name": "id",
-        "loweredTableWithSchemaName": "examineeExamAnswer",
+        "loweredTableWithSchemaName": "examineeExamAnswers",
         "foreignEntityName": "question",
         "entityName": "examineeExamAnswer"
       },
       {
-        "table_name": "Examinee_Exam_Answer",
+        "table_name": "Examinee_Exam_Answers",
         "column_name": "examinee_exam_id",
         "constraint_type": "FOREIGN KEY",
-        "foreign_table_name": "Examinee_Exam",
+        "foreign_table_name": "Examinee_Exams",
         "foreign_column_name": "id",
-        "loweredTableWithSchemaName": "examineeExamAnswer",
+        "loweredTableWithSchemaName": "examineeExamAnswers",
         "foreignEntityName": "examineeExam",
         "entityName": "examineeExamAnswer"
       }

@@ -22,7 +22,7 @@ function headersToJSON(headers) {
   return output
 }
 
-async function _entityGetRole (url, request) {
+async function _entityGetRoles (url, request) {
   const queryParameters = ['limit', 'offset', 'totalCount', 'fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.name.eq', 'where.name.neq', 'where.name.gt', 'where.name.gte', 'where.name.lt', 'where.name.lte', 'where.name.like', 'where.name.in', 'where.name.nin', 'where.name.contains', 'where.name.contained', 'where.name.overlaps', 'where.or', 'orderby.createdAt', 'orderby.id', 'orderby.name']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -42,7 +42,7 @@ async function _entityGetRole (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/role/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/roles/?${searchParams.toString()}`, {
     headers
   })
 
@@ -53,9 +53,9 @@ async function _entityGetRole (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetRole']} */
-export const entityGetRole = async (request) => {
-  return await _entityGetRole(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetRoles']} */
+export const entityGetRoles = async (request) => {
+  return await _entityGetRoles(baseUrl, request)
 }
 async function _entityCreateRole (url, request) {
   const headers = {
@@ -63,7 +63,7 @@ async function _entityCreateRole (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/role/`, {
+  const response = await fetch(`${url}/entity/roles/`, {
     method: 'POST',
     body: JSON.stringify(request),
     headers
@@ -80,7 +80,7 @@ async function _entityCreateRole (url, request) {
 export const entityCreateRole = async (request) => {
   return await _entityCreateRole(baseUrl, request)
 }
-async function _entityUpdateRole (url, request) {
+async function _entityUpdateRoles (url, request) {
   const queryParameters = ['fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.name.eq', 'where.name.neq', 'where.name.gt', 'where.name.gte', 'where.name.lt', 'where.name.lte', 'where.name.like', 'where.name.in', 'where.name.nin', 'where.name.contains', 'where.name.contained', 'where.name.overlaps', 'where.or']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -101,7 +101,7 @@ async function _entityUpdateRole (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/role/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/roles/?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -114,9 +114,9 @@ async function _entityUpdateRole (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityUpdateRole']} */
-export const entityUpdateRole = async (request) => {
-  return await _entityUpdateRole(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityUpdateRoles']} */
+export const entityUpdateRoles = async (request) => {
+  return await _entityUpdateRoles(baseUrl, request)
 }
 async function _entityGetRoleById (url, request) {
   const queryParameters = ['fields']
@@ -138,7 +138,7 @@ async function _entityGetRoleById (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/role/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/roles/${request['id']}?${searchParams.toString()}`, {
     headers
   })
 
@@ -174,7 +174,7 @@ async function _entityUpdateRole (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/role/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/roles/${request['id']}?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -191,7 +191,7 @@ async function _entityUpdateRole (url, request) {
 export const entityUpdateRole = async (request) => {
   return await _entityUpdateRole(baseUrl, request)
 }
-async function _entityDeleteRole (url, request) {
+async function _entityDeleteRoles (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -212,7 +212,7 @@ async function _entityDeleteRole (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/role/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/roles/${request['id']}?${searchParams.toString()}`, {
     method: 'DELETE',
     body: JSON.stringify(request),
     headers
@@ -225,11 +225,11 @@ async function _entityDeleteRole (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityDeleteRole']} */
-export const entityDeleteRole = async (request) => {
-  return await _entityDeleteRole(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityDeleteRoles']} */
+export const entityDeleteRoles = async (request) => {
+  return await _entityDeleteRoles(baseUrl, request)
 }
-async function _entityGetUserForRole (url, request) {
+async function _entityGetUsersForRole (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -249,7 +249,7 @@ async function _entityGetUserForRole (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/role/${request['id']}/user?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/roles/${request['id']}/users?${searchParams.toString()}`, {
     headers
   })
 
@@ -260,11 +260,11 @@ async function _entityGetUserForRole (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetUserForRole']} */
-export const entityGetUserForRole = async (request) => {
-  return await _entityGetUserForRole(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetUsersForRole']} */
+export const entityGetUsersForRole = async (request) => {
+  return await _entityGetUsersForRole(baseUrl, request)
 }
-async function _entityGetUser (url, request) {
+async function _entityGetUsers (url, request) {
   const queryParameters = ['limit', 'offset', 'totalCount', 'fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.fullName.eq', 'where.fullName.neq', 'where.fullName.gt', 'where.fullName.gte', 'where.fullName.lt', 'where.fullName.lte', 'where.fullName.like', 'where.fullName.in', 'where.fullName.nin', 'where.fullName.contains', 'where.fullName.contained', 'where.fullName.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.password.eq', 'where.password.neq', 'where.password.gt', 'where.password.gte', 'where.password.lt', 'where.password.lte', 'where.password.like', 'where.password.in', 'where.password.nin', 'where.password.contains', 'where.password.contained', 'where.password.overlaps', 'where.role.eq', 'where.role.neq', 'where.role.gt', 'where.role.gte', 'where.role.lt', 'where.role.lte', 'where.role.like', 'where.role.in', 'where.role.nin', 'where.role.contains', 'where.role.contained', 'where.role.overlaps', 'where.username.eq', 'where.username.neq', 'where.username.gt', 'where.username.gte', 'where.username.lt', 'where.username.lte', 'where.username.like', 'where.username.in', 'where.username.nin', 'where.username.contains', 'where.username.contained', 'where.username.overlaps', 'where.or', 'orderby.createdAt', 'orderby.fullName', 'orderby.id', 'orderby.password', 'orderby.role', 'orderby.username']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -284,7 +284,7 @@ async function _entityGetUser (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/user/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/users/?${searchParams.toString()}`, {
     headers
   })
 
@@ -295,9 +295,9 @@ async function _entityGetUser (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetUser']} */
-export const entityGetUser = async (request) => {
-  return await _entityGetUser(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetUsers']} */
+export const entityGetUsers = async (request) => {
+  return await _entityGetUsers(baseUrl, request)
 }
 async function _entityCreateUser (url, request) {
   const headers = {
@@ -305,7 +305,7 @@ async function _entityCreateUser (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/user/`, {
+  const response = await fetch(`${url}/entity/users/`, {
     method: 'POST',
     body: JSON.stringify(request),
     headers
@@ -322,7 +322,7 @@ async function _entityCreateUser (url, request) {
 export const entityCreateUser = async (request) => {
   return await _entityCreateUser(baseUrl, request)
 }
-async function _entityUpdateUser (url, request) {
+async function _entityUpdateUsers (url, request) {
   const queryParameters = ['fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.fullName.eq', 'where.fullName.neq', 'where.fullName.gt', 'where.fullName.gte', 'where.fullName.lt', 'where.fullName.lte', 'where.fullName.like', 'where.fullName.in', 'where.fullName.nin', 'where.fullName.contains', 'where.fullName.contained', 'where.fullName.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.password.eq', 'where.password.neq', 'where.password.gt', 'where.password.gte', 'where.password.lt', 'where.password.lte', 'where.password.like', 'where.password.in', 'where.password.nin', 'where.password.contains', 'where.password.contained', 'where.password.overlaps', 'where.role.eq', 'where.role.neq', 'where.role.gt', 'where.role.gte', 'where.role.lt', 'where.role.lte', 'where.role.like', 'where.role.in', 'where.role.nin', 'where.role.contains', 'where.role.contained', 'where.role.overlaps', 'where.username.eq', 'where.username.neq', 'where.username.gt', 'where.username.gte', 'where.username.lt', 'where.username.lte', 'where.username.like', 'where.username.in', 'where.username.nin', 'where.username.contains', 'where.username.contained', 'where.username.overlaps', 'where.or']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -343,7 +343,7 @@ async function _entityUpdateUser (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/user/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/users/?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -356,9 +356,9 @@ async function _entityUpdateUser (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityUpdateUser']} */
-export const entityUpdateUser = async (request) => {
-  return await _entityUpdateUser(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityUpdateUsers']} */
+export const entityUpdateUsers = async (request) => {
+  return await _entityUpdateUsers(baseUrl, request)
 }
 async function _entityGetUserById (url, request) {
   const queryParameters = ['fields']
@@ -380,7 +380,7 @@ async function _entityGetUserById (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/user/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/users/${request['id']}?${searchParams.toString()}`, {
     headers
   })
 
@@ -416,7 +416,7 @@ async function _entityUpdateUser (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/user/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/users/${request['id']}?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -433,7 +433,7 @@ async function _entityUpdateUser (url, request) {
 export const entityUpdateUser = async (request) => {
   return await _entityUpdateUser(baseUrl, request)
 }
-async function _entityDeleteUser (url, request) {
+async function _entityDeleteUsers (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -454,7 +454,7 @@ async function _entityDeleteUser (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/user/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/users/${request['id']}?${searchParams.toString()}`, {
     method: 'DELETE',
     body: JSON.stringify(request),
     headers
@@ -467,11 +467,11 @@ async function _entityDeleteUser (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityDeleteUser']} */
-export const entityDeleteUser = async (request) => {
-  return await _entityDeleteUser(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityDeleteUsers']} */
+export const entityDeleteUsers = async (request) => {
+  return await _entityDeleteUsers(baseUrl, request)
 }
-async function _entityGetExamForUser (url, request) {
+async function _entityGetExamsForUser (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -491,7 +491,7 @@ async function _entityGetExamForUser (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/user/${request['id']}/exam?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/users/${request['id']}/exams?${searchParams.toString()}`, {
     headers
   })
 
@@ -502,11 +502,11 @@ async function _entityGetExamForUser (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetExamForUser']} */
-export const entityGetExamForUser = async (request) => {
-  return await _entityGetExamForUser(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetExamsForUser']} */
+export const entityGetExamsForUser = async (request) => {
+  return await _entityGetExamsForUser(baseUrl, request)
 }
-async function _entityGetExamineeExamForUser (url, request) {
+async function _entityGetExamineeExamsForUser (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -526,7 +526,7 @@ async function _entityGetExamineeExamForUser (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/user/${request['id']}/examineeExamExamineeId?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/users/${request['id']}/examineeExamExamineeId?${searchParams.toString()}`, {
     headers
   })
 
@@ -537,9 +537,9 @@ async function _entityGetExamineeExamForUser (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamForUser']} */
-export const entityGetExamineeExamForUser = async (request) => {
-  return await _entityGetExamineeExamForUser(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamsForUser']} */
+export const entityGetExamineeExamsForUser = async (request) => {
+  return await _entityGetExamineeExamsForUser(baseUrl, request)
 }
 async function _entityGetRoleForUser (url, request) {
   const queryParameters = ['fields']
@@ -561,7 +561,7 @@ async function _entityGetRoleForUser (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/user/${request['id']}/role?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/users/${request['id']}/role?${searchParams.toString()}`, {
     headers
   })
 
@@ -576,7 +576,7 @@ async function _entityGetRoleForUser (url, request) {
 export const entityGetRoleForUser = async (request) => {
   return await _entityGetRoleForUser(baseUrl, request)
 }
-async function _entityGetExam (url, request) {
+async function _entityGetExams (url, request) {
   const queryParameters = ['limit', 'offset', 'totalCount', 'fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.createdBy.eq', 'where.createdBy.neq', 'where.createdBy.gt', 'where.createdBy.gte', 'where.createdBy.lt', 'where.createdBy.lte', 'where.createdBy.like', 'where.createdBy.in', 'where.createdBy.nin', 'where.createdBy.contains', 'where.createdBy.contained', 'where.createdBy.overlaps', 'where.description.eq', 'where.description.neq', 'where.description.gt', 'where.description.gte', 'where.description.lt', 'where.description.lte', 'where.description.like', 'where.description.in', 'where.description.nin', 'where.description.contains', 'where.description.contained', 'where.description.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.status.eq', 'where.status.neq', 'where.status.gt', 'where.status.gte', 'where.status.lt', 'where.status.lte', 'where.status.like', 'where.status.in', 'where.status.nin', 'where.status.contains', 'where.status.contained', 'where.status.overlaps', 'where.title.eq', 'where.title.neq', 'where.title.gt', 'where.title.gte', 'where.title.lt', 'where.title.lte', 'where.title.like', 'where.title.in', 'where.title.nin', 'where.title.contains', 'where.title.contained', 'where.title.overlaps', 'where.or', 'orderby.createdAt', 'orderby.createdBy', 'orderby.description', 'orderby.id', 'orderby.status', 'orderby.title']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -596,7 +596,7 @@ async function _entityGetExam (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/exam/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/exams/?${searchParams.toString()}`, {
     headers
   })
 
@@ -607,9 +607,9 @@ async function _entityGetExam (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetExam']} */
-export const entityGetExam = async (request) => {
-  return await _entityGetExam(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetExams']} */
+export const entityGetExams = async (request) => {
+  return await _entityGetExams(baseUrl, request)
 }
 async function _entityCreateExam (url, request) {
   const headers = {
@@ -617,7 +617,7 @@ async function _entityCreateExam (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/exam/`, {
+  const response = await fetch(`${url}/entity/exams/`, {
     method: 'POST',
     body: JSON.stringify(request),
     headers
@@ -634,7 +634,7 @@ async function _entityCreateExam (url, request) {
 export const entityCreateExam = async (request) => {
   return await _entityCreateExam(baseUrl, request)
 }
-async function _entityUpdateExam (url, request) {
+async function _entityUpdateExams (url, request) {
   const queryParameters = ['fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.createdBy.eq', 'where.createdBy.neq', 'where.createdBy.gt', 'where.createdBy.gte', 'where.createdBy.lt', 'where.createdBy.lte', 'where.createdBy.like', 'where.createdBy.in', 'where.createdBy.nin', 'where.createdBy.contains', 'where.createdBy.contained', 'where.createdBy.overlaps', 'where.description.eq', 'where.description.neq', 'where.description.gt', 'where.description.gte', 'where.description.lt', 'where.description.lte', 'where.description.like', 'where.description.in', 'where.description.nin', 'where.description.contains', 'where.description.contained', 'where.description.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.status.eq', 'where.status.neq', 'where.status.gt', 'where.status.gte', 'where.status.lt', 'where.status.lte', 'where.status.like', 'where.status.in', 'where.status.nin', 'where.status.contains', 'where.status.contained', 'where.status.overlaps', 'where.title.eq', 'where.title.neq', 'where.title.gt', 'where.title.gte', 'where.title.lt', 'where.title.lte', 'where.title.like', 'where.title.in', 'where.title.nin', 'where.title.contains', 'where.title.contained', 'where.title.overlaps', 'where.or']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -655,7 +655,7 @@ async function _entityUpdateExam (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/exam/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/exams/?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -668,9 +668,9 @@ async function _entityUpdateExam (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityUpdateExam']} */
-export const entityUpdateExam = async (request) => {
-  return await _entityUpdateExam(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityUpdateExams']} */
+export const entityUpdateExams = async (request) => {
+  return await _entityUpdateExams(baseUrl, request)
 }
 async function _entityGetExamById (url, request) {
   const queryParameters = ['fields']
@@ -692,7 +692,7 @@ async function _entityGetExamById (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/exam/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/exams/${request['id']}?${searchParams.toString()}`, {
     headers
   })
 
@@ -728,7 +728,7 @@ async function _entityUpdateExam (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/exam/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/exams/${request['id']}?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -745,7 +745,7 @@ async function _entityUpdateExam (url, request) {
 export const entityUpdateExam = async (request) => {
   return await _entityUpdateExam(baseUrl, request)
 }
-async function _entityDeleteExam (url, request) {
+async function _entityDeleteExams (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -766,7 +766,7 @@ async function _entityDeleteExam (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/exam/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/exams/${request['id']}?${searchParams.toString()}`, {
     method: 'DELETE',
     body: JSON.stringify(request),
     headers
@@ -779,11 +779,11 @@ async function _entityDeleteExam (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityDeleteExam']} */
-export const entityDeleteExam = async (request) => {
-  return await _entityDeleteExam(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityDeleteExams']} */
+export const entityDeleteExams = async (request) => {
+  return await _entityDeleteExams(baseUrl, request)
 }
-async function _entityGetQuestionForExam (url, request) {
+async function _entityGetQuestionsForExam (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -803,7 +803,7 @@ async function _entityGetQuestionForExam (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/exam/${request['id']}/question?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/exams/${request['id']}/questions?${searchParams.toString()}`, {
     headers
   })
 
@@ -814,11 +814,11 @@ async function _entityGetQuestionForExam (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetQuestionForExam']} */
-export const entityGetQuestionForExam = async (request) => {
-  return await _entityGetQuestionForExam(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetQuestionsForExam']} */
+export const entityGetQuestionsForExam = async (request) => {
+  return await _entityGetQuestionsForExam(baseUrl, request)
 }
-async function _entityGetExamineeExamForExam (url, request) {
+async function _entityGetExamineeExamsForExam (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -838,7 +838,7 @@ async function _entityGetExamineeExamForExam (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/exam/${request['id']}/examineeExamExamId?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/exams/${request['id']}/examineeExamExamId?${searchParams.toString()}`, {
     headers
   })
 
@@ -849,9 +849,9 @@ async function _entityGetExamineeExamForExam (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamForExam']} */
-export const entityGetExamineeExamForExam = async (request) => {
-  return await _entityGetExamineeExamForExam(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamsForExam']} */
+export const entityGetExamineeExamsForExam = async (request) => {
+  return await _entityGetExamineeExamsForExam(baseUrl, request)
 }
 async function _entityGetUserForExam (url, request) {
   const queryParameters = ['fields']
@@ -873,7 +873,7 @@ async function _entityGetUserForExam (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/exam/${request['id']}/created_by?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/exams/${request['id']}/created_by?${searchParams.toString()}`, {
     headers
   })
 
@@ -888,7 +888,7 @@ async function _entityGetUserForExam (url, request) {
 export const entityGetUserForExam = async (request) => {
   return await _entityGetUserForExam(baseUrl, request)
 }
-async function _entityGetQuestion (url, request) {
+async function _entityGetQuestions (url, request) {
   const queryParameters = ['limit', 'offset', 'totalCount', 'fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.description.eq', 'where.description.neq', 'where.description.gt', 'where.description.gte', 'where.description.lt', 'where.description.lte', 'where.description.like', 'where.description.in', 'where.description.nin', 'where.description.contains', 'where.description.contained', 'where.description.overlaps', 'where.examId.eq', 'where.examId.neq', 'where.examId.gt', 'where.examId.gte', 'where.examId.lt', 'where.examId.lte', 'where.examId.like', 'where.examId.in', 'where.examId.nin', 'where.examId.contains', 'where.examId.contained', 'where.examId.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.status.eq', 'where.status.neq', 'where.status.gt', 'where.status.gte', 'where.status.lt', 'where.status.lte', 'where.status.like', 'where.status.in', 'where.status.nin', 'where.status.contains', 'where.status.contained', 'where.status.overlaps', 'where.title.eq', 'where.title.neq', 'where.title.gt', 'where.title.gte', 'where.title.lt', 'where.title.lte', 'where.title.like', 'where.title.in', 'where.title.nin', 'where.title.contains', 'where.title.contained', 'where.title.overlaps', 'where.or', 'orderby.createdAt', 'orderby.description', 'orderby.examId', 'orderby.id', 'orderby.status', 'orderby.title']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -908,7 +908,7 @@ async function _entityGetQuestion (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/question/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/questions/?${searchParams.toString()}`, {
     headers
   })
 
@@ -919,9 +919,9 @@ async function _entityGetQuestion (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetQuestion']} */
-export const entityGetQuestion = async (request) => {
-  return await _entityGetQuestion(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetQuestions']} */
+export const entityGetQuestions = async (request) => {
+  return await _entityGetQuestions(baseUrl, request)
 }
 async function _entityCreateQuestion (url, request) {
   const headers = {
@@ -929,7 +929,7 @@ async function _entityCreateQuestion (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/question/`, {
+  const response = await fetch(`${url}/entity/questions/`, {
     method: 'POST',
     body: JSON.stringify(request),
     headers
@@ -946,7 +946,7 @@ async function _entityCreateQuestion (url, request) {
 export const entityCreateQuestion = async (request) => {
   return await _entityCreateQuestion(baseUrl, request)
 }
-async function _entityUpdateQuestion (url, request) {
+async function _entityUpdateQuestions (url, request) {
   const queryParameters = ['fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.description.eq', 'where.description.neq', 'where.description.gt', 'where.description.gte', 'where.description.lt', 'where.description.lte', 'where.description.like', 'where.description.in', 'where.description.nin', 'where.description.contains', 'where.description.contained', 'where.description.overlaps', 'where.examId.eq', 'where.examId.neq', 'where.examId.gt', 'where.examId.gte', 'where.examId.lt', 'where.examId.lte', 'where.examId.like', 'where.examId.in', 'where.examId.nin', 'where.examId.contains', 'where.examId.contained', 'where.examId.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.status.eq', 'where.status.neq', 'where.status.gt', 'where.status.gte', 'where.status.lt', 'where.status.lte', 'where.status.like', 'where.status.in', 'where.status.nin', 'where.status.contains', 'where.status.contained', 'where.status.overlaps', 'where.title.eq', 'where.title.neq', 'where.title.gt', 'where.title.gte', 'where.title.lt', 'where.title.lte', 'where.title.like', 'where.title.in', 'where.title.nin', 'where.title.contains', 'where.title.contained', 'where.title.overlaps', 'where.or']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -967,7 +967,7 @@ async function _entityUpdateQuestion (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/question/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/questions/?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -980,9 +980,9 @@ async function _entityUpdateQuestion (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityUpdateQuestion']} */
-export const entityUpdateQuestion = async (request) => {
-  return await _entityUpdateQuestion(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityUpdateQuestions']} */
+export const entityUpdateQuestions = async (request) => {
+  return await _entityUpdateQuestions(baseUrl, request)
 }
 async function _entityGetQuestionById (url, request) {
   const queryParameters = ['fields']
@@ -1004,7 +1004,7 @@ async function _entityGetQuestionById (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/question/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/questions/${request['id']}?${searchParams.toString()}`, {
     headers
   })
 
@@ -1040,7 +1040,7 @@ async function _entityUpdateQuestion (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/question/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/questions/${request['id']}?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -1057,7 +1057,7 @@ async function _entityUpdateQuestion (url, request) {
 export const entityUpdateQuestion = async (request) => {
   return await _entityUpdateQuestion(baseUrl, request)
 }
-async function _entityDeleteQuestion (url, request) {
+async function _entityDeleteQuestions (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1078,7 +1078,7 @@ async function _entityDeleteQuestion (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/question/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/questions/${request['id']}?${searchParams.toString()}`, {
     method: 'DELETE',
     body: JSON.stringify(request),
     headers
@@ -1091,11 +1091,11 @@ async function _entityDeleteQuestion (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityDeleteQuestion']} */
-export const entityDeleteQuestion = async (request) => {
-  return await _entityDeleteQuestion(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityDeleteQuestions']} */
+export const entityDeleteQuestions = async (request) => {
+  return await _entityDeleteQuestions(baseUrl, request)
 }
-async function _entityGetAnswerForQuestion (url, request) {
+async function _entityGetAnswersForQuestion (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1115,7 +1115,7 @@ async function _entityGetAnswerForQuestion (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/question/${request['id']}/answer?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/questions/${request['id']}/answers?${searchParams.toString()}`, {
     headers
   })
 
@@ -1126,11 +1126,11 @@ async function _entityGetAnswerForQuestion (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetAnswerForQuestion']} */
-export const entityGetAnswerForQuestion = async (request) => {
-  return await _entityGetAnswerForQuestion(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetAnswersForQuestion']} */
+export const entityGetAnswersForQuestion = async (request) => {
+  return await _entityGetAnswersForQuestion(baseUrl, request)
 }
-async function _entityGetExamineeExamAnswerForQuestion (url, request) {
+async function _entityGetExamineeExamAnswersForQuestion (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1150,7 +1150,7 @@ async function _entityGetExamineeExamAnswerForQuestion (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/question/${request['id']}/examineeExamAnswerQuestionId?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/questions/${request['id']}/examineeExamAnswerQuestionId?${searchParams.toString()}`, {
     headers
   })
 
@@ -1161,9 +1161,9 @@ async function _entityGetExamineeExamAnswerForQuestion (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamAnswerForQuestion']} */
-export const entityGetExamineeExamAnswerForQuestion = async (request) => {
-  return await _entityGetExamineeExamAnswerForQuestion(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamAnswersForQuestion']} */
+export const entityGetExamineeExamAnswersForQuestion = async (request) => {
+  return await _entityGetExamineeExamAnswersForQuestion(baseUrl, request)
 }
 async function _entityGetExamForQuestion (url, request) {
   const queryParameters = ['fields']
@@ -1185,7 +1185,7 @@ async function _entityGetExamForQuestion (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/question/${request['id']}/exam?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/questions/${request['id']}/exam?${searchParams.toString()}`, {
     headers
   })
 
@@ -1200,7 +1200,7 @@ async function _entityGetExamForQuestion (url, request) {
 export const entityGetExamForQuestion = async (request) => {
   return await _entityGetExamForQuestion(baseUrl, request)
 }
-async function _entityGetAnswer (url, request) {
+async function _entityGetAnswers (url, request) {
   const queryParameters = ['limit', 'offset', 'totalCount', 'fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.description.eq', 'where.description.neq', 'where.description.gt', 'where.description.gte', 'where.description.lt', 'where.description.lte', 'where.description.like', 'where.description.in', 'where.description.nin', 'where.description.contains', 'where.description.contained', 'where.description.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.questionId.eq', 'where.questionId.neq', 'where.questionId.gt', 'where.questionId.gte', 'where.questionId.lt', 'where.questionId.lte', 'where.questionId.like', 'where.questionId.in', 'where.questionId.nin', 'where.questionId.contains', 'where.questionId.contained', 'where.questionId.overlaps', 'where.or', 'orderby.createdAt', 'orderby.description', 'orderby.id', 'orderby.questionId']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1220,7 +1220,7 @@ async function _entityGetAnswer (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/answer/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/answers/?${searchParams.toString()}`, {
     headers
   })
 
@@ -1231,9 +1231,9 @@ async function _entityGetAnswer (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetAnswer']} */
-export const entityGetAnswer = async (request) => {
-  return await _entityGetAnswer(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetAnswers']} */
+export const entityGetAnswers = async (request) => {
+  return await _entityGetAnswers(baseUrl, request)
 }
 async function _entityCreateAnswer (url, request) {
   const headers = {
@@ -1241,7 +1241,7 @@ async function _entityCreateAnswer (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/answer/`, {
+  const response = await fetch(`${url}/entity/answers/`, {
     method: 'POST',
     body: JSON.stringify(request),
     headers
@@ -1258,7 +1258,7 @@ async function _entityCreateAnswer (url, request) {
 export const entityCreateAnswer = async (request) => {
   return await _entityCreateAnswer(baseUrl, request)
 }
-async function _entityUpdateAnswer (url, request) {
+async function _entityUpdateAnswers (url, request) {
   const queryParameters = ['fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.description.eq', 'where.description.neq', 'where.description.gt', 'where.description.gte', 'where.description.lt', 'where.description.lte', 'where.description.like', 'where.description.in', 'where.description.nin', 'where.description.contains', 'where.description.contained', 'where.description.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.questionId.eq', 'where.questionId.neq', 'where.questionId.gt', 'where.questionId.gte', 'where.questionId.lt', 'where.questionId.lte', 'where.questionId.like', 'where.questionId.in', 'where.questionId.nin', 'where.questionId.contains', 'where.questionId.contained', 'where.questionId.overlaps', 'where.or']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1279,7 +1279,7 @@ async function _entityUpdateAnswer (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/answer/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/answers/?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -1292,9 +1292,9 @@ async function _entityUpdateAnswer (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityUpdateAnswer']} */
-export const entityUpdateAnswer = async (request) => {
-  return await _entityUpdateAnswer(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityUpdateAnswers']} */
+export const entityUpdateAnswers = async (request) => {
+  return await _entityUpdateAnswers(baseUrl, request)
 }
 async function _entityGetAnswerById (url, request) {
   const queryParameters = ['fields']
@@ -1316,7 +1316,7 @@ async function _entityGetAnswerById (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/answer/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/answers/${request['id']}?${searchParams.toString()}`, {
     headers
   })
 
@@ -1352,7 +1352,7 @@ async function _entityUpdateAnswer (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/answer/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/answers/${request['id']}?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -1369,7 +1369,7 @@ async function _entityUpdateAnswer (url, request) {
 export const entityUpdateAnswer = async (request) => {
   return await _entityUpdateAnswer(baseUrl, request)
 }
-async function _entityDeleteAnswer (url, request) {
+async function _entityDeleteAnswers (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1390,7 +1390,7 @@ async function _entityDeleteAnswer (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/answer/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/answers/${request['id']}?${searchParams.toString()}`, {
     method: 'DELETE',
     body: JSON.stringify(request),
     headers
@@ -1403,11 +1403,11 @@ async function _entityDeleteAnswer (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityDeleteAnswer']} */
-export const entityDeleteAnswer = async (request) => {
-  return await _entityDeleteAnswer(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityDeleteAnswers']} */
+export const entityDeleteAnswers = async (request) => {
+  return await _entityDeleteAnswers(baseUrl, request)
 }
-async function _entityGetExamineeExamAnswerForAnswer (url, request) {
+async function _entityGetExamineeExamAnswersForAnswer (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1427,7 +1427,7 @@ async function _entityGetExamineeExamAnswerForAnswer (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/answer/${request['id']}/examineeExamAnswerAnswerId?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/answers/${request['id']}/examineeExamAnswerAnswerId?${searchParams.toString()}`, {
     headers
   })
 
@@ -1438,9 +1438,9 @@ async function _entityGetExamineeExamAnswerForAnswer (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamAnswerForAnswer']} */
-export const entityGetExamineeExamAnswerForAnswer = async (request) => {
-  return await _entityGetExamineeExamAnswerForAnswer(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamAnswersForAnswer']} */
+export const entityGetExamineeExamAnswersForAnswer = async (request) => {
+  return await _entityGetExamineeExamAnswersForAnswer(baseUrl, request)
 }
 async function _entityGetQuestionForAnswer (url, request) {
   const queryParameters = ['fields']
@@ -1462,7 +1462,7 @@ async function _entityGetQuestionForAnswer (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/answer/${request['id']}/question?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/answers/${request['id']}/question?${searchParams.toString()}`, {
     headers
   })
 
@@ -1477,7 +1477,7 @@ async function _entityGetQuestionForAnswer (url, request) {
 export const entityGetQuestionForAnswer = async (request) => {
   return await _entityGetQuestionForAnswer(baseUrl, request)
 }
-async function _entityGetExamineeExam (url, request) {
+async function _entityGetExamineeExams (url, request) {
   const queryParameters = ['limit', 'offset', 'totalCount', 'fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.duration.eq', 'where.duration.neq', 'where.duration.gt', 'where.duration.gte', 'where.duration.lt', 'where.duration.lte', 'where.duration.like', 'where.duration.in', 'where.duration.nin', 'where.duration.contains', 'where.duration.contained', 'where.duration.overlaps', 'where.examId.eq', 'where.examId.neq', 'where.examId.gt', 'where.examId.gte', 'where.examId.lt', 'where.examId.lte', 'where.examId.like', 'where.examId.in', 'where.examId.nin', 'where.examId.contains', 'where.examId.contained', 'where.examId.overlaps', 'where.examineeId.eq', 'where.examineeId.neq', 'where.examineeId.gt', 'where.examineeId.gte', 'where.examineeId.lt', 'where.examineeId.lte', 'where.examineeId.like', 'where.examineeId.in', 'where.examineeId.nin', 'where.examineeId.contains', 'where.examineeId.contained', 'where.examineeId.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.startTime.eq', 'where.startTime.neq', 'where.startTime.gt', 'where.startTime.gte', 'where.startTime.lt', 'where.startTime.lte', 'where.startTime.like', 'where.startTime.in', 'where.startTime.nin', 'where.startTime.contains', 'where.startTime.contained', 'where.startTime.overlaps', 'where.status.eq', 'where.status.neq', 'where.status.gt', 'where.status.gte', 'where.status.lt', 'where.status.lte', 'where.status.like', 'where.status.in', 'where.status.nin', 'where.status.contains', 'where.status.contained', 'where.status.overlaps', 'where.or', 'orderby.createdAt', 'orderby.duration', 'orderby.examId', 'orderby.examineeId', 'orderby.id', 'orderby.startTime', 'orderby.status']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1497,7 +1497,7 @@ async function _entityGetExamineeExam (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/examineeExam/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExams/?${searchParams.toString()}`, {
     headers
   })
 
@@ -1508,9 +1508,9 @@ async function _entityGetExamineeExam (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExam']} */
-export const entityGetExamineeExam = async (request) => {
-  return await _entityGetExamineeExam(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExams']} */
+export const entityGetExamineeExams = async (request) => {
+  return await _entityGetExamineeExams(baseUrl, request)
 }
 async function _entityCreateExamineeExam (url, request) {
   const headers = {
@@ -1518,7 +1518,7 @@ async function _entityCreateExamineeExam (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/examineeExam/`, {
+  const response = await fetch(`${url}/entity/examineeExams/`, {
     method: 'POST',
     body: JSON.stringify(request),
     headers
@@ -1535,7 +1535,7 @@ async function _entityCreateExamineeExam (url, request) {
 export const entityCreateExamineeExam = async (request) => {
   return await _entityCreateExamineeExam(baseUrl, request)
 }
-async function _entityUpdateExamineeExam (url, request) {
+async function _entityUpdateExamineeExams (url, request) {
   const queryParameters = ['fields', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.duration.eq', 'where.duration.neq', 'where.duration.gt', 'where.duration.gte', 'where.duration.lt', 'where.duration.lte', 'where.duration.like', 'where.duration.in', 'where.duration.nin', 'where.duration.contains', 'where.duration.contained', 'where.duration.overlaps', 'where.examId.eq', 'where.examId.neq', 'where.examId.gt', 'where.examId.gte', 'where.examId.lt', 'where.examId.lte', 'where.examId.like', 'where.examId.in', 'where.examId.nin', 'where.examId.contains', 'where.examId.contained', 'where.examId.overlaps', 'where.examineeId.eq', 'where.examineeId.neq', 'where.examineeId.gt', 'where.examineeId.gte', 'where.examineeId.lt', 'where.examineeId.lte', 'where.examineeId.like', 'where.examineeId.in', 'where.examineeId.nin', 'where.examineeId.contains', 'where.examineeId.contained', 'where.examineeId.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.startTime.eq', 'where.startTime.neq', 'where.startTime.gt', 'where.startTime.gte', 'where.startTime.lt', 'where.startTime.lte', 'where.startTime.like', 'where.startTime.in', 'where.startTime.nin', 'where.startTime.contains', 'where.startTime.contained', 'where.startTime.overlaps', 'where.status.eq', 'where.status.neq', 'where.status.gt', 'where.status.gte', 'where.status.lt', 'where.status.lte', 'where.status.like', 'where.status.in', 'where.status.nin', 'where.status.contains', 'where.status.contained', 'where.status.overlaps', 'where.or']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1556,7 +1556,7 @@ async function _entityUpdateExamineeExam (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/examineeExam/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExams/?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -1569,9 +1569,9 @@ async function _entityUpdateExamineeExam (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityUpdateExamineeExam']} */
-export const entityUpdateExamineeExam = async (request) => {
-  return await _entityUpdateExamineeExam(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityUpdateExamineeExams']} */
+export const entityUpdateExamineeExams = async (request) => {
+  return await _entityUpdateExamineeExams(baseUrl, request)
 }
 async function _entityGetExamineeExamById (url, request) {
   const queryParameters = ['fields']
@@ -1593,7 +1593,7 @@ async function _entityGetExamineeExamById (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/examineeExam/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExams/${request['id']}?${searchParams.toString()}`, {
     headers
   })
 
@@ -1629,7 +1629,7 @@ async function _entityUpdateExamineeExam (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/examineeExam/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExams/${request['id']}?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -1646,7 +1646,7 @@ async function _entityUpdateExamineeExam (url, request) {
 export const entityUpdateExamineeExam = async (request) => {
   return await _entityUpdateExamineeExam(baseUrl, request)
 }
-async function _entityDeleteExamineeExam (url, request) {
+async function _entityDeleteExamineeExams (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1667,7 +1667,7 @@ async function _entityDeleteExamineeExam (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/examineeExam/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExams/${request['id']}?${searchParams.toString()}`, {
     method: 'DELETE',
     body: JSON.stringify(request),
     headers
@@ -1680,11 +1680,11 @@ async function _entityDeleteExamineeExam (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityDeleteExamineeExam']} */
-export const entityDeleteExamineeExam = async (request) => {
-  return await _entityDeleteExamineeExam(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityDeleteExamineeExams']} */
+export const entityDeleteExamineeExams = async (request) => {
+  return await _entityDeleteExamineeExams(baseUrl, request)
 }
-async function _entityGetExamineeExamAnswerForExamineeExam (url, request) {
+async function _entityGetExamineeExamAnswersForExamineeExam (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1704,7 +1704,7 @@ async function _entityGetExamineeExamAnswerForExamineeExam (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/examineeExam/${request['id']}/examineeExamAnswerExamineeExamId?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExams/${request['id']}/examineeExamAnswerExamineeExamId?${searchParams.toString()}`, {
     headers
   })
 
@@ -1715,9 +1715,9 @@ async function _entityGetExamineeExamAnswerForExamineeExam (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamAnswerForExamineeExam']} */
-export const entityGetExamineeExamAnswerForExamineeExam = async (request) => {
-  return await _entityGetExamineeExamAnswerForExamineeExam(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamAnswersForExamineeExam']} */
+export const entityGetExamineeExamAnswersForExamineeExam = async (request) => {
+  return await _entityGetExamineeExamAnswersForExamineeExam(baseUrl, request)
 }
 async function _entityGetUserForExamineeExam (url, request) {
   const queryParameters = ['fields']
@@ -1739,7 +1739,7 @@ async function _entityGetUserForExamineeExam (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/examineeExam/${request['id']}/examinee?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExams/${request['id']}/examinee?${searchParams.toString()}`, {
     headers
   })
 
@@ -1774,7 +1774,7 @@ async function _entityGetExamForExamineeExam (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/examineeExam/${request['id']}/exam?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExams/${request['id']}/exam?${searchParams.toString()}`, {
     headers
   })
 
@@ -1789,7 +1789,7 @@ async function _entityGetExamForExamineeExam (url, request) {
 export const entityGetExamForExamineeExam = async (request) => {
   return await _entityGetExamForExamineeExam(baseUrl, request)
 }
-async function _entityGetExamineeExamAnswer (url, request) {
+async function _entityGetExamineeExamAnswers (url, request) {
   const queryParameters = ['limit', 'offset', 'totalCount', 'fields', 'where.answerId.eq', 'where.answerId.neq', 'where.answerId.gt', 'where.answerId.gte', 'where.answerId.lt', 'where.answerId.lte', 'where.answerId.like', 'where.answerId.in', 'where.answerId.nin', 'where.answerId.contains', 'where.answerId.contained', 'where.answerId.overlaps', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.examineeExamId.eq', 'where.examineeExamId.neq', 'where.examineeExamId.gt', 'where.examineeExamId.gte', 'where.examineeExamId.lt', 'where.examineeExamId.lte', 'where.examineeExamId.like', 'where.examineeExamId.in', 'where.examineeExamId.nin', 'where.examineeExamId.contains', 'where.examineeExamId.contained', 'where.examineeExamId.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.questionId.eq', 'where.questionId.neq', 'where.questionId.gt', 'where.questionId.gte', 'where.questionId.lt', 'where.questionId.lte', 'where.questionId.like', 'where.questionId.in', 'where.questionId.nin', 'where.questionId.contains', 'where.questionId.contained', 'where.questionId.overlaps', 'where.or', 'orderby.answerId', 'orderby.createdAt', 'orderby.examineeExamId', 'orderby.id', 'orderby.questionId']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1809,7 +1809,7 @@ async function _entityGetExamineeExamAnswer (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/examineeExamAnswer/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExamAnswers/?${searchParams.toString()}`, {
     headers
   })
 
@@ -1820,9 +1820,9 @@ async function _entityGetExamineeExamAnswer (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamAnswer']} */
-export const entityGetExamineeExamAnswer = async (request) => {
-  return await _entityGetExamineeExamAnswer(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityGetExamineeExamAnswers']} */
+export const entityGetExamineeExamAnswers = async (request) => {
+  return await _entityGetExamineeExamAnswers(baseUrl, request)
 }
 async function _entityCreateExamineeExamAnswer (url, request) {
   const headers = {
@@ -1830,7 +1830,7 @@ async function _entityCreateExamineeExamAnswer (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/examineeExamAnswer/`, {
+  const response = await fetch(`${url}/entity/examineeExamAnswers/`, {
     method: 'POST',
     body: JSON.stringify(request),
     headers
@@ -1847,7 +1847,7 @@ async function _entityCreateExamineeExamAnswer (url, request) {
 export const entityCreateExamineeExamAnswer = async (request) => {
   return await _entityCreateExamineeExamAnswer(baseUrl, request)
 }
-async function _entityUpdateExamineeExamAnswer (url, request) {
+async function _entityUpdateExamineeExamAnswers (url, request) {
   const queryParameters = ['fields', 'where.answerId.eq', 'where.answerId.neq', 'where.answerId.gt', 'where.answerId.gte', 'where.answerId.lt', 'where.answerId.lte', 'where.answerId.like', 'where.answerId.in', 'where.answerId.nin', 'where.answerId.contains', 'where.answerId.contained', 'where.answerId.overlaps', 'where.createdAt.eq', 'where.createdAt.neq', 'where.createdAt.gt', 'where.createdAt.gte', 'where.createdAt.lt', 'where.createdAt.lte', 'where.createdAt.like', 'where.createdAt.in', 'where.createdAt.nin', 'where.createdAt.contains', 'where.createdAt.contained', 'where.createdAt.overlaps', 'where.examineeExamId.eq', 'where.examineeExamId.neq', 'where.examineeExamId.gt', 'where.examineeExamId.gte', 'where.examineeExamId.lt', 'where.examineeExamId.lte', 'where.examineeExamId.like', 'where.examineeExamId.in', 'where.examineeExamId.nin', 'where.examineeExamId.contains', 'where.examineeExamId.contained', 'where.examineeExamId.overlaps', 'where.id.eq', 'where.id.neq', 'where.id.gt', 'where.id.gte', 'where.id.lt', 'where.id.lte', 'where.id.like', 'where.id.in', 'where.id.nin', 'where.id.contains', 'where.id.contained', 'where.id.overlaps', 'where.questionId.eq', 'where.questionId.neq', 'where.questionId.gt', 'where.questionId.gte', 'where.questionId.lt', 'where.questionId.lte', 'where.questionId.like', 'where.questionId.in', 'where.questionId.nin', 'where.questionId.contains', 'where.questionId.contained', 'where.questionId.overlaps', 'where.or']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1868,7 +1868,7 @@ async function _entityUpdateExamineeExamAnswer (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/examineeExamAnswer/?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExamAnswers/?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -1881,9 +1881,9 @@ async function _entityUpdateExamineeExamAnswer (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityUpdateExamineeExamAnswer']} */
-export const entityUpdateExamineeExamAnswer = async (request) => {
-  return await _entityUpdateExamineeExamAnswer(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityUpdateExamineeExamAnswers']} */
+export const entityUpdateExamineeExamAnswers = async (request) => {
+  return await _entityUpdateExamineeExamAnswers(baseUrl, request)
 }
 async function _entityGetExamineeExamAnswerById (url, request) {
   const queryParameters = ['fields']
@@ -1905,7 +1905,7 @@ async function _entityGetExamineeExamAnswerById (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/examineeExamAnswer/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExamAnswers/${request['id']}?${searchParams.toString()}`, {
     headers
   })
 
@@ -1941,7 +1941,7 @@ async function _entityUpdateExamineeExamAnswer (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/examineeExamAnswer/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExamAnswers/${request['id']}?${searchParams.toString()}`, {
     method: 'PUT',
     body: JSON.stringify(request),
     headers
@@ -1958,7 +1958,7 @@ async function _entityUpdateExamineeExamAnswer (url, request) {
 export const entityUpdateExamineeExamAnswer = async (request) => {
   return await _entityUpdateExamineeExamAnswer(baseUrl, request)
 }
-async function _entityDeleteExamineeExamAnswer (url, request) {
+async function _entityDeleteExamineeExamAnswers (url, request) {
   const queryParameters = ['fields']
   const searchParams = new URLSearchParams()
   queryParameters.forEach((qp) => {
@@ -1979,7 +1979,7 @@ async function _entityDeleteExamineeExamAnswer (url, request) {
     'Content-type': 'application/json; charset=utf-8'
   }
 
-  const response = await fetch(`${url}/entity/examineeExamAnswer/${request['id']}?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExamAnswers/${request['id']}?${searchParams.toString()}`, {
     method: 'DELETE',
     body: JSON.stringify(request),
     headers
@@ -1992,9 +1992,9 @@ async function _entityDeleteExamineeExamAnswer (url, request) {
   return await response.json()
 }
 
-/**  @type {import('./api-types.d.ts').Api['entityDeleteExamineeExamAnswer']} */
-export const entityDeleteExamineeExamAnswer = async (request) => {
-  return await _entityDeleteExamineeExamAnswer(baseUrl, request)
+/**  @type {import('./api-types.d.ts').Api['entityDeleteExamineeExamAnswers']} */
+export const entityDeleteExamineeExamAnswers = async (request) => {
+  return await _entityDeleteExamineeExamAnswers(baseUrl, request)
 }
 async function _entityGetAnswerForExamineeExamAnswer (url, request) {
   const queryParameters = ['fields']
@@ -2016,7 +2016,7 @@ async function _entityGetAnswerForExamineeExamAnswer (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/examineeExamAnswer/${request['id']}/answer?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExamAnswers/${request['id']}/answer?${searchParams.toString()}`, {
     headers
   })
 
@@ -2051,7 +2051,7 @@ async function _entityGetQuestionForExamineeExamAnswer (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/examineeExamAnswer/${request['id']}/question?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExamAnswers/${request['id']}/question?${searchParams.toString()}`, {
     headers
   })
 
@@ -2086,7 +2086,7 @@ async function _entityGetExamineeExamForExamineeExamAnswer (url, request) {
     ...defaultHeaders
   }
 
-  const response = await fetch(`${url}/entity/examineeExamAnswer/${request['id']}/examinee_exam?${searchParams.toString()}`, {
+  const response = await fetch(`${url}/entity/examineeExamAnswers/${request['id']}/examinee_exam?${searchParams.toString()}`, {
     headers
   })
 
@@ -2244,63 +2244,63 @@ export default function build (url, options) {
     defaultHeaders = options.headers
   }
   return {
-    entityGetRole: _entityGetRole.bind(url, ...arguments),
+    entityGetRoles: _entityGetRoles.bind(url, ...arguments),
     entityCreateRole: _entityCreateRole.bind(url, ...arguments),
-    entityUpdateRole: _entityUpdateRole.bind(url, ...arguments),
+    entityUpdateRoles: _entityUpdateRoles.bind(url, ...arguments),
     entityGetRoleById: _entityGetRoleById.bind(url, ...arguments),
     entityUpdateRole: _entityUpdateRole.bind(url, ...arguments),
-    entityDeleteRole: _entityDeleteRole.bind(url, ...arguments),
-    entityGetUserForRole: _entityGetUserForRole.bind(url, ...arguments),
-    entityGetUser: _entityGetUser.bind(url, ...arguments),
+    entityDeleteRoles: _entityDeleteRoles.bind(url, ...arguments),
+    entityGetUsersForRole: _entityGetUsersForRole.bind(url, ...arguments),
+    entityGetUsers: _entityGetUsers.bind(url, ...arguments),
     entityCreateUser: _entityCreateUser.bind(url, ...arguments),
-    entityUpdateUser: _entityUpdateUser.bind(url, ...arguments),
+    entityUpdateUsers: _entityUpdateUsers.bind(url, ...arguments),
     entityGetUserById: _entityGetUserById.bind(url, ...arguments),
     entityUpdateUser: _entityUpdateUser.bind(url, ...arguments),
-    entityDeleteUser: _entityDeleteUser.bind(url, ...arguments),
-    entityGetExamForUser: _entityGetExamForUser.bind(url, ...arguments),
-    entityGetExamineeExamForUser: _entityGetExamineeExamForUser.bind(url, ...arguments),
+    entityDeleteUsers: _entityDeleteUsers.bind(url, ...arguments),
+    entityGetExamsForUser: _entityGetExamsForUser.bind(url, ...arguments),
+    entityGetExamineeExamsForUser: _entityGetExamineeExamsForUser.bind(url, ...arguments),
     entityGetRoleForUser: _entityGetRoleForUser.bind(url, ...arguments),
-    entityGetExam: _entityGetExam.bind(url, ...arguments),
+    entityGetExams: _entityGetExams.bind(url, ...arguments),
     entityCreateExam: _entityCreateExam.bind(url, ...arguments),
-    entityUpdateExam: _entityUpdateExam.bind(url, ...arguments),
+    entityUpdateExams: _entityUpdateExams.bind(url, ...arguments),
     entityGetExamById: _entityGetExamById.bind(url, ...arguments),
     entityUpdateExam: _entityUpdateExam.bind(url, ...arguments),
-    entityDeleteExam: _entityDeleteExam.bind(url, ...arguments),
-    entityGetQuestionForExam: _entityGetQuestionForExam.bind(url, ...arguments),
-    entityGetExamineeExamForExam: _entityGetExamineeExamForExam.bind(url, ...arguments),
+    entityDeleteExams: _entityDeleteExams.bind(url, ...arguments),
+    entityGetQuestionsForExam: _entityGetQuestionsForExam.bind(url, ...arguments),
+    entityGetExamineeExamsForExam: _entityGetExamineeExamsForExam.bind(url, ...arguments),
     entityGetUserForExam: _entityGetUserForExam.bind(url, ...arguments),
-    entityGetQuestion: _entityGetQuestion.bind(url, ...arguments),
+    entityGetQuestions: _entityGetQuestions.bind(url, ...arguments),
     entityCreateQuestion: _entityCreateQuestion.bind(url, ...arguments),
-    entityUpdateQuestion: _entityUpdateQuestion.bind(url, ...arguments),
+    entityUpdateQuestions: _entityUpdateQuestions.bind(url, ...arguments),
     entityGetQuestionById: _entityGetQuestionById.bind(url, ...arguments),
     entityUpdateQuestion: _entityUpdateQuestion.bind(url, ...arguments),
-    entityDeleteQuestion: _entityDeleteQuestion.bind(url, ...arguments),
-    entityGetAnswerForQuestion: _entityGetAnswerForQuestion.bind(url, ...arguments),
-    entityGetExamineeExamAnswerForQuestion: _entityGetExamineeExamAnswerForQuestion.bind(url, ...arguments),
+    entityDeleteQuestions: _entityDeleteQuestions.bind(url, ...arguments),
+    entityGetAnswersForQuestion: _entityGetAnswersForQuestion.bind(url, ...arguments),
+    entityGetExamineeExamAnswersForQuestion: _entityGetExamineeExamAnswersForQuestion.bind(url, ...arguments),
     entityGetExamForQuestion: _entityGetExamForQuestion.bind(url, ...arguments),
-    entityGetAnswer: _entityGetAnswer.bind(url, ...arguments),
+    entityGetAnswers: _entityGetAnswers.bind(url, ...arguments),
     entityCreateAnswer: _entityCreateAnswer.bind(url, ...arguments),
-    entityUpdateAnswer: _entityUpdateAnswer.bind(url, ...arguments),
+    entityUpdateAnswers: _entityUpdateAnswers.bind(url, ...arguments),
     entityGetAnswerById: _entityGetAnswerById.bind(url, ...arguments),
     entityUpdateAnswer: _entityUpdateAnswer.bind(url, ...arguments),
-    entityDeleteAnswer: _entityDeleteAnswer.bind(url, ...arguments),
-    entityGetExamineeExamAnswerForAnswer: _entityGetExamineeExamAnswerForAnswer.bind(url, ...arguments),
+    entityDeleteAnswers: _entityDeleteAnswers.bind(url, ...arguments),
+    entityGetExamineeExamAnswersForAnswer: _entityGetExamineeExamAnswersForAnswer.bind(url, ...arguments),
     entityGetQuestionForAnswer: _entityGetQuestionForAnswer.bind(url, ...arguments),
-    entityGetExamineeExam: _entityGetExamineeExam.bind(url, ...arguments),
+    entityGetExamineeExams: _entityGetExamineeExams.bind(url, ...arguments),
     entityCreateExamineeExam: _entityCreateExamineeExam.bind(url, ...arguments),
-    entityUpdateExamineeExam: _entityUpdateExamineeExam.bind(url, ...arguments),
+    entityUpdateExamineeExams: _entityUpdateExamineeExams.bind(url, ...arguments),
     entityGetExamineeExamById: _entityGetExamineeExamById.bind(url, ...arguments),
     entityUpdateExamineeExam: _entityUpdateExamineeExam.bind(url, ...arguments),
-    entityDeleteExamineeExam: _entityDeleteExamineeExam.bind(url, ...arguments),
-    entityGetExamineeExamAnswerForExamineeExam: _entityGetExamineeExamAnswerForExamineeExam.bind(url, ...arguments),
+    entityDeleteExamineeExams: _entityDeleteExamineeExams.bind(url, ...arguments),
+    entityGetExamineeExamAnswersForExamineeExam: _entityGetExamineeExamAnswersForExamineeExam.bind(url, ...arguments),
     entityGetUserForExamineeExam: _entityGetUserForExamineeExam.bind(url, ...arguments),
     entityGetExamForExamineeExam: _entityGetExamForExamineeExam.bind(url, ...arguments),
-    entityGetExamineeExamAnswer: _entityGetExamineeExamAnswer.bind(url, ...arguments),
+    entityGetExamineeExamAnswers: _entityGetExamineeExamAnswers.bind(url, ...arguments),
     entityCreateExamineeExamAnswer: _entityCreateExamineeExamAnswer.bind(url, ...arguments),
-    entityUpdateExamineeExamAnswer: _entityUpdateExamineeExamAnswer.bind(url, ...arguments),
+    entityUpdateExamineeExamAnswers: _entityUpdateExamineeExamAnswers.bind(url, ...arguments),
     entityGetExamineeExamAnswerById: _entityGetExamineeExamAnswerById.bind(url, ...arguments),
     entityUpdateExamineeExamAnswer: _entityUpdateExamineeExamAnswer.bind(url, ...arguments),
-    entityDeleteExamineeExamAnswer: _entityDeleteExamineeExamAnswer.bind(url, ...arguments),
+    entityDeleteExamineeExamAnswers: _entityDeleteExamineeExamAnswers.bind(url, ...arguments),
     entityGetAnswerForExamineeExamAnswer: _entityGetAnswerForExamineeExamAnswer.bind(url, ...arguments),
     entityGetQuestionForExamineeExamAnswer: _entityGetQuestionForExamineeExamAnswer.bind(url, ...arguments),
     entityGetExamineeExamForExamineeExamAnswer: _entityGetExamineeExamForExamineeExamAnswer.bind(url, ...arguments),

@@ -8,14 +8,14 @@
     "schemas": {}
   },
   "paths": {
-    "/entity/role/": {
+    "/entity/roles/": {
       "get": {
-        "operationId": "entity_getRole",
-        "summary": "Get role.",
+        "operationId": "entity_getRoles",
+        "summary": "Get roles.",
         "tags": [
-          "Role"
+          "Roles"
         ],
-        "description": "Fetch role from the database.",
+        "description": "Fetch roles from the database.",
         "parameters": [
           {
             "schema": {
@@ -432,7 +432,7 @@
         "operationId": "entity_createRole",
         "summary": "Create role.",
         "tags": [
-          "Role"
+          "Roles"
         ],
         "description": "Add new role to the database.",
         "requestBody": {
@@ -495,12 +495,12 @@
         }
       },
       "put": {
-        "operationId": "entity_updateRole",
-        "summary": "Update role.",
+        "operationId": "entity_updateRoles",
+        "summary": "Update roles.",
         "tags": [
-          "Role"
+          "Roles"
         ],
-        "description": "Update one or more role in the database.",
+        "description": "Update one or more roles in the database.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -881,12 +881,12 @@
         }
       }
     },
-    "/entity/role/{id}": {
+    "/entity/roles/{id}": {
       "get": {
         "operationId": "entity_getRoleById",
         "summary": "Get Role by id.",
         "tags": [
-          "Role"
+          "Roles"
         ],
         "description": "Fetch Role using its id from the database.",
         "parameters": [
@@ -949,7 +949,7 @@
         "operationId": "entity_updateRole",
         "summary": "Update role.",
         "tags": [
-          "Role"
+          "Roles"
         ],
         "description": "Update role in the database.",
         "requestBody": {
@@ -1038,12 +1038,12 @@
         }
       },
       "delete": {
-        "operationId": "entity_deleteRole",
-        "summary": "Delete role.",
+        "operationId": "entity_deleteRoles",
+        "summary": "Delete roles.",
         "tags": [
-          "Role"
+          "Roles"
         ],
-        "description": "Delete one or more role from the Database.",
+        "description": "Delete one or more roles from the Database.",
         "parameters": [
           {
             "schema": {
@@ -1101,14 +1101,14 @@
         }
       }
     },
-    "/entity/role/{id}/user": {
+    "/entity/roles/{id}/users": {
       "get": {
-        "operationId": "entity_getUserForRole",
-        "summary": "Get user for role.",
+        "operationId": "entity_getUsersForRole",
+        "summary": "Get users for role.",
         "tags": [
-          "Role"
+          "Roles"
         ],
-        "description": "Fetch all the user for role from the database.",
+        "description": "Fetch all the users for role from the database.",
         "parameters": [
           {
             "schema": {
@@ -1184,14 +1184,14 @@
         }
       }
     },
-    "/entity/user/": {
+    "/entity/users/": {
       "get": {
-        "operationId": "entity_getUser",
-        "summary": "Get user.",
+        "operationId": "entity_getUsers",
+        "summary": "Get users.",
         "tags": [
-          "User"
+          "Users"
         ],
-        "description": "Fetch user from the database.",
+        "description": "Fetch users from the database.",
         "parameters": [
           {
             "schema": {
@@ -1947,7 +1947,7 @@
         "operationId": "entity_createUser",
         "summary": "Create user.",
         "tags": [
-          "User"
+          "Users"
         ],
         "description": "Add new user to the database.",
         "requestBody": {
@@ -2034,12 +2034,12 @@
         }
       },
       "put": {
-        "operationId": "entity_updateUser",
-        "summary": "Update user.",
+        "operationId": "entity_updateUsers",
+        "summary": "Update users.",
         "tags": [
-          "User"
+          "Users"
         ],
-        "description": "Update one or more user in the database.",
+        "description": "Update one or more users in the database.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2735,12 +2735,12 @@
         }
       }
     },
-    "/entity/user/{id}": {
+    "/entity/users/{id}": {
       "get": {
         "operationId": "entity_getUserById",
         "summary": "Get User by id.",
         "tags": [
-          "User"
+          "Users"
         ],
         "description": "Fetch User using its id from the database.",
         "parameters": [
@@ -2818,7 +2818,7 @@
         "operationId": "entity_updateUser",
         "summary": "Update user.",
         "tags": [
-          "User"
+          "Users"
         ],
         "description": "Update user in the database.",
         "requestBody": {
@@ -2934,12 +2934,12 @@
         }
       },
       "delete": {
-        "operationId": "entity_deleteUser",
-        "summary": "Delete user.",
+        "operationId": "entity_deleteUsers",
+        "summary": "Delete users.",
         "tags": [
-          "User"
+          "Users"
         ],
-        "description": "Delete one or more user from the Database.",
+        "description": "Delete one or more users from the Database.",
         "parameters": [
           {
             "schema": {
@@ -3012,14 +3012,14 @@
         }
       }
     },
-    "/entity/user/{id}/exam": {
+    "/entity/users/{id}/exams": {
       "get": {
-        "operationId": "entity_getExamForUser",
-        "summary": "Get exam for user.",
+        "operationId": "entity_getExamsForUser",
+        "summary": "Get exams for user.",
         "tags": [
-          "User"
+          "Users"
         ],
-        "description": "Fetch all the exam for user from the database.",
+        "description": "Fetch all the exams for user from the database.",
         "parameters": [
           {
             "schema": {
@@ -3095,14 +3095,14 @@
         }
       }
     },
-    "/entity/user/{id}/examineeExamExamineeId": {
+    "/entity/users/{id}/examineeExamExamineeId": {
       "get": {
-        "operationId": "entity_getExamineeExamForUser",
-        "summary": "Get examineeExam for user.",
+        "operationId": "entity_getExamineeExamsForUser",
+        "summary": "Get examineeExams for user.",
         "tags": [
-          "User"
+          "Users"
         ],
-        "description": "Fetch all the examineeExam for user from the database.",
+        "description": "Fetch all the examineeExams for user from the database.",
         "parameters": [
           {
             "schema": {
@@ -3183,12 +3183,12 @@
         }
       }
     },
-    "/entity/user/{id}/role": {
+    "/entity/users/{id}/role": {
       "get": {
         "operationId": "entity_getRoleForUser",
         "summary": "Get role for user.",
         "tags": [
-          "User"
+          "Users"
         ],
         "description": "Fetch the role for user from the database.",
         "parameters": [
@@ -3248,14 +3248,14 @@
         }
       }
     },
-    "/entity/exam/": {
+    "/entity/exams/": {
       "get": {
-        "operationId": "entity_getExam",
-        "summary": "Get exam.",
+        "operationId": "entity_getExams",
+        "summary": "Get exams.",
         "tags": [
-          "Exam"
+          "Exams"
         ],
-        "description": "Fetch exam from the database.",
+        "description": "Fetch exams from the database.",
         "parameters": [
           {
             "schema": {
@@ -4011,7 +4011,7 @@
         "operationId": "entity_createExam",
         "summary": "Create exam.",
         "tags": [
-          "Exam"
+          "Exams"
         ],
         "description": "Add new exam to the database.",
         "requestBody": {
@@ -4098,12 +4098,12 @@
         }
       },
       "put": {
-        "operationId": "entity_updateExam",
-        "summary": "Update exam.",
+        "operationId": "entity_updateExams",
+        "summary": "Update exams.",
         "tags": [
-          "Exam"
+          "Exams"
         ],
-        "description": "Update one or more exam in the database.",
+        "description": "Update one or more exams in the database.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -4799,12 +4799,12 @@
         }
       }
     },
-    "/entity/exam/{id}": {
+    "/entity/exams/{id}": {
       "get": {
         "operationId": "entity_getExamById",
         "summary": "Get Exam by id.",
         "tags": [
-          "Exam"
+          "Exams"
         ],
         "description": "Fetch Exam using its id from the database.",
         "parameters": [
@@ -4882,7 +4882,7 @@
         "operationId": "entity_updateExam",
         "summary": "Update exam.",
         "tags": [
-          "Exam"
+          "Exams"
         ],
         "description": "Update exam in the database.",
         "requestBody": {
@@ -4998,12 +4998,12 @@
         }
       },
       "delete": {
-        "operationId": "entity_deleteExam",
-        "summary": "Delete exam.",
+        "operationId": "entity_deleteExams",
+        "summary": "Delete exams.",
         "tags": [
-          "Exam"
+          "Exams"
         ],
-        "description": "Delete one or more exam from the Database.",
+        "description": "Delete one or more exams from the Database.",
         "parameters": [
           {
             "schema": {
@@ -5076,14 +5076,14 @@
         }
       }
     },
-    "/entity/exam/{id}/question": {
+    "/entity/exams/{id}/questions": {
       "get": {
-        "operationId": "entity_getQuestionForExam",
-        "summary": "Get question for exam.",
+        "operationId": "entity_getQuestionsForExam",
+        "summary": "Get questions for exam.",
         "tags": [
-          "Exam"
+          "Exams"
         ],
-        "description": "Fetch all the question for exam from the database.",
+        "description": "Fetch all the questions for exam from the database.",
         "parameters": [
           {
             "schema": {
@@ -5159,14 +5159,14 @@
         }
       }
     },
-    "/entity/exam/{id}/examineeExamExamId": {
+    "/entity/exams/{id}/examineeExamExamId": {
       "get": {
-        "operationId": "entity_getExamineeExamForExam",
-        "summary": "Get examineeExam for exam.",
+        "operationId": "entity_getExamineeExamsForExam",
+        "summary": "Get examineeExams for exam.",
         "tags": [
-          "Exam"
+          "Exams"
         ],
-        "description": "Fetch all the examineeExam for exam from the database.",
+        "description": "Fetch all the examineeExams for exam from the database.",
         "parameters": [
           {
             "schema": {
@@ -5247,12 +5247,12 @@
         }
       }
     },
-    "/entity/exam/{id}/created_by": {
+    "/entity/exams/{id}/created_by": {
       "get": {
         "operationId": "entity_getUserForExam",
         "summary": "Get user for exam.",
         "tags": [
-          "Exam"
+          "Exams"
         ],
         "description": "Fetch the user for exam from the database.",
         "parameters": [
@@ -5327,14 +5327,14 @@
         }
       }
     },
-    "/entity/question/": {
+    "/entity/questions/": {
       "get": {
-        "operationId": "entity_getQuestion",
-        "summary": "Get question.",
+        "operationId": "entity_getQuestions",
+        "summary": "Get questions.",
         "tags": [
-          "Question"
+          "Questions"
         ],
-        "description": "Fetch question from the database.",
+        "description": "Fetch questions from the database.",
         "parameters": [
           {
             "schema": {
@@ -6090,7 +6090,7 @@
         "operationId": "entity_createQuestion",
         "summary": "Create question.",
         "tags": [
-          "Question"
+          "Questions"
         ],
         "description": "Add new question to the database.",
         "requestBody": {
@@ -6177,12 +6177,12 @@
         }
       },
       "put": {
-        "operationId": "entity_updateQuestion",
-        "summary": "Update question.",
+        "operationId": "entity_updateQuestions",
+        "summary": "Update questions.",
         "tags": [
-          "Question"
+          "Questions"
         ],
-        "description": "Update one or more question in the database.",
+        "description": "Update one or more questions in the database.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -6878,12 +6878,12 @@
         }
       }
     },
-    "/entity/question/{id}": {
+    "/entity/questions/{id}": {
       "get": {
         "operationId": "entity_getQuestionById",
         "summary": "Get Question by id.",
         "tags": [
-          "Question"
+          "Questions"
         ],
         "description": "Fetch Question using its id from the database.",
         "parameters": [
@@ -6961,7 +6961,7 @@
         "operationId": "entity_updateQuestion",
         "summary": "Update question.",
         "tags": [
-          "Question"
+          "Questions"
         ],
         "description": "Update question in the database.",
         "requestBody": {
@@ -7077,12 +7077,12 @@
         }
       },
       "delete": {
-        "operationId": "entity_deleteQuestion",
-        "summary": "Delete question.",
+        "operationId": "entity_deleteQuestions",
+        "summary": "Delete questions.",
         "tags": [
-          "Question"
+          "Questions"
         ],
-        "description": "Delete one or more question from the Database.",
+        "description": "Delete one or more questions from the Database.",
         "parameters": [
           {
             "schema": {
@@ -7155,14 +7155,14 @@
         }
       }
     },
-    "/entity/question/{id}/answer": {
+    "/entity/questions/{id}/answers": {
       "get": {
-        "operationId": "entity_getAnswerForQuestion",
-        "summary": "Get answer for question.",
+        "operationId": "entity_getAnswersForQuestion",
+        "summary": "Get answers for question.",
         "tags": [
-          "Question"
+          "Questions"
         ],
-        "description": "Fetch all the answer for question from the database.",
+        "description": "Fetch all the answers for question from the database.",
         "parameters": [
           {
             "schema": {
@@ -7228,14 +7228,14 @@
         }
       }
     },
-    "/entity/question/{id}/examineeExamAnswerQuestionId": {
+    "/entity/questions/{id}/examineeExamAnswerQuestionId": {
       "get": {
-        "operationId": "entity_getExamineeExamAnswerForQuestion",
-        "summary": "Get examineeExamAnswer for question.",
+        "operationId": "entity_getExamineeExamAnswersForQuestion",
+        "summary": "Get examineeExamAnswers for question.",
         "tags": [
-          "Question"
+          "Questions"
         ],
-        "description": "Fetch all the examineeExamAnswer for question from the database.",
+        "description": "Fetch all the examineeExamAnswers for question from the database.",
         "parameters": [
           {
             "schema": {
@@ -7306,12 +7306,12 @@
         }
       }
     },
-    "/entity/question/{id}/exam": {
+    "/entity/questions/{id}/exam": {
       "get": {
         "operationId": "entity_getExamForQuestion",
         "summary": "Get exam for question.",
         "tags": [
-          "Question"
+          "Questions"
         ],
         "description": "Fetch the exam for question from the database.",
         "parameters": [
@@ -7386,14 +7386,14 @@
         }
       }
     },
-    "/entity/answer/": {
+    "/entity/answers/": {
       "get": {
-        "operationId": "entity_getAnswer",
-        "summary": "Get answer.",
+        "operationId": "entity_getAnswers",
+        "summary": "Get answers.",
         "tags": [
-          "Answer"
+          "Answers"
         ],
-        "description": "Fetch answer from the database.",
+        "description": "Fetch answers from the database.",
         "parameters": [
           {
             "schema": {
@@ -7923,7 +7923,7 @@
         "operationId": "entity_createAnswer",
         "summary": "Create answer.",
         "tags": [
-          "Answer"
+          "Answers"
         ],
         "description": "Add new answer to the database.",
         "requestBody": {
@@ -7991,12 +7991,12 @@
         }
       },
       "put": {
-        "operationId": "entity_updateAnswer",
-        "summary": "Update answer.",
+        "operationId": "entity_updateAnswers",
+        "summary": "Update answers.",
         "tags": [
-          "Answer"
+          "Answers"
         ],
-        "description": "Update one or more answer in the database.",
+        "description": "Update one or more answers in the database.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -8479,12 +8479,12 @@
         }
       }
     },
-    "/entity/answer/{id}": {
+    "/entity/answers/{id}": {
       "get": {
         "operationId": "entity_getAnswerById",
         "summary": "Get Answer by id.",
         "tags": [
-          "Answer"
+          "Answers"
         ],
         "description": "Fetch Answer using its id from the database.",
         "parameters": [
@@ -8552,7 +8552,7 @@
         "operationId": "entity_updateAnswer",
         "summary": "Update answer.",
         "tags": [
-          "Answer"
+          "Answers"
         ],
         "description": "Update answer in the database.",
         "requestBody": {
@@ -8647,12 +8647,12 @@
         }
       },
       "delete": {
-        "operationId": "entity_deleteAnswer",
-        "summary": "Delete answer.",
+        "operationId": "entity_deleteAnswers",
+        "summary": "Delete answers.",
         "tags": [
-          "Answer"
+          "Answers"
         ],
-        "description": "Delete one or more answer from the Database.",
+        "description": "Delete one or more answers from the Database.",
         "parameters": [
           {
             "schema": {
@@ -8715,14 +8715,14 @@
         }
       }
     },
-    "/entity/answer/{id}/examineeExamAnswerAnswerId": {
+    "/entity/answers/{id}/examineeExamAnswerAnswerId": {
       "get": {
-        "operationId": "entity_getExamineeExamAnswerForAnswer",
-        "summary": "Get examineeExamAnswer for answer.",
+        "operationId": "entity_getExamineeExamAnswersForAnswer",
+        "summary": "Get examineeExamAnswers for answer.",
         "tags": [
-          "Answer"
+          "Answers"
         ],
-        "description": "Fetch all the examineeExamAnswer for answer from the database.",
+        "description": "Fetch all the examineeExamAnswers for answer from the database.",
         "parameters": [
           {
             "schema": {
@@ -8793,12 +8793,12 @@
         }
       }
     },
-    "/entity/answer/{id}/question": {
+    "/entity/answers/{id}/question": {
       "get": {
         "operationId": "entity_getQuestionForAnswer",
         "summary": "Get question for answer.",
         "tags": [
-          "Answer"
+          "Answers"
         ],
         "description": "Fetch the question for answer from the database.",
         "parameters": [
@@ -8873,14 +8873,14 @@
         }
       }
     },
-    "/entity/examineeExam/": {
+    "/entity/examineeExams/": {
       "get": {
-        "operationId": "entity_getExamineeExam",
-        "summary": "Get examineeExam.",
+        "operationId": "entity_getExamineeExams",
+        "summary": "Get examineeExams.",
         "tags": [
-          "Examinee_Exam"
+          "Examinee_Exams"
         ],
-        "description": "Fetch examineeExam from the database.",
+        "description": "Fetch examineeExams from the database.",
         "parameters": [
           {
             "schema": {
@@ -9749,7 +9749,7 @@
         "operationId": "entity_createExamineeExam",
         "summary": "Create examineeExam.",
         "tags": [
-          "Examinee_Exam"
+          "Examinee_Exams"
         ],
         "description": "Add new examineeExam to the database.",
         "requestBody": {
@@ -9841,12 +9841,12 @@
         }
       },
       "put": {
-        "operationId": "entity_updateExamineeExam",
-        "summary": "Update examineeExam.",
+        "operationId": "entity_updateExamineeExams",
+        "summary": "Update examineeExams.",
         "tags": [
-          "Examinee_Exam"
+          "Examinee_Exams"
         ],
-        "description": "Update one or more examineeExam in the database.",
+        "description": "Update one or more examineeExams in the database.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -10644,12 +10644,12 @@
         }
       }
     },
-    "/entity/examineeExam/{id}": {
+    "/entity/examineeExams/{id}": {
       "get": {
         "operationId": "entity_getExamineeExamById",
         "summary": "Get ExamineeExam by id.",
         "tags": [
-          "Examinee_Exam"
+          "Examinee_Exams"
         ],
         "description": "Fetch ExamineeExam using its id from the database.",
         "parameters": [
@@ -10732,7 +10732,7 @@
         "operationId": "entity_updateExamineeExam",
         "summary": "Update examineeExam.",
         "tags": [
-          "Examinee_Exam"
+          "Examinee_Exams"
         ],
         "description": "Update examineeExam in the database.",
         "requestBody": {
@@ -10854,12 +10854,12 @@
         }
       },
       "delete": {
-        "operationId": "entity_deleteExamineeExam",
-        "summary": "Delete examineeExam.",
+        "operationId": "entity_deleteExamineeExams",
+        "summary": "Delete examineeExams.",
         "tags": [
-          "Examinee_Exam"
+          "Examinee_Exams"
         ],
-        "description": "Delete one or more examineeExam from the Database.",
+        "description": "Delete one or more examineeExams from the Database.",
         "parameters": [
           {
             "schema": {
@@ -10937,14 +10937,14 @@
         }
       }
     },
-    "/entity/examineeExam/{id}/examineeExamAnswerExamineeExamId": {
+    "/entity/examineeExams/{id}/examineeExamAnswerExamineeExamId": {
       "get": {
-        "operationId": "entity_getExamineeExamAnswerForExamineeExam",
-        "summary": "Get examineeExamAnswer for examineeExam.",
+        "operationId": "entity_getExamineeExamAnswersForExamineeExam",
+        "summary": "Get examineeExamAnswers for examineeExam.",
         "tags": [
-          "Examinee_Exam"
+          "Examinee_Exams"
         ],
-        "description": "Fetch all the examineeExamAnswer for examineeExam from the database.",
+        "description": "Fetch all the examineeExamAnswers for examineeExam from the database.",
         "parameters": [
           {
             "schema": {
@@ -11015,12 +11015,12 @@
         }
       }
     },
-    "/entity/examineeExam/{id}/examinee": {
+    "/entity/examineeExams/{id}/examinee": {
       "get": {
         "operationId": "entity_getUserForExamineeExam",
         "summary": "Get user for examineeExam.",
         "tags": [
-          "Examinee_Exam"
+          "Examinee_Exams"
         ],
         "description": "Fetch the user for examineeExam from the database.",
         "parameters": [
@@ -11095,12 +11095,12 @@
         }
       }
     },
-    "/entity/examineeExam/{id}/exam": {
+    "/entity/examineeExams/{id}/exam": {
       "get": {
         "operationId": "entity_getExamForExamineeExam",
         "summary": "Get exam for examineeExam.",
         "tags": [
-          "Examinee_Exam"
+          "Examinee_Exams"
         ],
         "description": "Fetch the exam for examineeExam from the database.",
         "parameters": [
@@ -11175,14 +11175,14 @@
         }
       }
     },
-    "/entity/examineeExamAnswer/": {
+    "/entity/examineeExamAnswers/": {
       "get": {
-        "operationId": "entity_getExamineeExamAnswer",
-        "summary": "Get examineeExamAnswer.",
+        "operationId": "entity_getExamineeExamAnswers",
+        "summary": "Get examineeExamAnswers.",
         "tags": [
-          "Examinee_Exam_Answer"
+          "Examinee_Exam_Answers"
         ],
-        "description": "Fetch examineeExamAnswer from the database.",
+        "description": "Fetch examineeExamAnswers from the database.",
         "parameters": [
           {
             "schema": {
@@ -11825,7 +11825,7 @@
         "operationId": "entity_createExamineeExamAnswer",
         "summary": "Create examineeExamAnswer.",
         "tags": [
-          "Examinee_Exam_Answer"
+          "Examinee_Exam_Answers"
         ],
         "description": "Add new examineeExamAnswer to the database.",
         "requestBody": {
@@ -11901,12 +11901,12 @@
         }
       },
       "put": {
-        "operationId": "entity_updateExamineeExamAnswer",
-        "summary": "Update examineeExamAnswer.",
+        "operationId": "entity_updateExamineeExamAnswers",
+        "summary": "Update examineeExamAnswers.",
         "tags": [
-          "Examinee_Exam_Answer"
+          "Examinee_Exam_Answers"
         ],
-        "description": "Update one or more examineeExamAnswer in the database.",
+        "description": "Update one or more examineeExamAnswers in the database.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -12494,12 +12494,12 @@
         }
       }
     },
-    "/entity/examineeExamAnswer/{id}": {
+    "/entity/examineeExamAnswers/{id}": {
       "get": {
         "operationId": "entity_getExamineeExamAnswerById",
         "summary": "Get ExamineeExamAnswer by id.",
         "tags": [
-          "Examinee_Exam_Answer"
+          "Examinee_Exam_Answers"
         ],
         "description": "Fetch ExamineeExamAnswer using its id from the database.",
         "parameters": [
@@ -12572,7 +12572,7 @@
         "operationId": "entity_updateExamineeExamAnswer",
         "summary": "Update examineeExamAnswer.",
         "tags": [
-          "Examinee_Exam_Answer"
+          "Examinee_Exam_Answers"
         ],
         "description": "Update examineeExamAnswer in the database.",
         "requestBody": {
@@ -12676,12 +12676,12 @@
         }
       },
       "delete": {
-        "operationId": "entity_deleteExamineeExamAnswer",
-        "summary": "Delete examineeExamAnswer.",
+        "operationId": "entity_deleteExamineeExamAnswers",
+        "summary": "Delete examineeExamAnswers.",
         "tags": [
-          "Examinee_Exam_Answer"
+          "Examinee_Exam_Answers"
         ],
-        "description": "Delete one or more examineeExamAnswer from the Database.",
+        "description": "Delete one or more examineeExamAnswers from the Database.",
         "parameters": [
           {
             "schema": {
@@ -12749,12 +12749,12 @@
         }
       }
     },
-    "/entity/examineeExamAnswer/{id}/answer": {
+    "/entity/examineeExamAnswers/{id}/answer": {
       "get": {
         "operationId": "entity_getAnswerForExamineeExamAnswer",
         "summary": "Get answer for examineeExamAnswer.",
         "tags": [
-          "Examinee_Exam_Answer"
+          "Examinee_Exam_Answers"
         ],
         "description": "Fetch the answer for examineeExamAnswer from the database.",
         "parameters": [
@@ -12819,12 +12819,12 @@
         }
       }
     },
-    "/entity/examineeExamAnswer/{id}/question": {
+    "/entity/examineeExamAnswers/{id}/question": {
       "get": {
         "operationId": "entity_getQuestionForExamineeExamAnswer",
         "summary": "Get question for examineeExamAnswer.",
         "tags": [
-          "Examinee_Exam_Answer"
+          "Examinee_Exam_Answers"
         ],
         "description": "Fetch the question for examineeExamAnswer from the database.",
         "parameters": [
@@ -12899,12 +12899,12 @@
         }
       }
     },
-    "/entity/examineeExamAnswer/{id}/examinee_exam": {
+    "/entity/examineeExamAnswers/{id}/examinee_exam": {
       "get": {
         "operationId": "entity_getExamineeExamForExamineeExamAnswer",
         "summary": "Get examineeExam for examineeExamAnswer.",
         "tags": [
-          "Examinee_Exam_Answer"
+          "Examinee_Exam_Answers"
         ],
         "description": "Fetch the examineeExam for examineeExamAnswer from the database.",
         "parameters": [

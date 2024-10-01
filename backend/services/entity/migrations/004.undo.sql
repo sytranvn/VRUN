@@ -1,1 +1,1 @@
-DROP TABLE Question;
+DROP TABLE Questions;
