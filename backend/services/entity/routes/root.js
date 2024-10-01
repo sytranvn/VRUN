@@ -1,7 +1,12 @@
 /// <reference path="../global.d.ts" />
 'use strict'
 import argon2 from 'argon2'
+import sensible from '@fastify/sensible'
 
+/**
+ * @typedef {import('fastify').FastifySchema} FastifySchema
+ */
+/** @type {FastifySchema} */
 const schema = {
 	body: {
 		type: 'object',
@@ -10,9 +15,11 @@ const schema = {
 			username: { type: 'string' },
 			password: { type: 'string' },
 		}
-	}
+	},
+	security: []
 }
 
+/** @type {FastifySchema} */
 const signupSchema = {
 	body: {
 		type: 'object',
@@ -22,10 +29,12 @@ const signupSchema = {
 			password: { type: 'string' },
 			fullName: { type: 'string' },
 		}
-	}
+	},
+	security: []
 }
 /** @param {import('fastify').FastifyInstance} fastify */
 export default async function(fastify, opts) {
+	fastify.register(sensible);
 	fastify.post('/login', { schema }, async (request, reply) => {
 		const secret = Buffer.from(opts.secret)
 		const { username, password } = request.body
@@ -36,18 +45,22 @@ export default async function(fastify, opts) {
 			limit: 1,
 		})
 		if (!user) {
-			throw fastify.platformatic.httpErrors.unauthorized();
+			throw fastify.httpErrors.unauthorized();
 		}
 		const { password: hashedPass, ...payload } = user;
 		if (!await argon2.verify(hashedPass, password, { secret })) {
-			throw fastify.platformatic.httpErrors.unauthorized();
+			throw fastify.httpErrors.unauthorized();
 		}
 		const [role] = await fastify.platformatic.entities.role.find({
 			where: { id: { eq: user.role } },
 			limit: 1
 		})
-		user.role = role.name
-		const token = fastify.jwt.sign(payload)
+		const token = fastify.jwt.sign({
+			id: user.id,
+			username: user.username,
+			role: role.name,
+			fullName: user.fullName,
+		})
 		return { token }
 	})
 
@@ -63,12 +76,16 @@ export default async function(fastify, opts) {
 			}
 		})
 		if (!user) {
-			throw fastify.platformatic.httpErrors.badRequest();
+			throw fastify.httpErrors.badRequest();
 		}
+		const [role] = await fastify.platformatic.entities.role.find({
+			where: { id: { eq: user.role } },
+			limit: 1
+		})
 		const token = fastify.jwt.sign({
 			id: user.id,
 			username: user.username,
-			role: user.role,
+			role: role.name,
 			fullName: user.fullName,
 		})
 		return { token }

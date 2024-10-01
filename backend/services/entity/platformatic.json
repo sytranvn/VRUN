@@ -3,8 +3,42 @@
   "db": {
     "connectionString": "{PLT_ENTITY_DATABASE_URL}",
     "graphql": true,
-    "openapi": true,
+    "openapi": {
+      "info": {
+        "title": "Platformatic DB API",
+        "version": "1.0.0",
+        "description": "This is the API documentation for Platformatic DB."
+      },
+      "enabled": true,
+      "security": [{ "bearerAuth": [] }],
+      "components": {
+        "securitySchemes": {
+          "bearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+          }
+        }
+      }
+    },
     "schemalock": true
+  },
+  "authorization": {
+    "adminSecret": "{PLT_SECRET}",
+    "roleKey": "role",
+    "anonymousRole": "anonymous",
+    "jwt": {
+      "secret": "{PLT_SECRET}"
+    },
+    "rules": [
+      {
+        "role": "admin",
+        "delete": true,
+        "entity": "user",
+        "find": true,
+        "save": true
+      }
+    ]
   },
   "watch": {
     "ignore": [
@@ -24,7 +58,7 @@
       },
       {
         "path": "./routes",
-        "encapsulate": true,
+        "encapsulate": false,
         "options": {
           "secret": "{PLT_SECRET}"
         }
