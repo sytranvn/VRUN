@@ -2113,26 +2113,11 @@ async function _postEntityLogin (url, request) {
     headers
   })
 
-  const textResponses = [200]
-  if (textResponses.includes(response.status)) {
-    return {
-      statusCode: response.status,
-      headers: headersToJSON(response.headers),
-      body: await response.text()
-    }
+  if (!response.ok) {
+    throw new Error(await response.text())
   }
-  if (response.headers.get('content-type') === 'application/json') {
-    return {
-      statusCode: response.status,
-      headers: headersToJSON(response.headers),
-      body: await response.json()
-    }
-  }
-  return {
-    statusCode: response.status,
-    headers: headersToJSON(response.headers),
-    body: await response.text()
-  }
+
+  return await response.json()
 }
 
 /**  @type {import('./api-types.d.ts').Api['postEntityLogin']} */
@@ -2151,26 +2136,11 @@ async function _postEntitySignup (url, request) {
     headers
   })
 
-  const textResponses = [200]
-  if (textResponses.includes(response.status)) {
-    return {
-      statusCode: response.status,
-      headers: headersToJSON(response.headers),
-      body: await response.text()
-    }
+  if (!response.ok) {
+    throw new Error(await response.text())
   }
-  if (response.headers.get('content-type') === 'application/json') {
-    return {
-      statusCode: response.status,
-      headers: headersToJSON(response.headers),
-      body: await response.json()
-    }
-  }
-  return {
-    statusCode: response.status,
-    headers: headersToJSON(response.headers),
-    body: await response.text()
-  }
+
+  return await response.json()
 }
 
 /**  @type {import('./api-types.d.ts').Api['postEntitySignup']} */

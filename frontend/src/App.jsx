@@ -15,7 +15,7 @@ const router = createBrowserRouter([
     path: "/",
     loader() {
       // Our root route always provides the user, if logged in
-      return { user: authProvider.username };
+      return { user: authProvider.user };
     },
     Component: Layout,
     children: [
@@ -55,6 +55,7 @@ export default function App() {
 async function loginAction({ request }) {
   let formData = await request.formData();
   let username = formData.get("username");
+  let password = formData.get("password");
 
   // Validate our form inputs and return validation errors via useActionData()
   if (!username) {
@@ -65,11 +66,12 @@ async function loginAction({ request }) {
 
   // Sign in and redirect to the proper destination if successful.
   try {
-    await authProvider.signin(username);
-  } catch {
+    await authProvider.signin({username, password});
+  } catch (e) {
     // Unused as of now but this is how you would handle invalid
     // username/password combinations - just like validating the inputs
     // above
+    console.error(e)
     return {
       error: "Invalid login attempt",
     };

@@ -19,6 +19,9 @@ export default function LoginPage() {
         <label>
           Username: <input name="username" />
         </label>{" "}
+        <label>
+          Password: <input name="password" type="password" />
+        </label>{" "}
         <button type="submit" disabled={isLoggingIn}>
           {isLoggingIn ? "Logging in..." : "Login"}
         </button>

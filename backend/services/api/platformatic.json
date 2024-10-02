@@ -1,5 +1,10 @@
 {
   "$schema": "https://schemas.platformatic.dev/@platformatic/composer/2.2.1.json",
+  "server": {
+    "cors": {
+      "origin": "http://localhost:5173"
+    }
+  },
   "composer": {
     "services": [
       {

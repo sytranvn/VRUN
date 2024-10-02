@@ -1820,9 +1820,11 @@ export type PostEntityLoginRequest = {
   'password': string;
 }
 
-export type PostEntityLoginResponseOK = unknown
+export type PostEntityLoginResponseOK = {
+  'token': string;
+}
 export type PostEntityLoginResponses =
-  FullResponse<PostEntityLoginResponseOK, 200>
+  PostEntityLoginResponseOK
 
 export type PostEntitySignupRequest = {
   'username': string;
@@ -1830,9 +1832,11 @@ export type PostEntitySignupRequest = {
   'fullName': string;
 }
 
-export type PostEntitySignupResponseOK = unknown
+export type PostEntitySignupResponseOK = {
+  'token': string;
+}
 export type PostEntitySignupResponses =
-  FullResponse<PostEntitySignupResponseOK, 200>
+  PostEntitySignupResponseOK
 
 export type AiPromptRequest = {
   'prompt': string;

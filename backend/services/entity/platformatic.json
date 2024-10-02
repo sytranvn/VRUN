@@ -1,16 +1,19 @@
 {
-  "$schema": "https://schemas.platformatic.dev/@platformatic/db/2.2.1.json",
   "db": {
     "connectionString": "{PLT_ENTITY_DATABASE_URL}",
+    "schemalock": true,
     "graphql": true,
     "openapi": {
       "info": {
-        "title": "Platformatic DB API",
-        "version": "1.0.0",
-        "description": "This is the API documentation for Platformatic DB."
+        "title": "Entity",
+        "version": "1.0.0"
       },
-      "enabled": true,
-      "security": [{ "bearerAuth": [] }],
+      "jsonSchemaDialect": "https://spec.openapis.org/oas/3.1/dialect/base",
+      "servers": [
+        {
+          "url": "/"
+        }
+      ],
       "components": {
         "securitySchemes": {
           "bearerAuth": {
@@ -19,9 +22,18 @@
             "bearerFormat": "JWT"
           }
         }
-      }
+      },
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "allowPrimaryKeysInInput": true,
+      "enabled": true
     },
-    "schemalock": true
+    "ignore": {
+      "versions": true
+    }
   },
   "authorization": {
     "adminSecret": "{PLT_SECRET}",
@@ -33,22 +45,20 @@
     "rules": [
       {
         "role": "admin",
-        "delete": true,
         "entity": "user",
         "find": true,
-        "save": true
+        "save": true,
+        "delete": true
       }
-    ]
-  },
-  "watch": {
-    "ignore": [
-      "*.sqlite",
-      "*.sqlite-journal"
     ]
   },
   "migrations": {
     "dir": "migrations",
+    "table": "versions",
     "autoApply": "{PLT_ENTITY_APPLY_MIGRATIONS}"
+  },
+  "types": {
+    "autogenerate": true
   },
   "plugins": {
     "paths": [
@@ -66,7 +76,14 @@
     ],
     "typescript": "{PLT_ENTITY_TYPESCRIPT}"
   },
-  "types": {
-    "autogenerate": true
-  }
+  "watch": {
+    "enabled": true,
+    "allow": null,
+    "ignore": [
+      "*.sqlite",
+      "*.sqlite-journal",
+      "dist/**/*"
+    ]
+  },
+  "$schema": "https://schemas.platformatic.dev/@platformatic/db/2.2.1.json"
 }

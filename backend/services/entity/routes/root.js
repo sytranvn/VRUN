@@ -16,6 +16,14 @@ const schema = {
 			password: { type: 'string' },
 		}
 	},
+	response: {
+		200: {
+			type: 'object',
+			properties: {
+				token: { type: 'string' },
+			}
+		},
+	},
 	security: []
 }
 
@@ -29,6 +37,14 @@ const signupSchema = {
 			password: { type: 'string' },
 			fullName: { type: 'string' },
 		}
+	},
+	response: {
+		200: {
+			type: 'object',
+			properties: {
+				token: { type: 'string' },
+			}
+		},
 	},
 	security: []
 }
