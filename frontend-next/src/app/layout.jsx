@@ -2,59 +2,32 @@
 
 import React from 'react';
 import '@/styles/global.scss';
-import {
-  AppstoreOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  ShopOutlined,
-  TeamOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
+import localFont from 'next/font/local';
 
-const items = [
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  AppstoreOutlined,
-  TeamOutlined,
-  ShopOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: `nav ${index + 1}`,
-}));
+const myFont = localFont({
+  src: [
+    {
+      path: '../assets/fonts/Quicksand/static/Quicksand-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../assets/fonts/Quicksand/static/Quicksand-Medium.ttf',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../assets/fonts/Quicksand/static/Quicksand-Bold.ttf',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+});
 
-const RootLayout = () => (
+const RootLayout = ({ children }) => (
   <html lang="en">
-    <body>
-      <Layout hasSider>
-        <Layout.Sider>
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={['4']}
-            items={items}
-          />
-        </Layout.Sider>
-        <Layout>
-          <Layout.Header>
-            header
-          </Layout.Header>
-          <Layout.Content>
-            <div>
-              main
-            </div>
-          </Layout.Content>
-          <Layout.Footer>
-            VRUN © {new Date().getFullYear()}
-          </Layout.Footer>
-        </Layout>
-      </Layout>
+    <body className={myFont.className}>
+      {children}
     </body>
   </html>
 );

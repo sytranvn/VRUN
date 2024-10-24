@@ -5,9 +5,15 @@ export async function GET() {
 /*
 Call example:
 
-const data = await fetch('http://localhost:3000/api/example', {
-  method: 'GET',
-}).then((res) => res.json());
+import getAxios from '@/utils/getAxios';
+
+const axios = getAxios();
+
+const { data } = await axios.request({
+  url: '/api/example',
+  method: 'get',
+  params: { abc: '123' },
+});
 
 console.log('response', data);
 */
