@@ -49,3 +49,21 @@ const Index = async () => {
 export default Index;
 
 ```
+
+## Froala usage
+
+```js
+import { useState } from 'react';
+import FroalaTextEditor from '@/components/FroalaTextEditor';
+
+const Component = () => {
+  const [model, setModel] = useState('');
+
+  return (
+    <FroalaTextEditor
+      model={model}
+      onModelChange={setModel}
+    />
+  );
+}
+```
