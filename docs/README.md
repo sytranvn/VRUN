@@ -98,3 +98,7 @@ Mỗi kỹ năng yêu cầu áp dụng các công nghệ liên quan.
 - Ghi âm + upload
 - Speech-to-text: Chuyển file ghi âm thành text để chấm điểm.
 - AI phân tích và cải thiện bài nói.
+
+# HOWTO
+
+[Hướng dẫn cài đặt và sử dụng](HOWTO.md)
