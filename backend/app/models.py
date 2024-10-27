@@ -1,5 +1,5 @@
 import uuid
-from typing import List
+from typing import List, Sequence
 from datetime import datetime, timezone
 from enum import StrEnum
 from pydantic import EmailStr
@@ -72,7 +72,7 @@ class UserPublic(UserBase):
 
 
 class UsersPublic(SQLModel):
-    data: list[UserPublic]
+    data: Sequence[UserPublic]
     count: int
 
 # Generic message
@@ -130,12 +130,30 @@ class CandidateExamStatus(StrEnum):
 #     candiate: User = Relationship(back_populates="exam_candidates")
 #     exam: "Exam" = Relationship(back_populates="candidate_exams")
 
-class Exam(BaseTable, SQLModel, table=True):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+class ExamBase(SQLModel):
     title: str = Field(max_length=255)
     description: str
 
-    status: ExamStatus = Field(default=ExamStatus.DRAFT,
+
+class ExamCreate(ExamBase):
+    pass
+
+class ExamUpdate(ExamBase):
+    title: str | None = Field(max_length=255)  # type: ignore
+    description: str | None  # type: ignore
+    status: ExamStatus
+
+class ExamPublic(ExamBase):
+    id: uuid.UUID
+    status: ExamStatus
+
+class ExamsPublic(SQLModel):
+    data: Sequence[ExamPublic]
+    count: int
+
+class Exam(BaseTable, ExamBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    status: ExamStatus = Field(default=ExamStatus.DRAFT.value,
                                sa_column=Column(Enum(ExamStatus, native_enum=False)))
     # exam_candidates: list[CandidateExam] = Relationship(back_populates="exam")
     skills: list["ExamSkill"] = Relationship(back_populates="exam")
