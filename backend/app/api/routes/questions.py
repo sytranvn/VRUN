@@ -31,66 +31,66 @@ def read_questions(
 
 
 @router.get("/{id}", response_model=QuestionPublic)
-def read_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
+def read_question(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
     """
-    Get item by ID.
+    Get question by ID.
     """
-    item = session.get(Question, id)
-    if not item:
+    question = session.get(Question, id)
+    if not question:
         raise HTTPException(status_code=404, detail="Question not found")
-    return item
+    return question
 
 
 @router.post("/", response_model=QuestionPublic)
-def create_item(
-    *, session: SessionDep, current_user: CurrentUser, item_in: QuestionCreate
+def create_question(
+    *, session: SessionDep, current_user: CurrentUser, question_in: QuestionCreate
 ) -> Any:
     """
-    Create new item.
+    Create new question.
     """
-    item = Question.model_validate(item_in)
-    session.add(item)
+    question = Question.model_validate(question_in)
+    session.add(question)
     session.commit()
-    session.refresh(item)
-    return item
+    session.refresh(question)
+    return question
 
 
 @router.put("/{id}", response_model=QuestionPublic)
-def update_item(
+def update_question(
     *,
     session: SessionDep,
     current_user: CurrentUser,
     id: uuid.UUID,
-    item_in: QuestionUpdate,
+    question_in: QuestionUpdate,
 ) -> Any:
     """
-    Update an item.
+    Update an question.
     """
     if not current_user.is_superuser:
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    item = session.get(Question, id)
-    if not item:
+    question = session.get(Question, id)
+    if not question:
         raise HTTPException(status_code=404, detail="Question not found")
-    update_dict = item_in.model_dump(exclude_unset=True)
-    item.sqlmodel_update(update_dict)
-    session.add(item)
+    update_dict = question_in.model_dump(exclude_unset=True)
+    question.sqlmodel_update(update_dict)
+    session.add(question)
     session.commit()
-    session.refresh(item)
-    return item
+    session.refresh(question)
+    return question
 
 
 @router.delete("/{id}")
-def delete_item(
+def delete_question(
     session: SessionDep, current_user: CurrentUser, id: uuid.UUID
 ) -> Message:
     """
-    Delete an item.
+    Delete an question.
     """
     if not current_user.is_superuser:
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    item = session.get(Question, id)
-    if not item:
+    question = session.get(Question, id)
+    if not question:
         raise HTTPException(status_code=404, detail="Question not found")
-    session.delete(item)
+    session.delete(question)
     session.commit()
     return Message(message="Question deleted successfully")

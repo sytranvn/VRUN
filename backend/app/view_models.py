@@ -1,6 +1,6 @@
 import uuid
 from typing import Sequence
-from .models import UserBase, ExamBase, ExamStatus, QuestionGroupBase, QuestionBase
+from .models import UserBase, ExamBase, ExamStatus, QuestionGroupBase, QuestionBase, AnswerBase
 from pydantic import EmailStr
 from sqlmodel import Field, SQLModel
 
@@ -86,12 +86,12 @@ class QuestionGroupUpdate(QuestionGroupBase):
 
 class QuestionGroupPublic(QuestionGroupBase):
     id: uuid.UUID
+    questions: Sequence["QuestionPublic"]
 
 
 class QuestionGroupsPublic(SQLModel):
     data: Sequence[QuestionGroupPublic]
     count: int
-
 
 
 class QuestionCreate(QuestionBase):
@@ -104,9 +104,21 @@ class QuestionUpdate(QuestionBase):
 
 class QuestionPublic(QuestionBase):
     id: uuid.UUID
+    answers: Sequence["AnswerPublic"]
 
 
 class QuestionsPublic(SQLModel):
     data: Sequence[QuestionPublic]
     count: int
 
+class AnswerPublic(AnswerBase):
+    id: uuid.UUID
+
+class AnswerCreate(AnswerBase):
+    question_id: uuid.UUID
+
+
+class AnswerUpdate(AnswerBase):
+    id: uuid.UUID
+    description: str | None  # type: ignore
+    is_correct_answer: bool | None

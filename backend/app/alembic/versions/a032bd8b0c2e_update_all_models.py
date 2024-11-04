@@ -1,8 +1,8 @@
-"""essay answer
+"""update all models
 
-Revision ID: 5cfc1ddf6fae
+Revision ID: a032bd8b0c2e
 Revises: 
-Create Date: 2024-11-04 13:20:16.104345
+Create Date: 2024-11-04 20:01:43.097988
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel.sql.sqltypes
 
 
 # revision identifiers, used by Alembic.
-revision = '5cfc1ddf6fae'
+revision = 'a032bd8b0c2e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -38,12 +38,13 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('question_group',
+    sa.Column('resource', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('created_time', sa.DateTime(), nullable=False),
     sa.Column('updated_time', sa.DateTime(), nullable=False),
     sa.Column('id', sa.Uuid(), nullable=False),
-    sa.Column('resource', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('skill', sa.Enum('LISTENING', 'READING', 'WRITING', 'SPEAKING', name='skill', native_enum=False), nullable=True),
+    sa.Column('status', sa.Enum('DRAFT', 'ACTIVE', 'DELETED', name='questionstatusenum', native_enum=False), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -75,14 +76,14 @@ def upgrade():
     op.create_table('part',
     sa.Column('created_time', sa.DateTime(), nullable=False),
     sa.Column('updated_time', sa.DateTime(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('question_group_id', sa.Uuid(), nullable=False),
+    sa.Column('exam_id', sa.Uuid(), nullable=False),
     sa.Column('titile', sqlmodel.sql.sqltypes.AutoString(length=255), nullable=False),
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('duration', sa.Integer(), nullable=False),
-    sa.Column('skill', sa.Enum('LISTENING', 'READING', 'WRITING', 'SPEAKING', name='skill', native_enum=False), nullable=True),
-    sa.Column('question_group_id', sa.Uuid(), nullable=False),
+    sa.ForeignKeyConstraint(['exam_id'], ['exam.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['question_group_id'], ['question_group.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('question_group_id', 'exam_id')
     )
     op.create_table('question',
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
@@ -90,7 +91,6 @@ def upgrade():
     sa.Column('updated_time', sa.DateTime(), nullable=False),
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('question_group_id', sa.Uuid(), nullable=False),
-    sa.Column('question_type', sa.Enum('MULTI_CHOICE', 'ESSAY', name='questiontype', native_enum=False), nullable=True),
     sa.ForeignKeyConstraint(['question_group_id'], ['question_group.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
