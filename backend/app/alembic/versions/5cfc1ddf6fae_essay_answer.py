@@ -1,8 +1,8 @@
-"""adjust model
+"""essay answer
 
-Revision ID: 39c27345879f
+Revision ID: 5cfc1ddf6fae
 Revises: 
-Create Date: 2024-10-26 12:09:07.798431
+Create Date: 2024-11-04 13:20:16.104345
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ import sqlmodel.sql.sqltypes
 
 
 # revision identifiers, used by Alembic.
-revision = '39c27345879f'
+revision = '5cfc1ddf6fae'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,11 +29,11 @@ def upgrade():
     sa.PrimaryKeyConstraint('key')
     )
     op.create_table('exam',
+    sa.Column('title', sqlmodel.sql.sqltypes.AutoString(length=255), nullable=False),
+    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('created_time', sa.DateTime(), nullable=False),
     sa.Column('updated_time', sa.DateTime(), nullable=False),
     sa.Column('id', sa.Uuid(), nullable=False),
-    sa.Column('title', sqlmodel.sql.sqltypes.AutoString(length=255), nullable=False),
-    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('status', sa.Enum('DRAFT', 'SUBMITTED', 'DELETED', name='examstatus', native_enum=False), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -43,6 +43,7 @@ def upgrade():
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('resource', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('skill', sa.Enum('LISTENING', 'READING', 'WRITING', 'SPEAKING', name='skill', native_enum=False), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -61,44 +62,15 @@ def upgrade():
     op.create_table('candidate_exam',
     sa.Column('created_time', sa.DateTime(), nullable=False),
     sa.Column('updated_time', sa.DateTime(), nullable=False),
+    sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('candidate_id', sa.Uuid(), nullable=False),
     sa.Column('exam_id', sa.Uuid(), nullable=False),
     sa.Column('start_time', sa.DateTime(), nullable=False),
     sa.Column('duration', sa.Integer(), nullable=False),
-    sa.Column('status', sa.Enum('REGISTERED', 'SCHEDULED', 'STARTED', 'ENDED', name='candidateexamstatus', native_enum=False), nullable=True),
+    sa.Column('status', sa.Enum('SCHEDULED', 'STARTED', 'FINISHED', 'CANCELED', name='candidateexamstatus', native_enum=False), nullable=True),
     sa.ForeignKeyConstraint(['candidate_id'], ['user.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['exam_id'], ['exam.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('candidate_id', 'exam_id')
-    )
-    op.create_table('exam_skill',
-    sa.Column('created_time', sa.DateTime(), nullable=False),
-    sa.Column('updated_time', sa.DateTime(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
-    sa.Column('skill', sa.Enum('LISTENING', 'READING', 'WRITING', 'SPEAKING', name='skill', native_enum=False, length=20), nullable=True),
-    sa.Column('number_of_parts', sa.Integer(), nullable=False),
-    sa.Column('duration', sa.Integer(), nullable=False),
-    sa.Column('exam_id', sa.Uuid(), nullable=False),
-    sa.ForeignKeyConstraint(['exam_id'], ['exam.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('question',
-    sa.Column('created_time', sa.DateTime(), nullable=False),
-    sa.Column('updated_time', sa.DateTime(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
-    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('question_group_id', sa.Uuid(), nullable=False),
-    sa.ForeignKeyConstraint(['question_group_id'], ['question_group.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id')
-    )
-    op.create_table('answer',
-    sa.Column('created_time', sa.DateTime(), nullable=False),
-    sa.Column('updated_time', sa.DateTime(), nullable=False),
-    sa.Column('id', sa.Uuid(), nullable=False),
-    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
-    sa.Column('question_id', sa.Uuid(), nullable=False),
-    sa.Column('is_correct_answer', sa.Boolean(), nullable=False),
-    sa.ForeignKeyConstraint(['question_id'], ['question.id'], ondelete='CASCADE'),
-    sa.PrimaryKeyConstraint('id', 'question_id')
     )
     op.create_table('part',
     sa.Column('created_time', sa.DateTime(), nullable=False),
@@ -107,24 +79,45 @@ def upgrade():
     sa.Column('titile', sqlmodel.sql.sqltypes.AutoString(length=255), nullable=False),
     sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
     sa.Column('duration', sa.Integer(), nullable=False),
-    sa.Column('exam_skill_id', sa.Uuid(), nullable=False),
+    sa.Column('skill', sa.Enum('LISTENING', 'READING', 'WRITING', 'SPEAKING', name='skill', native_enum=False), nullable=True),
     sa.Column('question_group_id', sa.Uuid(), nullable=False),
-    sa.ForeignKeyConstraint(['exam_skill_id'], ['exam_skill.id'], ),
     sa.ForeignKeyConstraint(['question_group_id'], ['question_group.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('candiate_exam_answer',
+    op.create_table('question',
+    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('created_time', sa.DateTime(), nullable=False),
+    sa.Column('updated_time', sa.DateTime(), nullable=False),
     sa.Column('id', sa.Uuid(), nullable=False),
-    sa.Column('candidate_id', sa.Uuid(), nullable=False),
-    sa.Column('exam_id', sa.Uuid(), nullable=False),
-    sa.Column('part_id', sa.Uuid(), nullable=False),
     sa.Column('question_group_id', sa.Uuid(), nullable=False),
-    sa.Column('question_id', sa.Uuid(), nullable=False),
-    sa.ForeignKeyConstraint(['candidate_id', 'exam_id'], ['candidate_exam.candidate_id', 'candidate_exam.exam_id'], ),
-    sa.ForeignKeyConstraint(['part_id'], ['part.id'], ondelete='CASCADE'),
+    sa.Column('question_type', sa.Enum('MULTI_CHOICE', 'ESSAY', name='questiontype', native_enum=False), nullable=True),
     sa.ForeignKeyConstraint(['question_group_id'], ['question_group.id'], ondelete='CASCADE'),
-    sa.ForeignKeyConstraint(['question_id'], ['question.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('answer',
+    sa.Column('created_time', sa.DateTime(), nullable=False),
+    sa.Column('updated_time', sa.DateTime(), nullable=False),
+    sa.Column('id', sa.Uuid(), nullable=False),
+    sa.Column('question_id', sa.Uuid(), nullable=False),
+    sa.Column('description', sqlmodel.sql.sqltypes.AutoString(), nullable=False),
+    sa.Column('is_correct_answer', sa.Boolean(), nullable=False),
+    sa.ForeignKeyConstraint(['question_id'], ['question.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('id', 'question_id')
+    )
+    op.create_table('candiate_exam_essay',
+    sa.Column('candidate_exam_id', sa.Uuid(), nullable=False),
+    sa.Column('question_id', sa.Uuid(), nullable=False),
+    sa.ForeignKeyConstraint(['candidate_exam_id'], ['candidate_exam.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['question_id'], ['question.id'], ),
+    sa.PrimaryKeyConstraint('candidate_exam_id', 'question_id')
+    )
+    op.create_table('candiate_exam_answer',
+    sa.Column('candidate_exam_id', sa.Uuid(), nullable=False),
+    sa.Column('question_id', sa.Uuid(), nullable=False),
+    sa.Column('answer_id', sa.Uuid(), nullable=False),
+    sa.ForeignKeyConstraint(['candidate_exam_id'], ['candidate_exam.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['question_id', 'answer_id'], ['answer.question_id', 'answer.id'], ondelete='CASCADE'),
+    sa.PrimaryKeyConstraint('candidate_exam_id', 'question_id', 'answer_id')
     )
     # ### end Alembic commands ###
 
@@ -132,10 +125,10 @@ def upgrade():
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
     op.drop_table('candiate_exam_answer')
-    op.drop_table('part')
+    op.drop_table('candiate_exam_essay')
     op.drop_table('answer')
     op.drop_table('question')
-    op.drop_table('exam_skill')
+    op.drop_table('part')
     op.drop_table('candidate_exam')
     op.drop_index(op.f('ix_user_email'), table_name='user')
     op.drop_table('user')
