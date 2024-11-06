@@ -70,5 +70,17 @@ module.exports = {
     'no-multiple-empty-lines': ['warn', { max: 1, maxBOF: 0, maxEOF: 1 }],
     'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
     'react/jsx-one-expression-per-line': 'off',
+    'arrow-body-style': 'off',
+    'react/jsx-max-props-per-line': ['warn', { maximum: 1, when: 'multiline' }],
+    'max-len': ['warn', {
+      code: 100,
+      tabWidth: 2,
+      ignoreComments: true,
+      ignoreTrailingComments: true,
+      ignoreUrls: true,
+      ignoreStrings: true,
+      ignoreTemplateLiterals: true,
+      ignoreRegExpLiterals: true,
+    }],
   },
 };

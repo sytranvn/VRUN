@@ -1,0 +1,188 @@
+@use "sass:math";
+@use "sass:list";
+@use "sass:map";
+@use "sass:string";
+@import "./media.scss";
+
+$spacing-breakpoints: (
+  xxl: 1920px,
+  xl: 1440px,
+  lg: 1024px,
+  md: 768px,
+  sm: 576px,
+  xs: 360px,
+  xxs: 360px,
+) !default;
+
+$_unit: 8;
+$_maxCount: 10;
+$spacing-levels: ();
+
+/// spacing convetion: each level (1->30) multiply by 8
+@for $i from 1 through $_maxCount {
+  $spacing-levels: map.set($spacing-levels, $i, #{$_unit * $i}px);
+}
+
+$spacing-valid-fields: (
+  'margin',
+  'padding',
+  'gap',
+) !default;
+
+$spacing-presets: (
+) !default;
+
+
+/// Calculate spacing
+/// @example space(2) = Spacing level 2 => 16px
+@function space($level: 1) {
+  @if ($level) {
+    @return map-get($map: $spacing-levels, $key: $level);
+  }
+  @return 0;
+}
+
+$_spacingExposeKey: "expose";
+
+$_spacingValidPositions: (top left right bottom);
+
+@function _getSpacing($options, $field) {
+  $style: ();
+  @if ($field == null) {
+    @return $style;
+  }
+  @if (
+    type-of($value: $options) == "list" or type-of($value: $options) == "number"
+  ) {
+    $style: map.set(
+      $style,
+      string.unquote($field),
+      list.join($options, (), $separator: space)
+    );
+  } @else if ($options != null and type-of($options) == "map") {
+    @each $pos in $_spacingValidPositions {
+      @if (map-has-key($map: $options, $key: $pos)) {
+        $style: map.set($style, #{$field}-#{$pos}, map.get($options, $pos));
+      }
+    }
+  }
+
+  @return $style;
+}
+
+@mixin _displaySpacing($styles) {
+  @each $field, $value in $styles {
+    #{$field}: map-get($map: $styles, $key: $field);
+  }
+}
+
+/// @name spacing
+/// @todo To generate styles relating to spacing (margin, padding, gap)
+/// @param name - The key listed in presets
+/// @param presets - design presets
+/// @param $breakpoints - grid breakpoints
+@mixin spacing(
+  $name,
+  $presets: $spacing-presets,
+  $breakpoints: $spacing-breakpoints
+) {
+  $options: _sortMedia(
+    map-get(
+      $map: $presets,
+      $key: $name,
+    )
+  );
+  $field-type: null;
+
+  @each $field in $spacing-valid-fields {
+    @if (string.index($name, $field) == 1) {
+      $field-type: $field;
+    }
+  }
+
+  @if ($options == () or $field-type == null) {
+    @warn #{'Invalid preset name:' $name};
+  }
+
+  @if ($field-type != null) {
+    @each $breakpoint, $value in $options {
+      $styles: _getSpacing($value, $field-type);
+      @if ($breakpoint == "default") {
+        @include _displaySpacing($styles);
+      } @else {
+        @include media-query($breakpoint, $mode: "desktop-first") {
+          @include _displaySpacing($styles);
+        }
+      }
+    }
+  }
+}
+
+/// @name generateSpacingClassname
+/// @todo To generate classname relating to spacing (margin, padding, gap)
+/// @param presets - design presets
+@mixin generateSpacingClassname($presets: $spacing-presets) {
+  @each $name, $options in $presets {
+    @if (
+      map-has-key($map: $options, $key: $_spacingExposeKey) and
+      map.get($options, $_spacingExposeKey) == 1
+    ) {
+      .#{$name} {
+        @include spacing($name, $presets);
+      }
+    }
+  }
+}
+
+/*
+Generate class names with the following format:
+.(padding|margin)_(top|left|right|bottom)_(1->max)
+*/
+
+$_presetPositions: (top left right bottom);
+$_presetAttrs: (margin padding);
+$_spacingLength: length($spacing-levels);
+
+$default-spacing: ();
+@for $i from 1 through $_spacingLength {
+  @each $attr in $_presetAttrs {
+    @each $pos in $_presetPositions {
+      $default-spacing: map.set($default-spacing, '#{$attr}_#{$pos}_#{$i}', (
+        expose: 1,
+        default: ($pos: space($i)),
+      ));
+    }
+  }
+}
+
+@include generateSpacingClassname($default-spacing);
+
+/*
+Generate class names with the following format:
+.(padding|margin)_(all|left_right|top_bottom)_(1->max)
+*/
+$_presetSides: (all left_right top_bottom);
+
+$default-spacing: ();
+@each $attr in $_presetAttrs {
+  @each $side in $_presetSides {
+    @for $i from 1 through $_spacingLength {
+      $value: space($i);
+      $style: (top: $value, left: $value, right: $value, bottom: $value);
+
+      @if($side == 'left_right') {
+        $style: (left: $value, right: $value);
+      } @else if($side == 'top_bottom') {
+        $style: (top: $value, bottom: $value);
+      }
+
+      $default-spacing: map.set($default-spacing, '#{$attr}_#{$side}_#{$i}', (
+        expose: 1,
+        default: $style,
+      ));
+    }
+  }
+}
+
+@include generateSpacingClassname($default-spacing);
+

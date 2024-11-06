@@ -24,12 +24,14 @@ const myFont = localFont({
   ],
 });
 
-const RootLayout = ({ children }) => (
-  <html lang="en">
-    <body className={myFont.className}>
-      {children}
-    </body>
-  </html>
-);
+const RootLayout = ({ children }) => {
+  return (
+    <html lang="en">
+      <body className={myFont.className}>
+        {children}
+      </body>
+    </html>
+  );
+};
 
 export default RootLayout;

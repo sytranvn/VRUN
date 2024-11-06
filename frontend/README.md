@@ -28,7 +28,7 @@ const Component = ({ children }) => {
 ## API call
 
 ```js
-import getAxios from '@/utils/getAxios';
+import getAxios from '@/utils/axios/getAxios';
 
 const axios = getAxios();
 
