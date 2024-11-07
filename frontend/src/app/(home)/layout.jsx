@@ -44,7 +44,9 @@ const HomeLayout = ({ children }) => {
             >
               <Flex gap="small">
                 <CodeOutlined />
-                <h1>VSTEP B2</h1>
+                <h1>
+                  <Link href="/" style={{ color: '#000' }}>VSTEP B2</Link>
+                </h1>
               </Flex>
               <Flex gap="small">
                 <Link href="/login">

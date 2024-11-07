@@ -82,5 +82,6 @@ module.exports = {
       ignoreTemplateLiterals: true,
       ignoreRegExpLiterals: true,
     }],
+    'react/no-array-index-key': 'off',
   },
 };
