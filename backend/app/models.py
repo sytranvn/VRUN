@@ -157,7 +157,7 @@ class QuestionBase(SQLModel):
 
 
 class Question(BaseTable, QuestionBase, table=True):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, unique=True)
     question_group_id: uuid.UUID = Field(
         foreign_key="question_group.id", nullable=False, ondelete="CASCADE", primary_key=True
     )
