@@ -1,5 +1,5 @@
+from typing import Any, List, cast
 import uuid
-from typing import Any, cast, List
 
 from fastapi import APIRouter, HTTPException
 from sqlmodel import col, func, select
@@ -7,21 +7,24 @@ from sqlmodel import col, func, select
 from app.api.deps import CurrentUser, SessionDep
 from app.models import Exam, QuestionGroup
 from app.view_models import (
-ExamCreate, ExamPublic, ExamsPublic, ExamUpdate, Message)
+    ExamCreate,
+    ExamPublic,
+    ExamUpdate,
+    ExamsPublic,
+    ExamsReadonly,
+    Message,
+)
 
 router = APIRouter()
-router.tags=["admin"]
 
-@router.get("/", response_model=ExamsPublic)
+
+@router.get("/", response_model=ExamsReadonly)
 def read_exams(
     session: SessionDep, current_user: CurrentUser, skip: int = 0, limit: int = 100
 ) -> Any:
     """
     Retrieve exams.
     """
-
-    if not current_user.is_superuser:
-        raise HTTPException(status_code=400, detail="Not enough permissions")
 
     count_statement = select(func.count()).select_from(Exam)
     count = session.exec(count_statement).one()

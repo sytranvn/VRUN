@@ -102,4 +102,3 @@ def delete_question_group(
     session.delete(question_group)
     session.commit()
     return Message(message="QuestionGroup deleted successfully")
-
