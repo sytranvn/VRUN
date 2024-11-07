@@ -68,10 +68,12 @@ class ExamUpdate(ExamBase):
     title: str | None = Field(max_length=255)  # type: ignore
     description: str | None  # type: ignore
     status: ExamStatus
+    question_groups: Sequence[uuid.UUID] | None
 
 class ExamPublic(ExamBase):
     id: uuid.UUID
     status: ExamStatus
+    question_groups: Sequence["QuestionGroupPublic"]
 
 class ExamsPublic(SQLModel):
     data: Sequence[ExamPublic]
@@ -95,8 +97,7 @@ class QuestionGroupsPublic(SQLModel):
 
 
 class QuestionCreate(QuestionBase):
-    question_group_id: uuid.UUID
-
+    answers: Sequence["AnswerCreate"]
 
 class QuestionUpdate(QuestionBase):
     id: uuid.UUID
@@ -116,6 +117,7 @@ class AnswerPublic(AnswerBase):
 
 class AnswerCreate(AnswerBase):
     question_id: uuid.UUID
+    is_correct_answer: bool
 
 
 class AnswerUpdate(AnswerBase):

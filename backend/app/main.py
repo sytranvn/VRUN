@@ -4,6 +4,7 @@ from fastapi.routing import APIRoute
 from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
+
 from app.core.config import settings
 from .initial_data import init
 
