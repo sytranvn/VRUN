@@ -97,6 +97,7 @@ class ExamPublic(ExamBase):
 
 class ExamReadonly(ExamBase):
     id: uuid.UUID
+    # TODO: this part only visible when take exam
     question_groups: List["QuestionGroupReadonly"]
 
 
