@@ -1,9 +1,9 @@
 import uuid
-from typing import List, Sequence
+from typing import List, Literal, Sequence
 from datetime import datetime, timezone
 from enum import StrEnum
 from pydantic import EmailStr
-from sqlmodel import Column, Field, ForeignKeyConstraint, Relationship, SQLModel, Enum
+from sqlmodel import Column, Field, ForeignKey, ForeignKeyConstraint, Relationship, SQLModel, Enum, UniqueConstraint
 
 
 class BaseTable:
@@ -17,6 +17,44 @@ class BaseTable:
         },
     )
 
+class AnswerStatus(StrEnum):
+    DRAFT = "DRAFT"
+    SUBMITED = "SUBMITED"
+
+class CandidateExamAnswer(SQLModel, table=True):
+    __tablename__ = "candiate_exam_answer"  # type: ignore
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ['question_id', 'answer_id'],
+            ['answer.question_id', 'answer.id'],
+            ondelete="CASCADE"
+        ),
+    )
+    candidate_exam_id: uuid.UUID = Field(nullable=False, primary_key=True, foreign_key="candidate_exam.id", ondelete="CASCADE")
+    question_id: uuid.UUID = Field(nullable=False, primary_key=True)
+    answer_id: uuid.UUID = Field(nullable=False, primary_key=True)
+    status: AnswerStatus = Field(
+        default=AnswerStatus.DRAFT,
+        sa_column=Column(Enum(AnswerStatus, native_enum=False))
+    )
+
+class CandidateExamStatus(StrEnum):
+    SCHEDULED  = "SCHEDULED"
+    STARTED    = "STARTED"
+    FINISHED   = "FINISHED"
+    CANCELED   = "CANCELED"
+
+class CandidateExam(BaseTable, SQLModel, table=True):
+    __tablename__ = "candidate_exam"  # type: ignore
+    id: uuid.UUID = Field(nullable=False, primary_key=True)
+    candidate_id: uuid.UUID = Field(foreign_key="user.id", nullable=False, ondelete="CASCADE")
+    exam_id: uuid.UUID = Field(foreign_key="exam.id", nullable=False, ondelete="CASCADE")
+    start_time: datetime
+    duration: int  = Field(default=120)  # minutes
+    start_time: datetime
+    duration: int  = Field(default=120)  # minutes
+    status: CandidateExamStatus = Field(default=CandidateExamStatus.SCHEDULED,
+                                        sa_column=Column(Enum(CandidateExamStatus, native_enum=False)))
 
 # Shared properties
 class Role(StrEnum):
@@ -32,131 +70,43 @@ class UserBase(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
 
 
-# Properties to receive via API on creation
-class UserCreate(UserBase):
-    password: str = Field(min_length=8, max_length=40)
-
-
-class UserRegister(SQLModel):
-    email: EmailStr = Field(max_length=255)
-    password: str = Field(min_length=8, max_length=40)
-    full_name: str | None = Field(default=None, max_length=255)
-
-
-# Properties to receive via API on update, all are optional
-class UserUpdate(UserBase):
-    email: EmailStr | None = Field(default=None, max_length=255)  # type: ignore
-    password: str | None = Field(default=None, min_length=8, max_length=40)
-
-
-class UserUpdateMe(UserBase):
-    full_name: str | None = Field(default=None, max_length=255)
-    email: EmailStr | None = Field(default=None, max_length=255)  # type: ignore
-
-
-class UpdatePassword(SQLModel):
-    current_password: str = Field(min_length=8, max_length=40)
-    new_password: str = Field(min_length=8, max_length=40)
-
-
 # Database model, database table inferred from class name
 class User(BaseTable, UserBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     hashed_password: str
-    # candidate_exams: list["CandidateExam"] = Relationship(back_populates="candidate")
+    exams: List["Exam"] = Relationship(link_model=CandidateExam)
 
-
-# Properties to return via API, id is always required
-class UserPublic(UserBase):
-    id: uuid.UUID
-
-
-class UsersPublic(SQLModel):
-    data: Sequence[UserPublic]
-    count: int
-
-# Generic message
-class Message(SQLModel):
-    message: str
-
-
-# JSON payload containing access token
-class Token(SQLModel):
-    access_token: str
-    token_type: str = "bearer"
-
-
-# Contents of JWT token
-class TokenPayload(SQLModel):
-    sub: str | None = None
-
-
-class NewPassword(SQLModel):
-    token: str
-    new_password: str = Field(min_length=8, max_length=40)
-
+class Part(BaseTable, SQLModel, table=True):
+    question_group_id: uuid.UUID = Field(
+        foreign_key="question_group.id", nullable=False, ondelete="CASCADE", primary_key=True
+    )
+    exam_id: uuid.UUID = Field(
+        foreign_key="exam.id", nullable=False, ondelete="CASCADE", primary_key=True
+    )
+    titile: str = Field(max_length=255)
+    description: str
+    duration: int
 
 # NOTE: Add new model here
 
 class ExamStatus(StrEnum):
-    DRAFT   = "DRAFT"
+    DRAFT     = "DRAFT"
     SUBMITTED = "SUBMITTED"
-    DELETED = "DELETED"
+    DELETED   = "DELETED"
 
-
-
-class CandidateExamStatus(StrEnum):
-    REGISTERED = "REGISTERED"
-    SCHEDULED  = "SCHEDULED"
-    STARTED    = "STARTED"
-    ENDED      = "ENDED"
-
-
-# NOTE: WIP, do not use
-# class CandidateExam(BaseTable, SQLModel, table=True):
-#     __tablename__ = "candidate_exam"  # type: ignore
-#     candidate_id: uuid.UUID = Field(
-#         foreign_key="user.id", nullable=False, ondelete="CASCADE", primary_key=True
-#     )
-#     exam_id: uuid.UUID = Field(
-#         foreign_key="exam.id", nullable=False, ondelete="CASCADE", primary_key=True
-#     )
-#     start_time: datetime
-#     duration: int  = Field(default=120)  # minutes
-#     start_time: datetime
-#     duration: int  = Field(default=120)  # minutes
-#     status: CandidateExamStatus = Field(default=CandidateExamStatus.REGISTERED,
-#                                         sa_column=Column(Enum(CandidateExamStatus, native_enum=False)))
-#     candiate: User = Relationship(back_populates="exam_candidates")
-#     exam: "Exam" = Relationship(back_populates="candidate_exams")
 
 class ExamBase(SQLModel):
     title: str = Field(max_length=255)
     description: str
 
 
-class ExamCreate(ExamBase):
-    pass
-
-class ExamUpdate(ExamBase):
-    title: str | None = Field(max_length=255)  # type: ignore
-    description: str | None  # type: ignore
-    status: ExamStatus
-
-class ExamPublic(ExamBase):
-    id: uuid.UUID
-    status: ExamStatus
-
-class ExamsPublic(SQLModel):
-    data: Sequence[ExamPublic]
-    count: int
-
 class Exam(BaseTable, ExamBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     status: ExamStatus = Field(default=ExamStatus.DRAFT.value,
                                sa_column=Column(Enum(ExamStatus, native_enum=False)))
-    # exam_candidates: list[CandidateExam] = Relationship(back_populates="exam")
-    skills: list["ExamSkill"] = Relationship(back_populates="exam")
+    exam_candidates: List[User] = Relationship(back_populates="exams", link_model=CandidateExam)
+    question_groups: List["QuestionGroup"] = Relationship(back_populates="exams", link_model=Part)
+
 
 class Skill(StrEnum):
     LISTENING = "LISTENING"
@@ -165,93 +115,78 @@ class Skill(StrEnum):
     SPEAKING = "SPEAKING"
 
 
-class ExamSkill(BaseTable, SQLModel, table=True):
-    __tablename__ = "exam_skill"  # type: ignore
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    skill: Skill = Field(sa_column=Column(Enum(Skill, native_enum=False, length=20)))
-    number_of_parts: int
-    duration: int
-    exam_id: uuid.UUID = Field(
-        foreign_key="exam.id", nullable=False, ondelete="CASCADE"
-    )
-    exam: Exam = Relationship(back_populates="skills")
-    parts: List["Part"] = Relationship(back_populates="exam_skill")
+class QuestionStatusEnum(StrEnum):
+    DRAFT = "DRAFT"
+    ACTIVE = "ACTIVE"
+    DELETED = "DELETED"
 
 
-class Part(BaseTable, SQLModel, table=True):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    titile: str = Field(max_length=255)
-    description: str
-    duration: int
-    exam_skill_id: uuid.UUID = Field(
-        nullable=False, foreign_key="exam_skill.id"
-    )
-    exam_skill: ExamSkill = Relationship(back_populates="parts")
-    question_group_id: uuid.UUID = Field(
-        foreign_key="question_group.id", nullable=False, ondelete="CASCADE"
-    )
-    question_group: "QuestionGroup" = Relationship()
-
-
-
-class QuestionGroup(BaseTable, SQLModel, table=True):
-    __tablename__ = "question_group"  # type: ignore
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+class QuestionGroupBase(SQLModel):
     resource: str
     description: str
+    skill: Skill
+    status: QuestionStatusEnum
+               
+
+class QuestionGroup(BaseTable, QuestionGroupBase, table=True):
+    __tablename__ = "question_group"  # type: ignore
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    skill: Skill = Field(default=Skill.LISTENING, 
+                         sa_column=Column(Enum(Skill, native_enum=False)))
+
+    status: QuestionStatusEnum = Field(default=QuestionStatusEnum.DRAFT, 
+                         sa_column=Column(Enum(QuestionStatusEnum, native_enum=False)))
     questions: List["Question"]= Relationship(back_populates="question_group")
-    part: Part | None = Relationship(back_populates="question_group")
+    exams: List["Exam"] = Relationship(back_populates="question_groups", link_model=Part)
+
 
 class QuestionType(StrEnum):
     MULTI_CHOICE= "MULTI_CHOICE"
     ESSAY= "ESSAY"
 
-class Question(BaseTable, SQLModel, table=True):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+
+class QuestionBase(SQLModel):
     description: str
+
+
+class Question(BaseTable, QuestionBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     question_group_id : uuid.UUID = Field(
         foreign_key="question_group.id", nullable=False, ondelete="CASCADE"
     )
-    question_type: QuestionType  = Field(default=QuestionType.MULTI_CHOICE,  sa_column=Column(Enum(QuestionType, native_enum=False)))
     question_group: QuestionGroup = Relationship(back_populates="questions")
     answers: List["Answer"] = Relationship(back_populates="question")
 
-
-class Answer(BaseTable, SQLModel, table=True):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+class AnswerBase(SQLModel):
     description: str
+
+class Answer(BaseTable, AnswerBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     question_id: uuid.UUID = Field(
         foreign_key="question.id", nullable=False, ondelete="CASCADE", primary_key=True
     )
     is_correct_answer: bool = Field(default=False)
     question: Question = Relationship(back_populates="answers")
 
-# NOTE: WIP, do not use
-# class CandidateExamAnswer(SQLModel, table=True):
-#     __tablename__ = "candiate_exam_answer"  # type: ignore
-#     __table_args__ = (
-#         ForeignKeyConstraint(
-#             ['candidate_id', 'exam_id'],
-#             ['candidate_exam.candidate_id', 'candidate_exam.exam_id'],
-#         ),
-#     )
-#     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-#     candidate_id: uuid.UUID
-#     exam_id: uuid.UUID
-#     # candidate_exam: CandidateExam = Relationship(back_populates="answers")
-#
-#     part_id: uuid.UUID = Field(
-#         foreign_key="part.id", nullable=False, ondelete="CASCADE"
-#     )
-#     part: Part | None = Relationship(back_populates="candidate_answers")
-#     question_group_id: uuid.UUID = Field(
-#         foreign_key="question_group.id", nullable=False, ondelete="CASCADE"
-#     )
-#     question_group: QuestionGroup | None = Relationship(back_populates="candidate_answers")
-#     question_id: uuid.UUID = Field(
-#         foreign_key="question.id", nullable=False, ondelete="CASCADE"
-#     )
-#     question: Question | None = Relationship(back_populates="candidate_answer")
+
+class EssaySkill(StrEnum):
+    WRITING = Skill.WRITING.value
+    SPEAKING = Skill.SPEAKING.value
+
+class CandidateExamEssay(SQLModel, table=True):
+    __tablename__ = "candiate_exam_essay"  # type: ignore
+    candidate_exam_id: uuid.UUID = Field(nullable=False, primary_key=True, foreign_key="candidate_exam.id", ondelete="CASCADE")
+    question_id: uuid.UUID = Field(nullable=False, primary_key=True, foreign_key="question.id")
+    skill: EssaySkill = Field(
+        default=EssaySkill.WRITING, 
+        sa_column=Column(Enum(EssaySkill, native_enum=False)),
+    )
+    status: AnswerStatus = Field(default=AnswerStatus.DRAFT,
+                                 sa_column=Column(Enum(AnswerStatus, native_enum=False)))
+    content: str = Field(nullable=True)
+    # link to voice record
+    resource: str = Field(nullable=True)
+    score: float = Field(nullable=True)
 
 
 class Configuration(BaseTable, SQLModel, table=True):

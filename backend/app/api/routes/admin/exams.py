@@ -1,14 +1,16 @@
 import uuid
-from typing import Any
+from typing import Any, cast, List
 
 from fastapi import APIRouter, HTTPException
-from sqlmodel import func, select
+from sqlmodel import col, func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Exam, ExamCreate, ExamPublic, ExamsPublic, ExamUpdate, Message
+from app.models import Exam, QuestionGroup
+from app.view_models import (
+ExamCreate, ExamPublic, ExamsPublic, ExamUpdate, Message)
 
 router = APIRouter()
-
+router.tags=["admin"]
 
 @router.get("/", response_model=ExamsPublic)
 def read_exams(
@@ -30,68 +32,73 @@ def read_exams(
 
 
 @router.get("/{id}", response_model=ExamPublic)
-def read_item(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
+def read_exam(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
     """
-    Get item by ID.
+    Get exam by ID.
     """
     if not current_user.is_superuser:
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    item = session.get(Exam, id)
-    if not item:
+    exam = session.get(Exam, id)
+    if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
-    return item
+    return exam
 
 
 @router.post("/", response_model=ExamPublic)
-def create_item(
-    *, session: SessionDep, current_user: CurrentUser, item_in: ExamCreate
+def create_exam(
+    *, session: SessionDep, current_user: CurrentUser, exam_in: ExamCreate
 ) -> Any:
     """
-    Create new item.
+    Create new exam.
     """
-    item = Exam.model_validate(item_in)
-    session.add(item)
+    exam = Exam.model_validate(exam_in)
+    session.add(exam)
     session.commit()
-    session.refresh(item)
-    return item
+    session.refresh(exam)
+    return exam
 
 
 @router.put("/{id}", response_model=ExamPublic)
-def update_item(
+def update_exam(
     *,
     session: SessionDep,
     current_user: CurrentUser,
     id: uuid.UUID,
-    item_in: ExamUpdate,
+    exam_in: ExamUpdate,
 ) -> Any:
     """
-    Update an item.
+    Update an exam.
     """
     if not current_user.is_superuser:
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    item = session.get(Exam, id)
-    if not item:
+    exam = session.get(Exam, id)
+    if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
-    update_dict = item_in.model_dump(exclude_unset=True)
-    item.sqlmodel_update(update_dict)
-    session.add(item)
+    if exam_in.question_groups is not None:
+        question_groups = session.exec(
+            select(QuestionGroup).where(col(QuestionGroup.id).in_(exam_in.question_groups))
+        ).all()
+        exam.question_groups = cast(List, question_groups)
+    update_dict = exam_in.model_dump(exclude_unset=True)
+    exam.sqlmodel_update(update_dict)
+    session.add(exam)
     session.commit()
-    session.refresh(item)
-    return item
+    session.refresh(exam)
+    return exam
 
 
 @router.delete("/{id}")
-def delete_item(
+def delete_exam(
     session: SessionDep, current_user: CurrentUser, id: uuid.UUID
 ) -> Message:
     """
-    Delete an item.
+    Delete an exam.
     """
     if not current_user.is_superuser:
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    item = session.get(Exam, id)
-    if not item:
+    exam = session.get(Exam, id)
+    if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
-    session.delete(item)
+    session.delete(exam)
     session.commit()
     return Message(message="Exam deleted successfully")

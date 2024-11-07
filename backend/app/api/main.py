@@ -1,9 +1,10 @@
 from fastapi import APIRouter
 
-from app.api.routes import login, users, utils, exams
+from app.api.routes import login, utils, admin, me
+
 
 api_router = APIRouter()
 api_router.include_router(login.router, tags=["login"])
-api_router.include_router(exams.router, prefix="/exams", tags=["exams"])
-api_router.include_router(users.router, prefix="/users", tags=["users"])
 api_router.include_router(utils.router, prefix="/utils", tags=["utils"])
+api_router.include_router(admin.admin_router, prefix="/admin")
+api_router.include_router(me.router, prefix="/me", tags=["me"])
