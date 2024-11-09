@@ -30,10 +30,6 @@ const contentStyle = {
   paddingBottom: '80px',
 };
 
-const examPartStyle = {
-  height: 'calc(100vh - 64px)',
-};
-
 const Exam = () => {
   const [modal, modalContext] = Modal.useModal();
   const router = useRouter();

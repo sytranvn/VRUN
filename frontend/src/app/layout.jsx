@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import '@/styles/global.scss';
 import localFont from 'next/font/local';
@@ -23,6 +21,10 @@ const myFont = localFont({
     },
   ],
 });
+
+export const metadata = {
+  title: 'VRUN',
+};
 
 const RootLayout = ({ children }) => {
   return (

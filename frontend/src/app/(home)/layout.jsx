@@ -3,10 +3,12 @@
 import React from 'react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import {
-  ConfigProvider, Layout, Flex, Button,
+  ConfigProvider, Layout, Flex, Popover, Avatar, Button,
 } from 'antd';
 import Link from 'next/link';
-import { CodeOutlined } from '@ant-design/icons';
+import {
+  CodeOutlined, UserOutlined, LogoutOutlined, SettingOutlined, HistoryOutlined,
+} from '@ant-design/icons';
 import getThemeOptions from '@/utils/antd/getThemeOptions';
 
 const themeOptions = getThemeOptions();
@@ -31,6 +33,36 @@ const footerStyle = {
 };
 
 const HomeLayout = ({ children }) => {
+  const userMenu = () => (
+    <Flex vertical gap="small">
+      <Link href="/profile">
+        <Button
+          style={{ width: '100%', justifyContent: 'flex-start' }}
+          icon={<SettingOutlined />}
+        >
+          Trang cá nhân
+        </Button>
+      </Link>
+      <Link href="/history">
+        <Button
+          style={{ width: '100%', justifyContent: 'flex-start' }}
+          icon={<HistoryOutlined />}
+        >
+          Lịch sử thi
+        </Button>
+      </Link>
+      <Link href="/logout">
+        <Button
+          style={{ width: '100%', justifyContent: 'flex-start' }}
+          danger
+          icon={<LogoutOutlined />}
+        >
+          Đăng xuất
+        </Button>
+      </Link>
+    </Flex>
+  );
+
   return (
     <AntdRegistry>
       <ConfigProvider
@@ -49,11 +81,18 @@ const HomeLayout = ({ children }) => {
                 </h1>
               </Flex>
               <Flex gap="small">
-                <Link href="/login">
-                  <Button type="link">
-                    Login
-                  </Button>
-                </Link>
+                <Popover
+                  content={userMenu}
+                  trigger="click"
+                  placement="bottomRight"
+                  arrow={false}
+                >
+                  <button type="button">
+                    <Avatar
+                      icon={<UserOutlined />}
+                    />
+                  </button>
+                </Popover>
               </Flex>
             </Flex>
           </Layout.Header>
