@@ -76,7 +76,8 @@ def update_exam(
         raise HTTPException(status_code=404, detail="Exam not found")
     if exam_in.question_groups is not None:
         question_groups = session.exec(
-            select(QuestionGroup).where(col(QuestionGroup.id).in_(exam_in.question_groups))
+            select(QuestionGroup)
+            .where(col(QuestionGroup.id).in_(exam_in.question_groups))
         ).all()
         exam.question_groups = cast(List, question_groups)
     update_dict = exam_in.model_dump(exclude_unset=True)

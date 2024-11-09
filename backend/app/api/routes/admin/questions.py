@@ -2,11 +2,13 @@ import uuid
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
+from fastapi.exceptions import ValidationException
 
-from app.api.deps import CurrentUser, SessionDep
-from app.models import Question, QuestionGroup
+from app.api.deps import SessionDep
+from app.models import Answer, Question, QuestionGroup
 
 from app.view_models import (
+    AnswerCreate,
     QuestionCreate,
     QuestionPublic,
     QuestionsPublic,
@@ -14,13 +16,12 @@ from app.view_models import (
     Message
 )
 
-router = APIRouter(prefix="/question_groups/{question_group_id}/questions")
+router = APIRouter()
 
-router.tags=["admin"]
 
 @router.get("/", response_model=QuestionsPublic)
 def read_questions(
-    session: SessionDep, current_user: CurrentUser,
+    session: SessionDep,
     question_group_id: uuid.UUID,
 ) -> Any:
     """
@@ -33,9 +34,11 @@ def read_questions(
 
 
 @router.get("/{id}", response_model=QuestionPublic)
-def read_question(session: SessionDep, current_user: CurrentUser, 
+def read_question(
+    session: SessionDep,
     question_group_id: uuid.UUID,
-    id: uuid.UUID) -> Any:
+    id: uuid.UUID
+) -> Any:
     """
     Get question by ID.
     """
@@ -47,7 +50,7 @@ def read_question(session: SessionDep, current_user: CurrentUser,
 
 @router.post("/", response_model=QuestionPublic)
 def create_question(
-    *, session: SessionDep, current_user: CurrentUser, question_in: QuestionCreate,
+    *, session: SessionDep, question_in: QuestionCreate,
     question_group_id: uuid.UUID,
 ) -> Any:
     """
@@ -55,12 +58,19 @@ def create_question(
     """
     question_group = session.get(QuestionGroup, question_group_id)
     if question_group is None:
-        raise HTTPException(status_code=404, detail="Question not found")
-    question = Question.model_validate(question_in)
-    question.question_group = question_group
+        raise HTTPException(status_code=404, detail="Question group not found")
+    answers = [AnswerCreate.model_validate(ans) for ans in question_in.answers]
+    if sum(ans.is_correct_answer for ans in answers) > 1:
+        raise ValidationException(errors=["Can't have multiple correct answers"])
+    del question_in.answers
+    question = Question.model_validate({**question_in.model_dump(), "question_group_id": question_group.id})
     session.add(question)
     session.commit()
     session.refresh(question)
+    for ans in answers:
+        ans = Answer.model_validate({**ans.model_dump(), "question_id": question.id})
+        question.answers.append(ans)
+    session.commit()
     return question
 
 
@@ -68,7 +78,6 @@ def create_question(
 def update_question(
     *,
     session: SessionDep,
-    current_user: CurrentUser,
     question_group_id: uuid.UUID,
     id: uuid.UUID,
     question_in: QuestionUpdate,
@@ -76,8 +85,6 @@ def update_question(
     """
     Update an question.
     """
-    if not current_user.is_superuser:
-        raise HTTPException(status_code=400, detail="Not enough permissions")
     question = session.get(Question, {"question_group_id": question_group_id, "id": id})
     if not question:
         raise HTTPException(status_code=404, detail="Question not found")
@@ -91,15 +98,13 @@ def update_question(
 
 @router.delete("/{id}")
 def delete_question(
-    session: SessionDep, current_user: CurrentUser, 
+    session: SessionDep,
     question_group_id: uuid.UUID,
     id: uuid.UUID
 ) -> Message:
     """
     Delete an question.
     """
-    if not current_user.is_superuser:
-        raise HTTPException(status_code=400, detail="Not enough permissions")
     question = session.get(Question, {"question_group_id": question_group_id, "id": id})
     if not question:
         raise HTTPException(status_code=404, detail="Question not found")
