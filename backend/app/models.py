@@ -88,17 +88,23 @@ class User(BaseTable, UserBase, table=True):
 
 
 class Part(BaseTable, SQLModel, table=True):
+    __tableargs__ = (
+        UniqueConstraint("exam_id", "order"),
+    )
     question_group_id: uuid.UUID = Field(
         foreign_key="question_group.id", nullable=False, ondelete="CASCADE", primary_key=True
     )
     exam_id: uuid.UUID = Field(
         foreign_key="exam.id", nullable=False, ondelete="CASCADE", primary_key=True
     )
+    order: int
+    question_group: "QuestionGroup" = Relationship()
+    exam: "Exam" = Relationship(back_populates="parts")
 
 
 class ExamStatus(StrEnum):
     DRAFT = "DRAFT"
-    SUBMITTED = "SUBMITTED"
+    ACTIVE = "ACTIVE"
 
 
 class ExamBase(SQLModel):
@@ -112,8 +118,7 @@ class Exam(BaseTable, ExamBase, table=True):
                                sa_column=Column(Enum(ExamStatus, native_enum=False)))
     exam_candidates: List[User] = Relationship(
         back_populates="exams", link_model=CandidateExam)
-    question_groups: List["QuestionGroup"] = Relationship(
-        back_populates="exams", link_model=Part)
+    parts: List[Part ]= Relationship()
 
 
 class Skill(StrEnum):
@@ -141,10 +146,12 @@ class QuestionGroup(BaseTable, QuestionGroupBase, table=True):
     skill: Skill = Field(default=Skill.LISTENING,
                          sa_column=Column(Enum(Skill, native_enum=False)))
     status: QuestionStatusEnum = Field(default=QuestionStatusEnum.DRAFT,
-                                       sa_column=Column(Enum(QuestionStatusEnum, native_enum=False)))
+                                       sa_column=Column(
+                                           Enum(QuestionStatusEnum,
+                                                native_enum=False)))
     questions: List["Question"] = Relationship(back_populates="question_group")
-    exams: List["Exam"] = Relationship(
-        back_populates="question_groups", link_model=Part)
+    # exams: List["Exam"] = Relationship(back_populates="question_groups", link_model=Part)
+    part: Part = Relationship(back_populates="question_group")
 
 
 class QuestionType(StrEnum):

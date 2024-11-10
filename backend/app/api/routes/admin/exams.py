@@ -1,13 +1,12 @@
+from typing import Any, List, cast
 import uuid
-from typing import Any, cast, List
 
 from fastapi import APIRouter, HTTPException
 from sqlmodel import col, func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Exam, QuestionGroup
-from app.view_models import (
-ExamCreate, ExamPublic, ExamsPublic, ExamUpdate, Message)
+from app.models import Exam, Part, QuestionGroup
+from app.view_models import ExamCreate, ExamPublic, ExamUpdate, ExamsPublic, Message, ExamQuestionGroupCreate
 
 router = APIRouter()
 router.tags=["admin"]
@@ -36,17 +35,17 @@ def read_exam(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> 
     """
     Get exam by ID.
     """
-    if not current_user.is_superuser:
-        raise HTTPException(status_code=400, detail="Not enough permissions")
     exam = session.get(Exam, id)
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
+    question_groups = sorted(exam.parts, key=lambda x: x.order)
+    exam.question_groups = question_groups
     return exam
 
 
 @router.post("/", response_model=ExamPublic)
 def create_exam(
-    *, session: SessionDep, current_user: CurrentUser, exam_in: ExamCreate
+    *, session: SessionDep, exam_in: ExamCreate
 ) -> Any:
     """
     Create new exam.
@@ -62,15 +61,12 @@ def create_exam(
 def update_exam(
     *,
     session: SessionDep,
-    current_user: CurrentUser,
     id: uuid.UUID,
     exam_in: ExamUpdate,
 ) -> Any:
     """
     Update an exam.
     """
-    if not current_user.is_superuser:
-        raise HTTPException(status_code=400, detail="Not enough permissions")
     exam = session.get(Exam, id)
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
@@ -90,16 +86,43 @@ def update_exam(
 
 @router.delete("/{id}")
 def delete_exam(
-    session: SessionDep, current_user: CurrentUser, id: uuid.UUID
+    session: SessionDep, id: uuid.UUID
 ) -> Message:
     """
     Delete an exam.
     """
-    if not current_user.is_superuser:
-        raise HTTPException(status_code=400, detail="Not enough permissions")
     exam = session.get(Exam, id)
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
     session.delete(exam)
     session.commit()
     return Message(message="Exam deleted successfully")
+
+@router.post("/{id}/question_groups", response_model=ExamPublic)
+def add_exam_question(
+    session: SessionDep,
+    id: uuid.UUID,
+    question_in: ExamQuestionGroupCreate
+) -> Any:
+    exam = session.get(Exam, id)
+    if not exam:
+        raise HTTPException(status_code=404, detail="Exam not found")
+    part = Part.model_validate(dict(exam_id=exam.id, **question_in.model_dump()))
+    exam.parts.append(part)
+    return exam
+    
+@router.delete("/{id}/question_groups/{question_group_id}", response_model=ExamPublic)
+def add_exam_question(
+    session: SessionDep,
+    id: uuid.UUID,
+    question_group_id: uuid.UUID
+) -> Any:
+    exam = session.get(Exam, id)
+    if not exam:
+        raise HTTPException(status_code=404, detail="Exam not found")
+    part = next(part for part in exam.parts if part.question_group_id == question_group_id)
+    exam.parts.remove(part)
+    session.commit()
+    session.refresh(exam)
+    return exam
+    

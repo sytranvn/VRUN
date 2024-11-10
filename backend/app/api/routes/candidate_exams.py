@@ -2,6 +2,7 @@ from typing import Any
 import uuid
 
 from fastapi import APIRouter, HTTPException
+from sqlmodel import select
 
 from app.api.deps import SessionDep, CurrentUser
 from app.models import Exam
@@ -25,7 +26,9 @@ def read_exams(
 
 
 @router.get("/{id}", response_model=ExamReadonly)
-def read_exam(session: SessionDep, id: uuid.UUID) -> Any:
+def read_exam(session: SessionDep,
+              current_user: CurrentUser,
+              id: uuid.UUID) -> Any:
     """
     Get exam by ID.
     """
@@ -36,7 +39,9 @@ def read_exam(session: SessionDep, id: uuid.UUID) -> Any:
 
 
 @router.post("/{id}/answer", response_model=ExamReadonly)
-def add_answer(session: SessionDep, id: uuid.UUID) -> Any:
+def add_answer(session: SessionDep,
+               current_user: CurrentUser,
+               id: uuid.UUID) -> Any:
     """
     Add an answer.
     """
@@ -45,8 +50,11 @@ def add_answer(session: SessionDep, id: uuid.UUID) -> Any:
         raise HTTPException(status_code=404, detail="Exam not found")
     return exam
 
+
 @router.post("/{id}/submit", response_model=ExamReadonly)
-def submit_answer(session: SessionDep, id: uuid.UUID) -> Any:
+def submit_answer(session: SessionDep,
+                  current_user: CurrentUser,
+                  id: uuid.UUID) -> Any:
     """
     Submit questions' answers of a skill.
     """
@@ -54,4 +62,3 @@ def submit_answer(session: SessionDep, id: uuid.UUID) -> Any:
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
     return exam
-

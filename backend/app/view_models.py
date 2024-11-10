@@ -6,6 +6,7 @@ from sqlmodel import Field, SQLModel
 
 from .models import (
     AnswerBase,
+    CandidateExamStatus,
     ExamBase,
     ExamStatus,
     Part,
@@ -94,11 +95,21 @@ class ExamPublic(ExamBase):
     status: ExamStatus
     question_groups: List["QuestionGroupPublic"]
 
+class ExamQuestionGroupCreate(SQLModel):
+    question_group_id: uuid.UUID
+    order: int
+
 
 class ExamReadonly(ExamBase):
     id: uuid.UUID
     # TODO: this part only visible when take exam
     question_groups: List["QuestionGroupReadonly"]
+
+class RegisteredExam(ExamBase):
+    id: uuid.UUID
+    # TODO: this part only visible when take exam
+    question_groups: List["QuestionGroupReadonly"]
+    status: CandidateExamStatus
 
 
 class ExamsPublic(SQLModel):
@@ -109,14 +120,6 @@ class ExamsPublic(SQLModel):
 class ExamsReadonly(SQLModel):
     data: List[ExamReadonly]
     count: int
-
-
-class PartPublic(SQLModel):
-    id: uuid.UUID
-    titile: str = Field(max_length=255)
-    description: str
-    duration: int
-    question_group: "QuestionGroupPublic"
 
 
 class QuestionGroupCreate(QuestionGroupBase):
