@@ -5,7 +5,7 @@ export async function GET() {
 /*
 Call example:
 
-import getAxios from '@/utils/getAxios';
+import getAxios from '@/utils/axios/getAxios';
 
 const axios = getAxios();
 

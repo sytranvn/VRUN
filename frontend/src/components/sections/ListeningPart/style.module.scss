@@ -1,0 +1,21 @@
+.section {
+  position: relative;
+}
+.exam {
+  height: 100%;
+}
+.content {
+  height: calc(100vh - 64px - 100px);
+  overflow: auto;
+  padding: 0 30px 40px;
+}
+.audio {
+  height: 100px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  audio {
+    width: 50%;
+  }
+}

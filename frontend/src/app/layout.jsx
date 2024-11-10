@@ -1,8 +1,6 @@
-'use client';
-
-import React from 'react';
 import '@/styles/global.scss';
 import localFont from 'next/font/local';
+import ScrollTop from '@/components/elements/ScrollTop';
 
 const myFont = localFont({
   src: [
@@ -24,12 +22,19 @@ const myFont = localFont({
   ],
 });
 
-const RootLayout = ({ children }) => (
-  <html lang="en">
-    <body className={myFont.className}>
-      {children}
-    </body>
-  </html>
-);
+export const metadata = {
+  title: 'VRUN',
+};
+
+const RootLayout = ({ children }) => {
+  return (
+    <html lang="en">
+      <body className={myFont.className}>
+        {children}
+        <ScrollTop />
+      </body>
+    </html>
+  );
+};
 
 export default RootLayout;

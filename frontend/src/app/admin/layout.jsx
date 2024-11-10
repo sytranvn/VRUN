@@ -1,35 +1,42 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import {
-  AppstoreOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  ShopOutlined,
-  TeamOutlined,
-  UploadOutlined,
+  PaperClipOutlined,
+  HomeOutlined,
+  ExceptionOutlined,
   UserOutlined,
-  VideoCameraOutlined,
 } from '@ant-design/icons';
 import {
-  ConfigProvider, Layout, Menu, theme,
+  ConfigProvider, Layout, Menu, Flex, Button, theme,
 } from 'antd';
+import Link from 'next/link';
+import Logo from '@/components/elements/Logo';
+import { usePathname } from 'next/navigation';
 
 const items = [
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  AppstoreOutlined,
-  TeamOutlined,
-  ShopOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: `nav ${index + 1}`,
-}));
+  {
+    key: 'dashboard',
+    icon: React.createElement(HomeOutlined),
+    label: <Link href="/admin">Trang chủ</Link>,
+  },
+  {
+    key: 'exam-management',
+    icon: React.createElement(PaperClipOutlined),
+    label: <Link href="/admin/exam">Quản lý đề thi</Link>,
+  },
+  {
+    key: 'history-management',
+    icon: React.createElement(ExceptionOutlined),
+    label: <Link href="/admin/history">Lịch sử dự thi</Link>,
+  },
+  {
+    key: 'user-management',
+    icon: React.createElement(UserOutlined),
+    label: <Link href="/admin/user">Quản lý người dùng</Link>,
+  },
+];
 
 const menuStyle = {
   height: '100vh',
@@ -43,50 +50,78 @@ const headerStyle = {
   position: 'sticky',
   top: '0px',
   borderBottom: '1px solid #ddd',
+  zIndex: '10',
 };
 
 const contentStyle = {
   padding: '24px',
+  backgroundColor: '#fafafa',
 };
 
 const footerStyle = {
   textAlign: 'center',
-  backgroundColor: '#fff',
+  backgroundColor: '#fafafa',
 };
 
-const AdminLayout = ({ children }) => (
-  <AntdRegistry>
-    <ConfigProvider
-      theme={{
-        algorithm: theme.defaultAlgorithm,
-        token: {
-          colorBgLayout: '#fff',
-        },
-      }}
-    >
-      <Layout hasSider>
-        <Layout.Sider>
-          <Menu
-            style={menuStyle}
-            mode="inline"
-            defaultSelectedKeys={['4']}
-            items={items}
-          />
-        </Layout.Sider>
-        <Layout>
-          <Layout.Header style={headerStyle}>
-            VRUN
-          </Layout.Header>
-          <Layout.Content style={contentStyle}>
-            {children}
-          </Layout.Content>
-          <Layout.Footer style={footerStyle}>
-            VRUN © {new Date().getFullYear()}
-          </Layout.Footer>
+const AdminLayout = ({ children }) => {
+  const [selectedKeys, setSelectedKeys] = useState([]);
+  const path = usePathname();
+
+  useEffect(() => {
+    if (path.startsWith('/admin/exam')) {
+      setSelectedKeys(['exam-management']);
+    } else if (path.startsWith('/admin/history')) {
+      setSelectedKeys(['history-management']);
+    } else if (path.startsWith('/admin/user')) {
+      setSelectedKeys(['user-management']);
+    } else {
+      setSelectedKeys(['dashboard']);
+    }
+  }, [path]);
+
+  const handleLogout = () => {
+    console.log('handleLogout');
+  };
+
+  return (
+    <AntdRegistry>
+      <ConfigProvider
+        theme={{
+          algorithm: theme.defaultAlgorithm,
+          token: {
+            colorBgLayout: '#fff',
+          },
+        }}
+      >
+        <Layout hasSider>
+          <Layout.Sider>
+            <Menu
+              style={menuStyle}
+              mode="inline"
+              selectedKeys={selectedKeys}
+              items={items}
+            />
+          </Layout.Sider>
+          <Layout>
+            <Layout.Header style={headerStyle}>
+              <Flex justify="space-between" align="center">
+                <Logo href="/admin" />
+                <Button onClick={handleLogout} type="link">
+                  Đăng xuất
+                </Button>
+              </Flex>
+            </Layout.Header>
+            <Layout.Content style={contentStyle}>
+              {children}
+            </Layout.Content>
+            <Layout.Footer style={footerStyle}>
+              VRUN © {new Date().getFullYear()}
+            </Layout.Footer>
+          </Layout>
         </Layout>
-      </Layout>
-    </ConfigProvider>
-  </AntdRegistry>
-);
+      </ConfigProvider>
+    </AntdRegistry>
+  );
+};
 
 export default AdminLayout;

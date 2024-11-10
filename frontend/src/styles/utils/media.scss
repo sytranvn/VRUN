@@ -1,0 +1,111 @@
+@use "sass:map";
+
+$media-breakpoints: (
+  xxl: 1920px,
+  xl: 1440px,
+  lg: 1280px,
+  md: 768px,
+  sm: 576px,
+  xs: 360px,
+  xxs: 360px,
+);
+
+/// private function
+@function _sortMedia(
+  $options,
+  $breakpoints:
+    map-merge(
+      $media-breakpoints,
+      (
+        "default": 0,
+      )
+    )
+) {
+  $media: map-keys($breakpoints);
+  $sorted: ();
+  @each $breakpoint, $_ in $breakpoints {
+    @if ($options != null and map.get($options, $breakpoint) != null) {
+      $sorted: map.set($sorted, $breakpoint, map.get($options, $breakpoint));
+    }
+  }
+
+  @return $sorted;
+}
+
+/// private function
+@mixin _withContainer($query) {
+  $maxWidth: map-get($map: $query, $key: 'max-width');
+  $minWidth: map-get($map: $query, $key: 'min-width');
+
+  @if($maxWidth != null and $minWidth != null) {
+    @container #{$container-name} (min-width: #{$minWidth}) {
+      @container #{$container-name} (max-width: #{$maxWidth}) {
+        @content;
+      }
+    }
+  } @else if($maxWidth != null) {
+    @container #{$container-name} (max-width: #{$maxWidth}) {
+      @content;
+    }
+  } @else if($minWidth != null) {
+    @container #{$container-name} (min-width: #{$minWidth}) {
+      @content;
+    }
+  }
+}
+
+/// @name media-query
+/// @todo To apply style in specific media query
+/// @param $breakpoint - Supported breakpoints: xs, sm, md, lg, xl, xxl
+/// @param $mode - separate | mix - select mode to apply breakpoint
+/// @param $breakpoints - grid breakpoints
+@mixin media-query($breakpoint: "xs", $mode: "mobile-first", $breakpoints: $media-breakpoints, $with-container: false) {
+  $media: map-get(
+    $map: $breakpoints,
+    $key: $breakpoint,
+  );
+
+  @if ($breakpoint == "xs") {
+    @media screen and (max-width: $media) {
+      @content;
+    }
+  } @else {
+    @if ($mode == "mobile-first") {
+      @media screen and (min-width: calc($media + 1px)) {
+        @content;
+      }
+    } @else if($mode == "desktop-first") {
+      @media screen and (max-width: $media) {
+        @content;
+      }
+    }
+  }
+}
+
+/// @name media-between
+/// @todo To apply style between media queries
+/// @param $from - screen from width
+/// @param $to - screen to width
+/// @param $breakpoints - grid breakpoints
+@mixin media-between($from: "xs", $to: "lg", $breakpoints: $media-breakpoints, $with-container: false) {
+  $mediaFrom: map-get(
+    $map: $breakpoints,
+    $key: $from,
+  );
+  $mediaTo: map-get(
+    $map: $breakpoints,
+    $key: $to,
+  );
+
+  @if ($mediaFrom != null and $mediaTo != null) {
+    @if ($mediaFrom > $mediaTo) {
+      $tmp: $mediaFrom;
+      $mediaTo: $tmp;
+      $mediaFrom: $mediaTo;
+    }
+
+    @media screen and (min-width: calc($mediaFrom + 1px)) and (max-width: calc($mediaTo - 1px)) {
+      @content;
+    }
+  }
+}
