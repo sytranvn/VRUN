@@ -3,8 +3,8 @@
 import {
   Button, Row, Col, Typography, Flex, Card,
 } from 'antd';
-import { AudioOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import VoiceRecorder from '@/components/elements/VoiceRecorder';
 
 const { Text } = Typography;
 
@@ -70,14 +70,7 @@ const Index = () => {
                 <Text>
                   <strong>Bước 3:</strong> Nhấp vào nút &ldquo;Thu âm&rdquo; để thu âm
                 </Text>
-                <Flex gap="middle" align="center">
-                  <Button icon={<AudioOutlined />} type="primary">
-                    Thu âm
-                  </Button>
-                  <Button icon={<PlayCircleOutlined />} type="default">
-                    Nghe lại
-                  </Button>
-                </Flex>
+                <VoiceRecorder />
               </Flex>
               <Flex gap="middle" vertical>
                 <Text>

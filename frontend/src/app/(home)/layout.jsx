@@ -7,8 +7,9 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import {
-  CodeOutlined, UserOutlined, LogoutOutlined, SettingOutlined, HistoryOutlined,
+  UserOutlined, LogoutOutlined, SettingOutlined, HistoryOutlined,
 } from '@ant-design/icons';
+import Logo from '@/components/elements/Logo';
 import getThemeOptions from '@/utils/antd/getThemeOptions';
 
 const themeOptions = getThemeOptions();
@@ -18,7 +19,7 @@ const headerStyle = {
   position: 'sticky',
   top: '0px',
   borderBottom: '1px solid #ddd',
-  zIndex: '1',
+  zIndex: '10',
 };
 
 const contentStyle = {
@@ -33,6 +34,10 @@ const footerStyle = {
 };
 
 const HomeLayout = ({ children }) => {
+  const handleLogout = () => {
+    console.log('logout');
+  };
+
   const userMenu = () => (
     <Flex vertical gap="small">
       <Link href="/profile">
@@ -51,15 +56,14 @@ const HomeLayout = ({ children }) => {
           Lịch sử thi
         </Button>
       </Link>
-      <Link href="/logout">
-        <Button
-          style={{ width: '100%', justifyContent: 'flex-start' }}
-          danger
-          icon={<LogoutOutlined />}
-        >
-          Đăng xuất
-        </Button>
-      </Link>
+      <Button
+        style={{ width: '100%', justifyContent: 'flex-start' }}
+        danger
+        icon={<LogoutOutlined />}
+        onClick={handleLogout}
+      >
+        Đăng xuất
+      </Button>
     </Flex>
   );
 
@@ -74,12 +78,7 @@ const HomeLayout = ({ children }) => {
               justify="space-between"
               align="center"
             >
-              <Flex gap="small">
-                <CodeOutlined />
-                <h1>
-                  <Link href="/" style={{ color: '#000' }}>VSTEP B2</Link>
-                </h1>
-              </Flex>
+              <Logo />
               <Flex gap="small">
                 <Popover
                   content={userMenu}

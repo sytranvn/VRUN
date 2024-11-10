@@ -5,7 +5,6 @@ import {
   Flex, Form, Input, Button, Typography,
 } from 'antd';
 import Link from 'next/link';
-import { CodeOutlined } from '@ant-design/icons';
 
 const { Item } = Form;
 const { Title } = Typography;

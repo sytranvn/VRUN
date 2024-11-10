@@ -2,34 +2,35 @@
 
 import { useState } from 'react';
 import {
-  Flex, Form, Input, Button, DatePicker, Typography,
+  Flex, Form, Input, Button, Typography,
 } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
 import Link from 'next/link';
-import { CodeOutlined } from '@ant-design/icons';
 
 const { Item } = Form;
 const { Password } = Input;
 const { Title } = Typography;
 
-const Register = () => {
+const ChangePassword = () => {
   const [userInfo, setUserInfo] = useState({
-    fullname: '',
-    birthdate: '',
-    username: '',
+    oldPassword: '',
     password: '',
     retypePassword: '',
   });
   const [form] = Form.useForm();
 
   const RULES = {
-    fullname: [
-      { required: true, message: 'Vui lòng nhập họ tên' },
-    ],
-    birthdate: [
-      { required: true, message: 'Vui lòng nhập ngày tháng năm sinh' },
-    ],
-    username: [
-      { required: true, message: 'Vui lòng nhập tên tài khoản' },
+    oldPassword: [
+      { required: true, message: 'Vui lòng nhập mật khẩu' },
+      () => ({
+        validator(_, value) {
+          if (value.length > 8) {
+            return Promise.resolve();
+          }
+
+          return Promise.reject(new Error('Mật khẩu có ít nhất 8 ký tự'));
+        },
+      }),
     ],
     password: [
       { required: true, message: 'Vui lòng nhập mật khẩu' },
@@ -59,16 +60,13 @@ const Register = () => {
 
   const handleSubmit = (formData) => {
     console.log('formData', formData);
-    setUserInfo({
-      ...formData,
-      birthdate: formData.birthdate.format('YYYY-MM-DD'),
-    });
+    setUserInfo(formData);
   };
 
   return (
     <>
       <Title level={3} style={{ textAlign: 'center' }}>
-        Đăng ký
+        Đổi mật khẩu
       </Title>
       <Form
         form={form}
@@ -80,42 +78,19 @@ const Register = () => {
       >
         <Flex vertical gap="small">
           <Item
-            name="fullname"
-            label="Họ và tên"
-            rules={RULES.fullname}
+            name="password"
+            label="Mật khẩu cũ"
+            rules={RULES.oldPassword}
             hasFeedback
           >
-            <Input
-              autoComplete="fullname"
-              size="large"
-            />
-          </Item>
-          <Item
-            name="birthdate"
-            label="Ngày sinh"
-            rules={RULES.birthdate}
-            hasFeedback
-          >
-            <DatePicker
-              size="large"
-              style={{ width: '100%' }}
-              placeholder="YYYY-MM-DD"
-            />
-          </Item>
-          <Item
-            name="username"
-            label="Tài khoản"
-            rules={RULES.username}
-            hasFeedback
-          >
-            <Input
-              autoComplete="username"
+            <Password
+              autoComplete="current-password"
               size="large"
             />
           </Item>
           <Item
             name="password"
-            label="Mật khẩu"
+            label="Mật khẩu mới"
             rules={RULES.password}
             hasFeedback
           >
@@ -137,22 +112,26 @@ const Register = () => {
           </Item>
           <Item>
             <Flex
-              justify="center"
-              vertical
+              justify="space-between"
               align="center"
               gap="middle"
             >
+              <Link href="/">
+                <Button
+                  htmlType="button"
+                  size="large"
+                >
+                  Quay lại
+                </Button>
+              </Link>
               <Button
                 htmlType="submit"
                 type="primary"
-                style={{ width: '100%' }}
                 size="large"
+                icon={<SaveOutlined />}
               >
-                Đăng ký
+                Thay đổi
               </Button>
-              <Link href="/login" style={{ textAlign: 'right' }}>
-                Đăng nhập
-              </Link>
             </Flex>
           </Item>
         </Flex>
@@ -161,4 +140,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default ChangePassword;

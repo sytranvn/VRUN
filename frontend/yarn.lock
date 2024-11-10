@@ -603,6 +603,11 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
+"@wavesurfer/react@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@wavesurfer/react/-/react-1.0.7.tgz#5bbb8fe8080f4478e896a32eeeb5ed111bbc4266"
+  integrity sha512-Bw2rd2zqVL1ERy8N9mciacbQW3N5Gn9oRjhq3kjqgtLeE8a1WSTU+4kU0E37541jf432eNZ8lNzuodFFSiNccw==
+
 acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"
@@ -3178,6 +3183,11 @@ use-sync-external-store@^1.0.0:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.2.tgz#c3b6390f3a30eba13200d2302dcdf1e7b57b2ef9"
   integrity sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==
+
+wavesurfer.js@^7.8.8:
+  version "7.8.8"
+  resolved "https://registry.yarnpkg.com/wavesurfer.js/-/wavesurfer.js-7.8.8.tgz#5ace659a8eae615aaed943d417e036bef31d007e"
+  integrity sha512-FNiJ6RCAu4TijRcwdaqlN19+Y+Hhqb7Nfo2P4LudzhNnQRMKvF3QmXd9+KHlQZrSjexeK3WbY4COsxgGJkxMag==
 
 which-boxed-primitive@^1.0.2:
   version "1.0.2"

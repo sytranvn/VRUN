@@ -2,21 +2,34 @@
 
 import { useState } from 'react';
 import {
-  Flex, Form, Input, Button, Typography,
+  Flex, Form, Input, Button, DatePicker, Typography,
 } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
+import Link from 'next/link';
 
 const { Item } = Form;
-const { Password } = Input;
 const { Title } = Typography;
 
-const Register = () => {
+const Profile = () => {
   const [userInfo, setUserInfo] = useState({
+    fullname: '',
+    birthdate: '',
+    username: '',
     password: '',
     retypePassword: '',
   });
   const [form] = Form.useForm();
 
   const RULES = {
+    fullname: [
+      { required: true, message: 'Vui lòng nhập họ tên' },
+    ],
+    birthdate: [
+      { required: true, message: 'Vui lòng nhập ngày tháng năm sinh' },
+    ],
+    username: [
+      { required: true, message: 'Vui lòng nhập tên tài khoản' },
+    ],
     password: [
       { required: true, message: 'Vui lòng nhập mật khẩu' },
       () => ({
@@ -45,13 +58,16 @@ const Register = () => {
 
   const handleSubmit = (formData) => {
     console.log('formData', formData);
-    setUserInfo(formData);
+    setUserInfo({
+      ...formData,
+      birthdate: formData.birthdate.format('YYYY-MM-DD'),
+    });
   };
 
   return (
     <>
       <Title level={3} style={{ textAlign: 'center' }}>
-        Khôi phục mật khẩu
+        Chỉnh sửa thông tin
       </Title>
       <Form
         form={form}
@@ -63,41 +79,69 @@ const Register = () => {
       >
         <Flex vertical gap="small">
           <Item
+            name="fullname"
+            label="Họ và tên"
+            rules={RULES.fullname}
+            hasFeedback
+          >
+            <Input
+              autoComplete="fullname"
+              size="large"
+            />
+          </Item>
+          <Item
+            name="birthdate"
+            label="Ngày sinh"
+            rules={RULES.birthdate}
+            hasFeedback
+          >
+            <DatePicker
+              size="large"
+              style={{ width: '100%' }}
+              placeholder="YYYY-MM-DD"
+            />
+          </Item>
+          <Item
+            name="username"
+            label="Tài khoản"
+          >
+            <Input
+              autoComplete="username"
+              size="large"
+              readOnly
+            />
+          </Item>
+          <Item
             name="password"
             label="Mật khẩu"
             rules={RULES.password}
             hasFeedback
           >
-            <Password
-              autoComplete="new-password"
-              size="large"
-            />
-          </Item>
-          <Item
-            name="retypePassword"
-            label="Nhập lại mật khẩu"
-            rules={RULES.retypePassword}
-            hasFeedback
-          >
-            <Password
-              autoComplete="new-password"
-              size="large"
-            />
+            <Link href="/change-password">
+              <Button>Thay đổi mật khẩu</Button>
+            </Link>
           </Item>
           <Item>
             <Flex
-              justify="center"
-              vertical
+              justify="space-between"
               align="center"
               gap="middle"
             >
+              <Link href="/">
+                <Button
+                  htmlType="button"
+                  size="large"
+                >
+                  Quay lại
+                </Button>
+              </Link>
               <Button
                 htmlType="submit"
                 type="primary"
-                style={{ width: '100%' }}
                 size="large"
+                icon={<SaveOutlined />}
               >
-                Xác nhận
+                Thay đổi
               </Button>
             </Flex>
           </Item>
@@ -107,4 +151,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Profile;

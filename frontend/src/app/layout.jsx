@@ -1,6 +1,6 @@
-import React from 'react';
 import '@/styles/global.scss';
 import localFont from 'next/font/local';
+import ScrollTop from '@/components/elements/ScrollTop';
 
 const myFont = localFont({
   src: [
@@ -31,6 +31,7 @@ const RootLayout = ({ children }) => {
     <html lang="en">
       <body className={myFont.className}>
         {children}
+        <ScrollTop />
       </body>
     </html>
   );

@@ -4,13 +4,14 @@ import React, { useEffect } from 'react';
 import {
   Layout, Flex, Button, Statistic, Modal, Anchor, Row, Col,
 } from 'antd';
-import Link from 'next/link';
-import { CodeOutlined, CheckOutlined, SaveOutlined } from '@ant-design/icons';
+import { CheckOutlined, SaveOutlined } from '@ant-design/icons';
+import Logo from '@/components/elements/Logo';
 import ListeningPart from '@/components/sections/ListeningPart';
 import ReadingPart from '@/components/sections/ReadingPart';
 import WritingPart from '@/components/sections/WritingPart';
 import SpeakingPart from '@/components/sections/SpeakingPart';
 import disableBodyScroll from '@/utils/scroll/disableBodyScroll';
+import enableBodyScroll from '@/utils/scroll/enableBodyScroll';
 import { EXAM_ANCHOR } from '@/utils/constants';
 import { useRouter } from 'next/navigation';
 
@@ -35,13 +36,22 @@ const Exam = () => {
   const router = useRouter();
 
   const finishExam = () => {
-    // modal.confirm({ title: '123' });
-    console.log('finishExam');
-    router.push('/finish');
+    modal.confirm({
+      title: 'Bạn có chắc muốn kết thúc bài thi?',
+      onOk() {
+        enableBodyScroll(document.body);
+        router.push('/finish');
+      },
+    });
   };
 
   const timeout = () => {
-    console.log('timeout');
+    modal.warning({
+      title: 'Hết giờ làm bài.',
+      onOk() {
+        router.push('/finish');
+      },
+    });
   };
 
   const saveExam = () => {
@@ -59,12 +69,7 @@ const Exam = () => {
           justify="space-between"
           align="center"
         >
-          <Flex gap="small">
-            <CodeOutlined />
-            <h1>
-              <Link href="/" style={{ color: '#000' }}>VSTEP B2</Link>
-            </h1>
-          </Flex>
+          <Logo />
           <Countdown
             value={new Date().getTime() + 360000}
             onFinish={timeout}

@@ -1,15 +1,23 @@
 'use client';
 
-import {
-  Flex, Splitter,
-} from 'antd';
-import Image from 'next/image';
+import { useState } from 'react';
+import { Flex, Splitter } from 'antd';
+import VoiceRecorder from '@/components/elements/VoiceRecorder';
 import htmlSample4 from '@/assets/data/htmlSample4';
 import style from './style.module.scss';
 
 const { Panel } = Splitter;
 
 const ReadingPart = ({ id }) => {
+  const [isCompleted, setIsCompleted] = useState();
+  const handleStart = () => {
+    console.log('start');
+  };
+  const handleStop = (recordedUrl) => {
+    console.log('stop', recordedUrl);
+    setIsCompleted(true);
+  };
+
   return (
     <Flex
       id={id}
@@ -27,11 +35,11 @@ const ReadingPart = ({ id }) => {
           </Panel>
           <Panel defaultSize="50%">
             <div className={style.content}>
-              <Image
-                src="/static/images/sample_speaking.png"
-                width={500}
-                height={500}
-                alt="sample"
+              <VoiceRecorder
+                disabled={isCompleted}
+                replay={false}
+                onStart={handleStart}
+                onStop={handleStop}
               />
             </div>
           </Panel>
