@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List
 import uuid
 
 from fastapi import APIRouter, HTTPException
@@ -46,7 +46,8 @@ def read_exam(session: SessionDep, id: uuid.UUID) -> Any:
         raise HTTPException(status_code=404, detail="Exam not found")
     return exam
 
-@router.post("/{id}/register", response_model=RegisteredExam)
+
+@router.post("/{id}/register", response_model=List[RegisteredExam])
 def register_exam(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
     """
     Register for an exam.

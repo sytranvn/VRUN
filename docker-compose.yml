@@ -92,6 +92,15 @@ services:
     build:
       context: ./backend
 
+  minio:
+    image: quay.io/minio/minio
+    restart: always
+    command: server /data --console-address ":9001"
+    ports:
+      - 9000:9000
+      - 9001:9001
+
+
   # frontend:
   #   image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
   #   restart: always

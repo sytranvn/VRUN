@@ -22,6 +22,9 @@ class AnswerStatus(StrEnum):
     DRAFT = "DRAFT"
     SUBMITED = "SUBMITED"
 
+class ExamStatus(StrEnum):
+    DRAFT = "DRAFT"
+    ACTIVE = "ACTIVE"
 
 class CandidateExamAnswer(SQLModel, table=True):
     __tablename__ = "candiate_exam_answer"  # type: ignore
@@ -62,6 +65,8 @@ class CandidateExam(BaseTable, SQLModel, table=True):
     duration: int = Field(default=120)  # minutes
     status: CandidateExamStatus = Field(default=CandidateExamStatus.SCHEDULED,
                                         sa_column=Column(Enum(CandidateExamStatus, native_enum=False)))
+    exam: "Exam" = Relationship()
+    candidate: "User" = Relationship(back_populates="exams")
 
 # Shared properties
 
@@ -84,7 +89,7 @@ class UserBase(SQLModel):
 class User(BaseTable, UserBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     hashed_password: str
-    exams: List["Exam"] = Relationship(link_model=CandidateExam)
+    exams: List["CandidateExam"] = Relationship()
 
 
 class Part(BaseTable, SQLModel, table=True):
@@ -102,9 +107,7 @@ class Part(BaseTable, SQLModel, table=True):
     exam: "Exam" = Relationship(back_populates="parts")
 
 
-class ExamStatus(StrEnum):
-    DRAFT = "DRAFT"
-    ACTIVE = "ACTIVE"
+
 
 
 class ExamBase(SQLModel):
@@ -116,8 +119,6 @@ class Exam(BaseTable, ExamBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     status: ExamStatus = Field(default=ExamStatus.DRAFT.value,
                                sa_column=Column(Enum(ExamStatus, native_enum=False)))
-    exam_candidates: List[User] = Relationship(
-        back_populates="exams", link_model=CandidateExam)
     parts: List[Part ]= Relationship()
 
 
@@ -134,8 +135,8 @@ class QuestionStatusEnum(StrEnum):
 
 
 class QuestionGroupBase(SQLModel):
-    resource: str
     description: str
+    resource: str | None
     skill: Skill
     duration: int
 

@@ -55,6 +55,9 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str = ""
     POSTGRES_DB: str = ""
+    MINIO_ENDPOINT: str = "localhost:9000"
+    MINIO_KEY: str = ""
+    MINIO_SECRET: str = ""
 
     @computed_field  # type: ignore[prop-decorator]
     @property

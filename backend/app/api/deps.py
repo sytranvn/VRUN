@@ -8,6 +8,8 @@ from jwt.exceptions import InvalidTokenError
 from pydantic import ValidationError
 from sqlmodel import Session
 
+from minio import Minio
+
 from app.core import security
 from app.core.config import settings
 from app.core.db import engine
@@ -56,3 +58,15 @@ def get_current_active_superuser(current_user: CurrentUser) -> User:
             status_code=403, detail="The user doesn't have enough privileges"
         )
     return current_user
+
+
+def get_minio_client():
+    return Minio(
+        settings.MINIO_ENDPOINT,
+        access_key=settings.MINIO_KEY,
+        secret_key=settings.MINIO_SECRET,
+        secure=settings.ENVIRONMENT != "local"
+    )
+
+
+MinioDep = Annotated[Minio, Depends(get_minio_client)]

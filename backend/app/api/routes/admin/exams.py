@@ -6,10 +6,11 @@ from sqlmodel import col, func, select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.models import Exam, Part, QuestionGroup
-from app.view_models import ExamCreate, ExamPublic, ExamUpdate, ExamsPublic, Message, ExamQuestionGroupCreate
+from app.view_models import ExamCreate, ExamPublic, ExamUpdate, ExamsPublic, Message, ExamQuestionGroupCreate, PartCreate
 
 router = APIRouter()
-router.tags=["admin"]
+router.tags = ["admin"]
+
 
 @router.get("/", response_model=ExamsPublic)
 def read_exams(
@@ -38,8 +39,6 @@ def read_exam(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> 
     exam = session.get(Exam, id)
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
-    question_groups = sorted(exam.parts, key=lambda x: x.order)
-    exam.question_groups = question_groups
     return exam
 
 
@@ -98,21 +97,42 @@ def delete_exam(
     session.commit()
     return Message(message="Exam deleted successfully")
 
+
 @router.post("/{id}/question_groups", response_model=ExamPublic)
-def add_exam_question(
+def add_exam_question_group(
     session: SessionDep,
     id: uuid.UUID,
-    question_in: ExamQuestionGroupCreate
+    part_in: PartCreate
 ) -> Any:
     exam = session.get(Exam, id)
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
-    part = Part.model_validate(dict(exam_id=exam.id, **question_in.model_dump()))
+    part = Part.model_validate(dict(**part_in.model_dump(), exam_id=exam.id))
     exam.parts.append(part)
+    session.commit()
+    session.refresh(exam)
     return exam
-    
+
+
+@router.put("/{id}/question_groups", response_model=ExamPublic)
+def update_exam_question_groups(
+    session: SessionDep,
+    id: uuid.UUID,
+    parts_in: List[PartCreate]
+) -> Any:
+    exam = session.get(Exam, id)
+    if not exam:
+        raise HTTPException(status_code=404, detail="Exam not found")
+    parts = [Part.model_validate(dict(**part_in.model_dump(), exam_id=exam.id))
+             for part_in in parts_in]
+    exam.parts = parts
+    session.commit()
+    session.refresh(exam)
+    return exam
+
+
 @router.delete("/{id}/question_groups/{question_group_id}", response_model=ExamPublic)
-def add_exam_question(
+def delete_exam_question_group(
     session: SessionDep,
     id: uuid.UUID,
     question_group_id: uuid.UUID
@@ -120,9 +140,9 @@ def add_exam_question(
     exam = session.get(Exam, id)
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
-    part = next(part for part in exam.parts if part.question_group_id == question_group_id)
+    part = next(
+        part for part in exam.parts if part.question_group_id == question_group_id)
     exam.parts.remove(part)
     session.commit()
     session.refresh(exam)
     return exam
-    

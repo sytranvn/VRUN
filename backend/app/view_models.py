@@ -1,8 +1,11 @@
+from datetime import timedelta
 from typing import List
 import uuid
 
-from pydantic import EmailStr
+from pydantic import EmailStr, SerializationInfo, field_serializer
+from pydantic.fields import computed_field
 from sqlmodel import Field, SQLModel
+
 
 from .models import (
     AnswerBase,
@@ -17,6 +20,15 @@ from .models import (
 )
 
 # Properties to receive via API on creation
+context = None
+
+
+def get_context():
+    from app.api.deps import get_minio_client
+    return {
+        "minio": get_minio_client(),
+        "bucket": "vrun"
+    }
 
 
 class UserCreate(UserBase):
@@ -93,7 +105,17 @@ class ExamUpdate(SQLModel):
 class ExamPublic(ExamBase):
     id: uuid.UUID
     status: ExamStatus
-    question_groups: List["QuestionGroupPublic"]
+    parts: List["PartPublic"]
+
+
+class PartCreate(SQLModel):
+    question_group_id: uuid.UUID
+    order: int
+
+
+class PartPublic(SQLModel):
+    order: int
+    question_group: "QuestionGroupPublic"
 
 class ExamQuestionGroupCreate(SQLModel):
     question_group_id: uuid.UUID
@@ -103,7 +125,12 @@ class ExamQuestionGroupCreate(SQLModel):
 class ExamReadonly(ExamBase):
     id: uuid.UUID
     # TODO: this part only visible when take exam
-    question_groups: List["QuestionGroupReadonly"]
+    parts: List["PartReadonly"]
+
+
+class PartReadonly(SQLModel):
+    order: int
+    question_group: "QuestionGroupReadonly"
 
 class RegisteredExam(ExamBase):
     id: uuid.UUID
@@ -134,6 +161,22 @@ class QuestionGroupUpdate(QuestionGroupBase):
 class QuestionGroupPublic(QuestionGroupBase):
     id: uuid.UUID
     questions: List["QuestionPublic"]
+
+    @field_serializer('resource')
+    def presign_url(self, v: str, _info: SerializationInfo):
+        if not v:
+            return v
+        global context
+        if context is None:
+            context = get_context()
+        minio = context["minio"]
+        mybucket = context["bucket"]
+        return minio.get_presigned_url(
+            "GET",
+            mybucket,
+            v,
+            expires=timedelta(days=1)
+        )
 
 
 class QuestionGroupReadonly(QuestionGroupBase):
