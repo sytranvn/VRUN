@@ -5,8 +5,10 @@ from fastapi import APIRouter, HTTPException
 from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Exam, ExamStatus
+from app.models import CandidateExam, CandidateExamStatus, Exam, ExamStatus
 from app.view_models import (
+    CandidateExamRegister,
+    ExamFinished,
     ExamReadonly,
     ExamsReadonly,
     RegisteredExam
@@ -18,7 +20,6 @@ router = APIRouter()
 @router.get("/", response_model=ExamsReadonly)
 def read_exams(
     session: SessionDep,
-    current_user: CurrentUser,
     skip: int = 0, limit: int = 100
 ) -> Any:
     """
@@ -48,7 +49,12 @@ def read_exam(session: SessionDep, id: uuid.UUID) -> Any:
 
 
 @router.post("/{id}/register", response_model=List[RegisteredExam])
-def register_exam(session: SessionDep, current_user: CurrentUser, id: uuid.UUID) -> Any:
+def register_exam(
+    session: SessionDep,
+    current_user: CurrentUser,
+    id: uuid.UUID,
+    register_in: CandidateExamRegister
+) -> Any:
     """
     Register for an exam.
     """
@@ -58,8 +64,21 @@ def register_exam(session: SessionDep, current_user: CurrentUser, id: uuid.UUID)
     ).one()
     if exam is None:
         raise HTTPException(status_code=404, detail="Not found")
-    current_user.exams.append(exam)
+    exists = next((True
+                   for ue in current_user.exams
+                   if ue.exam_id == exam.id
+                   and ue.status in (CandidateExamStatus.SCHEDULED,
+                                     CandidateExamStatus.STARTED)),
+                  False)
+    if exists:
+        raise HTTPException(status_code=400, detail="You have registered this exam.")
+    current_user.exams.append(
+        CandidateExam(
+            candidate_id=current_user.id,
+            exam_id=exam.id,
+            **register_in.model_dump()
+        )
+    )
     session.commit()
     session.refresh(current_user.exams)
     return current_user.exams
-

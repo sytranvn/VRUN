@@ -2,7 +2,7 @@ from sqlmodel import Session, create_engine, select
 
 from app import crud
 from app.core.config import settings
-from app.models import Answer, Exam, Part, Question, QuestionGroup, Role, Skill, User
+from app.models import Answer, Exam, ExamStatus, Part, Question, QuestionGroup, Role, Skill, User
 from app.view_models import ExamCreate, UserCreate
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
@@ -68,6 +68,9 @@ def init_db(session: Session) -> None:
                            is_correct_answer=i == 3) for i in range(4)]
 
             exam.parts.append(
-                Part(question_group_id=question_group.id, order=0, exam_id=exam.id))
+                Part(question_group_id=question_group.id,
+                     order=0,
+                     exam_id=exam.id))
+            exam.status = ExamStatus.ACTIVE
             session.commit()
             session.refresh(exam)

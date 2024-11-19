@@ -54,15 +54,12 @@ class CandidateExamStatus(StrEnum):
 
 class CandidateExam(BaseTable, SQLModel, table=True):
     __tablename__ = "candidate_exam"  # type: ignore
-    id: uuid.UUID = Field(nullable=False, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, nullable=False, primary_key=True)
     candidate_id: uuid.UUID = Field(
         foreign_key="user.id", nullable=False, ondelete="CASCADE")
     exam_id: uuid.UUID = Field(
         foreign_key="exam.id", nullable=False, ondelete="CASCADE")
     start_time: datetime
-    duration: int = Field(default=120)  # minutes
-    start_time: datetime
-    duration: int = Field(default=120)  # minutes
     status: CandidateExamStatus = Field(default=CandidateExamStatus.SCHEDULED,
                                         sa_column=Column(Enum(CandidateExamStatus, native_enum=False)))
     exam: "Exam" = Relationship()

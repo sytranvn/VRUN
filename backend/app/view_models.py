@@ -1,14 +1,15 @@
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List
 import uuid
 
-from pydantic import EmailStr, SerializationInfo, field_serializer
+from pydantic import BaseModel, EmailStr, SerializationInfo, field_serializer, field_validator, validator
 from pydantic.fields import computed_field
 from sqlmodel import Field, SQLModel
 
 
 from .models import (
     AnswerBase,
+    CandidateExam,
     CandidateExamStatus,
     ExamBase,
     ExamStatus,
@@ -17,6 +18,7 @@ from .models import (
     QuestionGroupBase,
     QuestionStatusEnum,
     UserBase,
+    Skill
 )
 
 # Properties to receive via API on creation
@@ -95,6 +97,17 @@ class ExamCreate(ExamBase):
     pass
 
 
+class CandidateExamRegister(BaseModel):
+    start_time: datetime
+
+    @field_validator('start_time')
+    @classmethod
+    def validate_date(cls, v):
+        if v < datetime.now(tz=timezone.utc):
+            raise AssertionError("Start time must be in future")
+        return v
+
+
 class ExamUpdate(SQLModel):
     title: str | None = Field(max_length=255)  # type: ignore
     description: str | None  # type: ignore
@@ -128,15 +141,31 @@ class ExamReadonly(ExamBase):
     parts: List["PartReadonly"]
 
 
+class ExamStarted(ExamBase):
+    id: uuid.UUID
+    # parts: List["PartStarted"]
+
+class ExamFinished(ExamBase):
+    id: uuid.UUID
+    # parts: List["PartFinished"]
+
+
 class PartReadonly(SQLModel):
     order: int
     question_group: "QuestionGroupReadonly"
 
-class RegisteredExam(ExamBase):
+
+class RegisteredExam(SQLModel):
     id: uuid.UUID
     # TODO: this part only visible when take exam
-    question_groups: List["QuestionGroupReadonly"]
+    # question_groups: List["QuestionGroupReadonly"]
     status: CandidateExamStatus
+    exam: "ExamReadonly"
+
+
+class RegisteredExams(SQLModel):
+    data: List[RegisteredExam]
+    count: int
 
 
 class ExamsPublic(SQLModel):
@@ -180,8 +209,13 @@ class QuestionGroupPublic(QuestionGroupBase):
 
 
 class QuestionGroupReadonly(QuestionGroupBase):
-    id: uuid.UUID
-    questions: List["QuestionReadonly"]
+    duration: int
+    skill: Skill
+
+    @field_serializer('resource')
+    @classmethod
+    def hidden(cls, v):
+        return None
 
 
 class QuestionGroupsPublic(SQLModel):
