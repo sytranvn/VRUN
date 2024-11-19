@@ -24,8 +24,9 @@ dependencies = [
     "minio>=7.2.10",
 ]
 
-[tool.uv]
-dev-dependencies = [
+[tool.pdm.dev-dependencies]
+debug = [
+    "debugpy>=1.8.7",
     "pytest<8.0.0,>=7.4.3",
     "mypy<2.0.0,>=1.8.0",
     "ruff<1.0.0,>=0.2.2",
@@ -33,14 +34,9 @@ dev-dependencies = [
     "types-passlib<2.0.0.0,>=1.7.7.20240106",
     "coverage<8.0.0,>=7.4.3",
 ]
-
-[tool.pdm.dev-dependencies]
-debug = [
-    "debugpy>=1.8.7",
-]
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+# [build-system]
+# requires = ["hatchling"]
+# build-backend = "hatchling.build"
 
 [tool.mypy]
 strict = true

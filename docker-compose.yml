@@ -19,36 +19,36 @@ services:
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
-  prestart:
-    image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
-    build:
-      context: ./backend
-    networks:
-      - default
-    depends_on:
-      db:
-        condition: service_healthy
-    command: bash scripts/prestart.sh
-    env_file:
-      - .env
-    environment:
-      - DOMAIN=${DOMAIN}
-      - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
-      - ENVIRONMENT=${ENVIRONMENT}
-      - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
-      - SECRET_KEY=${SECRET_KEY?Variable not set}
-      - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
-      - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_USER=${SMTP_USER}
-      - SMTP_PASSWORD=${SMTP_PASSWORD}
-      - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
-      - POSTGRES_SERVER=db
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
-      - SENTRY_DSN=${SENTRY_DSN}
+  # prestart:
+  #   image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
+  #   build:
+  #     context: ./backend
+  #   networks:
+  #     - default
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   command: bash scripts/prestart.sh
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - DOMAIN=${DOMAIN}
+  #     - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
+  #     - ENVIRONMENT=${ENVIRONMENT}
+  #     - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
+  #     - SECRET_KEY=${SECRET_KEY?Variable not set}
+  #     - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
+  #     - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
+  #     - SMTP_HOST=${SMTP_HOST}
+  #     - SMTP_USER=${SMTP_USER}
+  #     - SMTP_PASSWORD=${SMTP_PASSWORD}
+  #     - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
+  #     - POSTGRES_SERVER=db
+  #     - POSTGRES_PORT=${POSTGRES_PORT}
+  #     - POSTGRES_DB=${POSTGRES_DB}
+  #     - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+  #     - SENTRY_DSN=${SENTRY_DSN}
 
   backend:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
@@ -58,8 +58,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      prestart:
-        condition: service_completed_successfully
     env_file:
       - .env
     environment:
@@ -98,6 +96,9 @@ services:
     command: server /data --console-address ":9001"
     env_file:
     - .env
+    environment:
+      - MINIO_ACCESS_KEY=${MINIO_KEY?Variable not set}
+      - MINIO_SECRET_KEY=${MINIO_SECRET?Variable not set}
     ports:
       - 9000:9000
       - 9001:9001
