@@ -1,4 +1,4 @@
-from minio import Minio
+from minio import Minio, S3Error
 from .config import settings
 
 def init_storage():
@@ -9,5 +9,11 @@ def init_storage():
         secure=settings.ENVIRONMENT != "local"
     )
     if not client.bucket_exists("vrun"):
-        client.make_bucket("vrun")
-        client.set_bucket_policy("vrun", "download")
+        try:
+            client.make_bucket("vrun")
+        except S3Error as e:
+            if e.code == 'BucketAlreadyOwnedByYou':
+                # when start multiple workers, we can call make multiple calls at the same time
+                pass
+            else:
+                raise

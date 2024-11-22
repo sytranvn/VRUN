@@ -58,6 +58,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      minio:
+        condition: service_healthy
     env_file:
       - .env
     environment:
@@ -102,6 +104,8 @@ services:
     ports:
       - 9000:9000
       - 9001:9001
+    healthcheck:
+       test: curl -f http://localhost:9000
 
 
   # frontend:
