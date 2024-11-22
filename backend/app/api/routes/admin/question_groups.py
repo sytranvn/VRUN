@@ -15,7 +15,6 @@ QuestionGroupCreate, QuestionGroupPublic, QuestionGroupsPublic, QuestionGroupUpd
 
 router = APIRouter()
 
-router.tags=["admin"]
 
 @router.get("/", response_model=QuestionGroupsPublic)
 def read_question_groups(

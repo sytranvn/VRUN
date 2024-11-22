@@ -77,14 +77,16 @@ class UserBase(SQLModel):
     email: EmailStr = Field(unique=True, index=True, max_length=255)
     is_active: bool = True
     is_superuser: bool = False
-    role: Role = Field(default=Role.CANDIDATE,
-                       sa_column=Column(Enum(Role, native_enum=False)))
+    role: Role
     full_name: str | None = Field(default=None, max_length=255)
 
 
 # Database model, database table inferred from class name
 class User(BaseTable, UserBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    role: Role = Field(default=Role.CANDIDATE,
+                       sa_column=Column(Enum(Role, native_enum=False)))
+
     hashed_password: str
     exams: List["CandidateExam"] = Relationship()
 

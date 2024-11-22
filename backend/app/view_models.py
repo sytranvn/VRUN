@@ -2,18 +2,15 @@ from datetime import datetime, timedelta, timezone
 from typing import List
 import uuid
 
-from pydantic import BaseModel, EmailStr, SerializationInfo, field_serializer, field_validator, validator
-from pydantic.fields import computed_field
+from pydantic import BaseModel, EmailStr, SerializationInfo, field_serializer, field_validator
 from sqlmodel import Field, SQLModel
 
 
 from .models import (
     AnswerBase,
-    CandidateExam,
     CandidateExamStatus,
     ExamBase,
     ExamStatus,
-    Part,
     QuestionBase,
     QuestionGroupBase,
     QuestionStatusEnum,
@@ -50,7 +47,7 @@ class UserUpdate(UserBase):
     password: str | None = Field(default=None, min_length=8, max_length=40)
 
 
-class UserUpdateMe(UserBase):
+class UserUpdateMe(SQLModel):
     full_name: str | None = Field(default=None, max_length=255)
     email: EmailStr | None = Field(  # type: ignore
         default=None, max_length=255)

@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --fix --ext \".jsx,.js\" --ignore-path .gitignore ./src/.",
-    "generate-client": "openapi-ts --input ./openapi.json --output ./src/client --client axios --exportSchemas true"
+    "generate-client": "openapi-ts --input ./openapi.json --output ./src/client --client axios --exportSchemas true --enums typescript"
   },
   "dependencies": {
     "next": "14.2.14",

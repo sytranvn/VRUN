@@ -98,6 +98,8 @@ services:
     command: server /data --console-address ":9001"
     env_file:
     - .env
+    storage_opt:
+      size: '5G'
     environment:
       - MINIO_ACCESS_KEY=${MINIO_KEY?Variable not set}
       - MINIO_SECRET_KEY=${MINIO_SECRET?Variable not set}

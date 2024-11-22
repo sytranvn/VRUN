@@ -9,7 +9,6 @@ from app.models import Exam, Part, QuestionGroup
 from app.view_models import ExamCreate, ExamPublic, ExamUpdate, ExamsPublic, Message, ExamQuestionGroupCreate, PartCreate
 
 router = APIRouter()
-router.tags = ["admin"]
 
 
 @router.get("/", response_model=ExamsPublic)

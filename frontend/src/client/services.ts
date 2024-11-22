@@ -8,15 +8,15 @@ import type {
 	NewPassword,
 	Token,
 	UserPublic,
+	AnswerCreate,
+	AnswerPublic,
+	AnswerUpdate,
+	Body_admin_create_question_group_resources,
 	ExamCreate,
 	ExamPublic,
 	ExamsPublic,
 	ExamUpdate,
 	PartCreate,
-	AnswerCreate,
-	AnswerPublic,
-	AnswerUpdate,
-	Body_question_groups_create_question_group_resources,
 	QuestionCreate,
 	QuestionGroupCreate,
 	QuestionGroupPublic,
@@ -221,214 +221,6 @@ export type TDataDeleteExamQuestionGroup = {
 	id: string;
 	questionGroupId: string;
 };
-
-export class ExamsService {
-	/**
-	 * Read Exams
-	 * Retrieve exams.
-	 * @returns ExamsPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static readExams(
-		data: TDataReadExams = {},
-	): CancelablePromise<ExamsPublic> {
-		const { limit = 100, skip = 0 } = data;
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/admin/exams/",
-			query: {
-				skip,
-				limit,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Create Exam
-	 * Create new exam.
-	 * @returns ExamPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static createExam(
-		data: TDataCreateExam,
-	): CancelablePromise<ExamPublic> {
-		const { requestBody } = data;
-		return __request(OpenAPI, {
-			method: "POST",
-			url: "/api/v1/admin/exams/",
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Read Exam
-	 * Get exam by ID.
-	 * @returns ExamPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static readExam(data: TDataReadExam): CancelablePromise<ExamPublic> {
-		const { id } = data;
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/admin/exams/{id}",
-			path: {
-				id,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Update Exam
-	 * Update an exam.
-	 * @returns ExamPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static updateExam(
-		data: TDataUpdateExam,
-	): CancelablePromise<ExamPublic> {
-		const { id, requestBody } = data;
-		return __request(OpenAPI, {
-			method: "PUT",
-			url: "/api/v1/admin/exams/{id}",
-			path: {
-				id,
-			},
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Delete Exam
-	 * Delete an exam.
-	 * @returns Message Successful Response
-	 * @throws ApiError
-	 */
-	public static deleteExam(data: TDataDeleteExam): CancelablePromise<Message> {
-		const { id } = data;
-		return __request(OpenAPI, {
-			method: "DELETE",
-			url: "/api/v1/admin/exams/{id}",
-			path: {
-				id,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Add Exam Question Group
-	 * @returns ExamPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static addExamQuestionGroup(
-		data: TDataAddExamQuestionGroup,
-	): CancelablePromise<ExamPublic> {
-		const { id, requestBody } = data;
-		return __request(OpenAPI, {
-			method: "POST",
-			url: "/api/v1/admin/exams/{id}/question_groups",
-			path: {
-				id,
-			},
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Update Exam Question Groups
-	 * @returns ExamPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static updateExamQuestionGroups(
-		data: TDataUpdateExamQuestionGroups,
-	): CancelablePromise<ExamPublic> {
-		const { id, requestBody } = data;
-		return __request(OpenAPI, {
-			method: "PUT",
-			url: "/api/v1/admin/exams/{id}/question_groups",
-			path: {
-				id,
-			},
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Delete Exam Question Group
-	 * @returns ExamPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static deleteExamQuestionGroup(
-		data: TDataDeleteExamQuestionGroup,
-	): CancelablePromise<ExamPublic> {
-		const { id, questionGroupId } = data;
-		return __request(OpenAPI, {
-			method: "DELETE",
-			url: "/api/v1/admin/exams/{id}/question_groups/{question_group_id}",
-			path: {
-				id,
-				question_group_id: questionGroupId,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-}
-
-export type TDataReadExams = {
-	limit?: number;
-	skip?: number;
-};
-export type TDataCreateExam = {
-	requestBody: ExamCreate;
-};
-export type TDataReadExam = {
-	id: string;
-};
-export type TDataUpdateExam = {
-	id: string;
-	requestBody: ExamUpdate;
-};
-export type TDataDeleteExam = {
-	id: string;
-};
-export type TDataAddExamQuestionGroup = {
-	id: string;
-	requestBody: PartCreate;
-};
-export type TDataUpdateExamQuestionGroups = {
-	id: string;
-	requestBody: Array<PartCreate>;
-};
-export type TDataDeleteExamQuestionGroup = {
-	id: string;
-	questionGroupId: string;
-};
 export type TDataReadUsers = {
 	limit?: number;
 	skip?: number;
@@ -466,7 +258,7 @@ export type TDataDeleteQuestionGroup = {
 	id: string;
 };
 export type TDataCreateQuestionGroupResources = {
-	formData: Body_question_groups_create_question_group_resources;
+	formData: Body_admin_create_question_group_resources;
 	id: string;
 };
 export type TDataReadQuestions = {
@@ -1180,584 +972,6 @@ export class AdminService {
 	}
 }
 
-export type TDataReadUsers = {
-	limit?: number;
-	skip?: number;
-};
-export type TDataCreateUser = {
-	requestBody: UserCreate;
-};
-export type TDataReadUserById = {
-	userId: string;
-};
-export type TDataUpdateUser = {
-	requestBody: UserUpdate;
-	userId: string;
-};
-export type TDataDeleteUser = {
-	userId: string;
-};
-
-export class UsersService {
-	/**
-	 * Read Users
-	 * Retrieve users.
-	 * @returns UsersPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static readUsers(
-		data: TDataReadUsers = {},
-	): CancelablePromise<UsersPublic> {
-		const { limit = 100, skip = 0 } = data;
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/admin/users/",
-			query: {
-				skip,
-				limit,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Create User
-	 * Create new user.
-	 * @returns UserPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static createUser(
-		data: TDataCreateUser,
-	): CancelablePromise<UserPublic> {
-		const { requestBody } = data;
-		return __request(OpenAPI, {
-			method: "POST",
-			url: "/api/v1/admin/users/",
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Read User By Id
-	 * Get a specific user by id.
-	 * @returns UserPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static readUserById(
-		data: TDataReadUserById,
-	): CancelablePromise<UserPublic> {
-		const { userId } = data;
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/admin/users/{user_id}",
-			path: {
-				user_id: userId,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Update User
-	 * Update a user.
-	 * @returns UserPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static updateUser(
-		data: TDataUpdateUser,
-	): CancelablePromise<UserPublic> {
-		const { requestBody, userId } = data;
-		return __request(OpenAPI, {
-			method: "PATCH",
-			url: "/api/v1/admin/users/{user_id}",
-			path: {
-				user_id: userId,
-			},
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Delete User
-	 * Delete a user.
-	 * @returns Message Successful Response
-	 * @throws ApiError
-	 */
-	public static deleteUser(data: TDataDeleteUser): CancelablePromise<Message> {
-		const { userId } = data;
-		return __request(OpenAPI, {
-			method: "DELETE",
-			url: "/api/v1/admin/users/{user_id}",
-			path: {
-				user_id: userId,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-}
-
-export type TDataReadQuestionGroups = {
-	limit?: number;
-	skill?: Skill | null;
-	skip?: number;
-	status?: QuestionStatusEnum | null;
-};
-export type TDataCreateQuestionGroup = {
-	requestBody: QuestionGroupCreate;
-};
-export type TDataReadQuestionGroup = {
-	id: string;
-};
-export type TDataUpdateQuestionGroup = {
-	id: string;
-	requestBody: QuestionGroupUpdate;
-};
-export type TDataDeleteQuestionGroup = {
-	id: string;
-};
-export type TDataCreateQuestionGroupResources = {
-	formData: Body_question_groups_create_question_group_resources;
-	id: string;
-};
-export type TDataReadQuestions = {
-	questionGroupId: string;
-};
-export type TDataCreateQuestion = {
-	questionGroupId: string;
-	requestBody: QuestionCreate;
-};
-export type TDataReadQuestion = {
-	id: string;
-	questionGroupId: string;
-};
-export type TDataUpdateQuestion = {
-	id: string;
-	questionGroupId: string;
-	requestBody: QuestionUpdate;
-};
-export type TDataDeleteQuestion = {
-	id: string;
-	questionGroupId: string;
-};
-export type TDataReadAnswers = {
-	questionGroupId: string;
-	questionId: string;
-};
-export type TDataCreateAnswer = {
-	questionGroupId: string;
-	questionId: string;
-	requestBody: AnswerCreate;
-};
-export type TDataReadAnswer = {
-	id: string;
-	questionGroupId: string;
-	questionId: string;
-};
-export type TDataUpdateAnswer = {
-	id: string;
-	questionGroupId: string;
-	questionId: string;
-	requestBody: AnswerUpdate;
-};
-export type TDataDeleteAnswer = {
-	id: string;
-	questionGroupId: string;
-	questionId: string;
-};
-
-export class QuestionGroupsService {
-	/**
-	 * Read Question Groups
-	 * Retrieve question groups.
-	 * @returns QuestionGroupsPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static readQuestionGroups(
-		data: TDataReadQuestionGroups = {},
-	): CancelablePromise<QuestionGroupsPublic> {
-		const { limit = 100, skill, skip = 0, status } = data;
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/admin/question_groups/",
-			query: {
-				skip,
-				limit,
-				skill,
-				status,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Create Question Group
-	 * Create new question group.
-	 * @returns QuestionGroupPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static createQuestionGroup(
-		data: TDataCreateQuestionGroup,
-	): CancelablePromise<QuestionGroupPublic> {
-		const { requestBody } = data;
-		return __request(OpenAPI, {
-			method: "POST",
-			url: "/api/v1/admin/question_groups/",
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Read Question Group
-	 * Get question group by ID.
-	 * @returns QuestionGroupPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static readQuestionGroup(
-		data: TDataReadQuestionGroup,
-	): CancelablePromise<QuestionGroupPublic> {
-		const { id } = data;
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/admin/question_groups/{id}",
-			path: {
-				id,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Update Question Group
-	 * Update an question group.
-	 * @returns QuestionGroupPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static updateQuestionGroup(
-		data: TDataUpdateQuestionGroup,
-	): CancelablePromise<QuestionGroupPublic> {
-		const { id, requestBody } = data;
-		return __request(OpenAPI, {
-			method: "PUT",
-			url: "/api/v1/admin/question_groups/{id}",
-			path: {
-				id,
-			},
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Delete Question Group
-	 * Delete an question group.
-	 * @returns Message Successful Response
-	 * @throws ApiError
-	 */
-	public static deleteQuestionGroup(
-		data: TDataDeleteQuestionGroup,
-	): CancelablePromise<Message> {
-		const { id } = data;
-		return __request(OpenAPI, {
-			method: "DELETE",
-			url: "/api/v1/admin/question_groups/{id}",
-			path: {
-				id,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Create Question Group Resources
-	 * Create new question group.
-	 * @returns QuestionGroupPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static createQuestionGroupResources(
-		data: TDataCreateQuestionGroupResources,
-	): CancelablePromise<QuestionGroupPublic> {
-		const { formData, id } = data;
-		return __request(OpenAPI, {
-			method: "POST",
-			url: "/api/v1/admin/question_groups/{id}/resources",
-			path: {
-				id,
-			},
-			formData: formData,
-			mediaType: "multipart/form-data",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Read Questions
-	 * Retrieve questions.
-	 * @returns QuestionsPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static readQuestions(
-		data: TDataReadQuestions,
-	): CancelablePromise<QuestionsPublic> {
-		const { questionGroupId } = data;
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/admin/question_groups/{question_group_id}/questions/",
-			path: {
-				question_group_id: questionGroupId,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Create Question
-	 * Create new question.
-	 * @returns QuestionPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static createQuestion(
-		data: TDataCreateQuestion,
-	): CancelablePromise<QuestionPublic> {
-		const { questionGroupId, requestBody } = data;
-		return __request(OpenAPI, {
-			method: "POST",
-			url: "/api/v1/admin/question_groups/{question_group_id}/questions/",
-			path: {
-				question_group_id: questionGroupId,
-			},
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Read Question
-	 * Get question by ID.
-	 * @returns QuestionPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static readQuestion(
-		data: TDataReadQuestion,
-	): CancelablePromise<QuestionPublic> {
-		const { id, questionGroupId } = data;
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/admin/question_groups/{question_group_id}/questions/{id}",
-			path: {
-				question_group_id: questionGroupId,
-				id,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Update Question
-	 * Update an question.
-	 * @returns QuestionPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static updateQuestion(
-		data: TDataUpdateQuestion,
-	): CancelablePromise<QuestionPublic> {
-		const { id, questionGroupId, requestBody } = data;
-		return __request(OpenAPI, {
-			method: "PUT",
-			url: "/api/v1/admin/question_groups/{question_group_id}/questions/{id}",
-			path: {
-				question_group_id: questionGroupId,
-				id,
-			},
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Delete Question
-	 * Delete an question.
-	 * @returns Message Successful Response
-	 * @throws ApiError
-	 */
-	public static deleteQuestion(
-		data: TDataDeleteQuestion,
-	): CancelablePromise<Message> {
-		const { id, questionGroupId } = data;
-		return __request(OpenAPI, {
-			method: "DELETE",
-			url: "/api/v1/admin/question_groups/{question_group_id}/questions/{id}",
-			path: {
-				question_group_id: questionGroupId,
-				id,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Read Answers
-	 * Retrieve questions.
-	 * @returns AnswerPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static readAnswers(
-		data: TDataReadAnswers,
-	): CancelablePromise<Array<AnswerPublic>> {
-		const { questionGroupId, questionId } = data;
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/admin/question_groups/{question_group_id}/questions/{question_id}/answers/",
-			path: {
-				question_group_id: questionGroupId,
-				question_id: questionId,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Create Answer
-	 * Create new answer.
-	 * @returns AnswerPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static createAnswer(
-		data: TDataCreateAnswer,
-	): CancelablePromise<AnswerPublic> {
-		const { questionGroupId, questionId, requestBody } = data;
-		return __request(OpenAPI, {
-			method: "POST",
-			url: "/api/v1/admin/question_groups/{question_group_id}/questions/{question_id}/answers/",
-			path: {
-				question_group_id: questionGroupId,
-				question_id: questionId,
-			},
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Read Answer
-	 * Get answer by ID.
-	 * @returns AnswerPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static readAnswer(
-		data: TDataReadAnswer,
-	): CancelablePromise<AnswerPublic> {
-		const { id, questionGroupId, questionId } = data;
-		return __request(OpenAPI, {
-			method: "GET",
-			url: "/api/v1/admin/question_groups/{question_group_id}/questions/{question_id}/answers/{id}",
-			path: {
-				question_group_id: questionGroupId,
-				question_id: questionId,
-				id,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Update Answer
-	 * Update an answer.
-	 * @returns AnswerPublic Successful Response
-	 * @throws ApiError
-	 */
-	public static updateAnswer(
-		data: TDataUpdateAnswer,
-	): CancelablePromise<AnswerPublic> {
-		const { id, questionGroupId, questionId, requestBody } = data;
-		return __request(OpenAPI, {
-			method: "PUT",
-			url: "/api/v1/admin/question_groups/{question_group_id}/questions/{question_id}/answers/{id}",
-			path: {
-				question_group_id: questionGroupId,
-				question_id: questionId,
-				id,
-			},
-			body: requestBody,
-			mediaType: "application/json",
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-
-	/**
-	 * Delete Answer
-	 * Delete an answer.
-	 * @returns Message Successful Response
-	 * @throws ApiError
-	 */
-	public static deleteAnswer(
-		data: TDataDeleteAnswer,
-	): CancelablePromise<Message> {
-		const { id, questionGroupId, questionId } = data;
-		return __request(OpenAPI, {
-			method: "DELETE",
-			url: "/api/v1/admin/question_groups/{question_group_id}/questions/{question_id}/answers/{id}",
-			path: {
-				question_group_id: questionGroupId,
-				question_id: questionId,
-				id,
-			},
-			errors: {
-				422: `Validation Error`,
-			},
-		});
-	}
-}
-
 export type TDataRegisterUser = {
 	requestBody: UserRegister;
 };
@@ -1859,18 +1073,18 @@ export class MeService {
 	}
 }
 
-export type TDataReadExams = {
+export type TDataReadAvailableExams = {
 	limit?: number;
 	skip?: number;
 };
-export type TDataReadExam = {
+export type TDataReadAvailableExam = {
 	id: string;
 };
 export type TDataRegisterExam = {
 	id: string;
 	requestBody: CandidateExamRegister;
 };
-export type TDataReadExam1 = {
+export type TDataReadRegisteredExam = {
 	id: string;
 };
 export type TDataAddAnswer = {
@@ -1882,13 +1096,13 @@ export type TDataSubmitAnswer = {
 
 export class CandidateService {
 	/**
-	 * Read Exams
+	 * Read Available Exams
 	 * Retrieve exams.
 	 * @returns ExamsReadonly Successful Response
 	 * @throws ApiError
 	 */
-	public static readExams(
-		data: TDataReadExams = {},
+	public static readAvailableExams(
+		data: TDataReadAvailableExams = {},
 	): CancelablePromise<ExamsReadonly> {
 		const { limit = 100, skip = 0 } = data;
 		return __request(OpenAPI, {
@@ -1905,12 +1119,14 @@ export class CandidateService {
 	}
 
 	/**
-	 * Read Exam
+	 * Read Available Exam
 	 * Get exam by ID.
 	 * @returns ExamReadonly Successful Response
 	 * @throws ApiError
 	 */
-	public static readExam(data: TDataReadExam): CancelablePromise<ExamReadonly> {
+	public static readAvailableExam(
+		data: TDataReadAvailableExam,
+	): CancelablePromise<ExamReadonly> {
 		const { id } = data;
 		return __request(OpenAPI, {
 			method: "GET",
@@ -1949,12 +1165,12 @@ export class CandidateService {
 	}
 
 	/**
-	 * Read Exams
+	 * Read Registered Exams
 	 * Retrieve exams.
 	 * @returns RegisteredExams Successful Response
 	 * @throws ApiError
 	 */
-	public static readExams1(): CancelablePromise<RegisteredExams> {
+	public static readRegisteredExams(): CancelablePromise<RegisteredExams> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/registered_exams/",
@@ -1962,13 +1178,13 @@ export class CandidateService {
 	}
 
 	/**
-	 * Read Exam
+	 * Read Registered Exam
 	 * Get exam by ID.
 	 * @returns RegisteredExams Successful Response
 	 * @throws ApiError
 	 */
-	public static readExam1(
-		data: TDataReadExam1,
+	public static readRegisteredExam(
+		data: TDataReadRegisteredExam,
 	): CancelablePromise<RegisteredExams> {
 		const { id } = data;
 		return __request(OpenAPI, {

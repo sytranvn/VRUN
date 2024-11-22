@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=RegisteredExams)
-def read_exams(
+def read_registered_exams(
     session: SessionDep,
     current_user: CurrentUser,
 ) -> Any:
@@ -26,7 +26,7 @@ def read_exams(
 
 
 @router.get("/{id}", response_model=RegisteredExams)
-def read_exam(session: SessionDep,
+def read_registered_exam(session: SessionDep,
               current_user: CurrentUser,
               id: uuid.UUID) -> Any:
     """

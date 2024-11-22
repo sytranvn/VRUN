@@ -15,6 +15,10 @@ export type AnswerUpdate = {
 	is_correct_answer: boolean;
 };
 
+export type Body_admin_create_question_group_resources = {
+	file: Blob | File;
+};
+
 export type Body_login_login_access_token = {
 	grant_type?: string | null;
 	username: string;
@@ -24,19 +28,16 @@ export type Body_login_login_access_token = {
 	client_secret?: string | null;
 };
 
-export type Body_question_groups_create_question_group_resources = {
-	file: Blob | File;
-};
-
 export type CandidateExamRegister = {
 	start_time: string;
 };
 
-export type CandidateExamStatus =
-	| "SCHEDULED"
-	| "STARTED"
-	| "FINISHED"
-	| "CANCELED";
+export enum CandidateExamStatus {
+	SCHEDULED = "SCHEDULED",
+	STARTED = "STARTED",
+	FINISHED = "FINISHED",
+	CANCELED = "CANCELED",
+}
 
 export type ExamCreate = {
 	title: string;
@@ -58,7 +59,10 @@ export type ExamReadonly = {
 	parts: Array<PartReadonly>;
 };
 
-export type ExamStatus = "DRAFT" | "ACTIVE";
+export enum ExamStatus {
+	DRAFT = "DRAFT",
+	ACTIVE = "ACTIVE",
+}
 
 export type ExamUpdate = {
 	title: string | null;
@@ -153,7 +157,10 @@ export type QuestionPublic = {
 	answers: Array<AnswerPublic>;
 };
 
-export type QuestionStatusEnum = "DRAFT" | "ACTIVE";
+export enum QuestionStatusEnum {
+	DRAFT = "DRAFT",
+	ACTIVE = "ACTIVE",
+}
 
 export type QuestionUpdate = {
 	description: string | null;
@@ -176,9 +183,17 @@ export type RegisteredExams = {
 	count: number;
 };
 
-export type Role = "CANDIDATE" | "EXAMINER";
+export enum Role {
+	CANDIDATE = "CANDIDATE",
+	EXAMINER = "EXAMINER",
+}
 
-export type Skill = "LISTENING" | "READING" | "WRITING " | "SPEAKING";
+export enum Skill {
+	LISTENING = "LISTENING",
+	READING = "READING",
+	WRITING_ = "WRITING ",
+	SPEAKING = "SPEAKING",
+}
 
 export type Token = {
 	access_token: string;
@@ -194,7 +209,7 @@ export type UserCreate = {
 	email: string;
 	is_active?: boolean;
 	is_superuser?: boolean;
-	role?: Role;
+	role: Role;
 	full_name?: string | null;
 	password: string;
 };
@@ -203,7 +218,7 @@ export type UserPublic = {
 	email: string;
 	is_active?: boolean;
 	is_superuser?: boolean;
-	role?: Role;
+	role: Role;
 	full_name?: string | null;
 	id: string;
 };
@@ -218,17 +233,14 @@ export type UserUpdate = {
 	email?: string | null;
 	is_active?: boolean;
 	is_superuser?: boolean;
-	role?: Role;
+	role: Role;
 	full_name?: string | null;
 	password?: string | null;
 };
 
 export type UserUpdateMe = {
-	email?: string | null;
-	is_active?: boolean;
-	is_superuser?: boolean;
-	role?: Role;
 	full_name?: string | null;
+	email?: string | null;
 };
 
 export type UsersPublic = {

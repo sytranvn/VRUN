@@ -55,6 +55,16 @@ export const $AnswerUpdate = {
 	},
 } as const;
 
+export const $Body_admin_create_question_group_resources = {
+	properties: {
+		file: {
+			type: "binary",
+			isRequired: true,
+			format: "binary",
+		},
+	},
+} as const;
+
 export const $Body_login_login_access_token = {
 	properties: {
 		grant_type: {
@@ -102,16 +112,6 @@ export const $Body_login_login_access_token = {
 					type: "null",
 				},
 			],
-		},
-	},
-} as const;
-
-export const $Body_question_groups_create_question_group_resources = {
-	properties: {
-		file: {
-			type: "binary",
-			isRequired: true,
-			format: "binary",
 		},
 	},
 } as const;
@@ -704,7 +704,7 @@ export const $UserCreate = {
 		},
 		role: {
 			type: "Role",
-			default: CANDIDATE,
+			isRequired: true,
 		},
 		full_name: {
 			type: "any-of",
@@ -745,7 +745,7 @@ export const $UserPublic = {
 		},
 		role: {
 			type: "Role",
-			default: CANDIDATE,
+			isRequired: true,
 		},
 		full_name: {
 			type: "any-of",
@@ -821,7 +821,7 @@ export const $UserUpdate = {
 		},
 		role: {
 			type: "Role",
-			default: CANDIDATE,
+			isRequired: true,
 		},
 		full_name: {
 			type: "any-of",
@@ -853,12 +853,11 @@ export const $UserUpdate = {
 
 export const $UserUpdateMe = {
 	properties: {
-		email: {
+		full_name: {
 			type: "any-of",
 			contains: [
 				{
 					type: "string",
-					format: "email",
 					maxLength: 255,
 				},
 				{
@@ -866,23 +865,12 @@ export const $UserUpdateMe = {
 				},
 			],
 		},
-		is_active: {
-			type: "boolean",
-			default: true,
-		},
-		is_superuser: {
-			type: "boolean",
-			default: false,
-		},
-		role: {
-			type: "Role",
-			default: CANDIDATE,
-		},
-		full_name: {
+		email: {
 			type: "any-of",
 			contains: [
 				{
 					type: "string",
+					format: "email",
 					maxLength: 255,
 				},
 				{

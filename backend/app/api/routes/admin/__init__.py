@@ -8,9 +8,10 @@ from . import exams, question_groups, questions, users, answers
 
 admin_router = APIRouter(
     dependencies=[Depends(get_current_active_superuser)],
+    tags=["admin"]
 )
-admin_router.include_router(exams.router, prefix="/exams", tags=["exams"])
-admin_router.include_router(users.router, prefix="/users", tags=["users"])
+admin_router.include_router(exams.router, prefix="/exams")
+admin_router.include_router(users.router, prefix="/users")
 questions.router.include_router(
     answers.router,
     prefix="/{question_id}/answers"
@@ -21,5 +22,5 @@ question_groups.router.include_router(
 )
 admin_router.include_router(
     question_groups.router,
-    prefix="/question_groups", tags=["question_groups"]
+    prefix="/question_groups"
 )

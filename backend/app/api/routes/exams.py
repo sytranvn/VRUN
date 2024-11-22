@@ -18,7 +18,7 @@ router = APIRouter()
 
 
 @router.get("/", response_model=ExamsReadonly)
-def read_exams(
+def read_available_exams(
     session: SessionDep,
     skip: int = 0, limit: int = 100
 ) -> Any:
@@ -38,7 +38,7 @@ def read_exams(
 
 
 @router.get("/{id}", response_model=ExamReadonly)
-def read_exam(session: SessionDep, id: uuid.UUID) -> Any:
+def read_available_exam(session: SessionDep, id: uuid.UUID) -> Any:
     """
     Get exam by ID.
     """
