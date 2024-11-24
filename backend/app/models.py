@@ -26,6 +26,7 @@ class ExamStatus(StrEnum):
     DRAFT = "DRAFT"
     ACTIVE = "ACTIVE"
 
+
 class CandidateExamAnswer(SQLModel, table=True):
     __tablename__ = "candiate_exam_answer"  # type: ignore
     __table_args__ = (
@@ -43,6 +44,23 @@ class CandidateExamAnswer(SQLModel, table=True):
         default=AnswerStatus.DRAFT,
         sa_column=Column(Enum(AnswerStatus, native_enum=False))
     )
+    answer: "Answer" = Relationship()
+
+
+class CandidateExamEssay(SQLModel, table=True):
+    __tablename__ = "candiate_exam_essay"  # type: ignore
+    id: uuid.UUID = Field(
+        nullable=False, primary_key=True, foreign_key="candidate_exam.id", ondelete="CASCADE")
+
+    candidate_exam_id: uuid.UUID = Field(foreign_key="candidate_exam.id", nullable=False)
+    question_id: uuid.UUID = Field(
+        nullable=False, foreign_key="question.id")
+    status: AnswerStatus = Field(default=AnswerStatus.DRAFT,
+                                 sa_column=Column(Enum(AnswerStatus, native_enum=False)))
+    content: str = Field(nullable=True)
+    # link to voice record
+    resource: str = Field(nullable=True)
+    score: float = Field(nullable=True)
 
 
 class CandidateExamStatus(StrEnum):
@@ -56,14 +74,21 @@ class CandidateExam(BaseTable, SQLModel, table=True):
     __tablename__ = "candidate_exam"  # type: ignore
     id: uuid.UUID = Field(default_factory=uuid.uuid4, nullable=False, primary_key=True)
     candidate_id: uuid.UUID = Field(
-        foreign_key="user.id", nullable=False, ondelete="CASCADE")
+        foreign_key="user.id", nullable=False, ondelete="CASCADE", primary_key=True)
     exam_id: uuid.UUID = Field(
-        foreign_key="exam.id", nullable=False, ondelete="CASCADE")
+        foreign_key="exam.id", nullable=False, ondelete="CASCADE", primary_key=True)
     start_time: datetime
     status: CandidateExamStatus = Field(default=CandidateExamStatus.SCHEDULED,
                                         sa_column=Column(Enum(CandidateExamStatus, native_enum=False)))
     exam: "Exam" = Relationship()
     candidate: "User" = Relationship(back_populates="exams")
+    selected_answers: List[CandidateExamAnswer] = Relationship()
+    essays: List["CandidateExamEssay"] = Relationship(
+        sa_relationship_kwargs={
+            "primaryjoin": "CandidateExam.id==CandidateExamEssay.candidate_exam_id", 
+            "lazy": "joined"
+        }
+    )
 
 # Shared properties
 
@@ -77,7 +102,7 @@ class UserBase(SQLModel):
     email: EmailStr = Field(unique=True, index=True, max_length=255)
     is_active: bool = True
     is_superuser: bool = False
-    role: Role
+    role: Role = Field(default=Role.CANDIDATE)
     full_name: str | None = Field(default=None, max_length=255)
 
 
@@ -189,23 +214,6 @@ class EssaySkill(StrEnum):
     WRITING = Skill.WRITING.value
     SPEAKING = Skill.SPEAKING.value
 
-
-class CandidateExamEssay(SQLModel, table=True):
-    __tablename__ = "candiate_exam_essay"  # type: ignore
-    candidate_exam_id: uuid.UUID = Field(
-        nullable=False, primary_key=True, foreign_key="candidate_exam.id", ondelete="CASCADE")
-    question_id: uuid.UUID = Field(
-        nullable=False, primary_key=True, foreign_key="question.id")
-    skill: EssaySkill = Field(
-        default=EssaySkill.WRITING,
-        sa_column=Column(Enum(EssaySkill, native_enum=False)),
-    )
-    status: AnswerStatus = Field(default=AnswerStatus.DRAFT,
-                                 sa_column=Column(Enum(AnswerStatus, native_enum=False)))
-    content: str = Field(nullable=True)
-    # link to voice record
-    resource: str = Field(nullable=True)
-    score: float = Field(nullable=True)
 
 
 class Configuration(BaseTable, SQLModel, table=True):

@@ -1,3 +1,4 @@
+export $(grep -v '^#' ../.env | xargs)
 export PGPASSWORD=$POSTGRES_PASSWORD
 psql -h $POSTGRES_SERVER -U $POSTGRES_USER -d $POSTGRES_DB -c '
 DROP TABLE public.answer CASCADE;

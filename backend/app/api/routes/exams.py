@@ -80,5 +80,5 @@ def register_exam(
         )
     )
     session.commit()
-    session.refresh(current_user.exams)
-    return current_user.exams
+    session.refresh(current_user)
+    return list(current_user.exams)
