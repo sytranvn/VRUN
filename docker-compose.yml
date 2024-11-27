@@ -98,8 +98,6 @@ services:
     command: server /data --console-address ":9001"
     env_file:
     - .env
-    storage_opt:
-      size: '5G'
     environment:
       - MINIO_ACCESS_KEY=${MINIO_KEY?Variable not set}
       - MINIO_SECRET_KEY=${MINIO_SECRET?Variable not set}
@@ -107,7 +105,7 @@ services:
       - 9000:9000
       - 9001:9001
     healthcheck:
-       test: curl -f http://localhost:9000
+      test: curl -f http://localhost:9001
 
 
   # frontend:
