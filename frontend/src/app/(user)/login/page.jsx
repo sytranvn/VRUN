@@ -2,23 +2,38 @@
 
 import { useState } from 'react';
 import {
-  Flex, Form, Input, Button, Typography,
+  Flex, Form, Input, Button, Typography, Modal,
 } from 'antd';
 import Link from 'next/link';
+import useApiService from '@/services';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { TOKEN_KEY } from '@/utils/constants';
 
 const { Item } = Form;
 const { Password } = Input;
 const { Title } = Typography;
 
 const Login = () => {
-  const [userInfo, setUserInfo] = useState({
+  const router = useRouter();
+  const [modal, modalContext] = Modal.useModal();
+  const { LoginService } = useApiService();
+  const [userInfo] = useState({
     username: '',
     password: '',
   });
 
-  const handleSubmit = (formData) => {
-    console.log('formData', formData);
-    setUserInfo(formData);
+  const handleSubmit = async (formData) => {
+    LoginService.loginAccessToken({ formData })
+      .then((data) => {
+        Cookies.set(TOKEN_KEY, data.access_token);
+        router.push('/');
+      })
+      .catch(() => {
+        modal.error({
+          title: 'Tài khoản hoặc mật khẩu không đúng.',
+        });
+      });
   };
 
   return (
@@ -66,6 +81,7 @@ const Login = () => {
           </Flex>
         </Item>
       </Form>
+      {modalContext}
     </>
   );
 };

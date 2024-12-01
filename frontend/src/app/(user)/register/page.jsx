@@ -2,33 +2,43 @@
 
 import { useState } from 'react';
 import {
-  Flex, Form, Input, Button, DatePicker, Typography,
+  Flex, Form, Input, Button, Typography, Modal,
 } from 'antd';
 import Link from 'next/link';
+import useApiService from '@/services';
+import { useRouter } from 'next/navigation';
 
 const { Item } = Form;
 const { Password } = Input;
 const { Title } = Typography;
 
 const Register = () => {
-  const [userInfo, setUserInfo] = useState({
-    fullname: '',
-    birthdate: '',
-    username: '',
+  const [modal, modalContext] = Modal.useModal();
+  const router = useRouter();
+  const { MeService } = useApiService();
+  const [userInfo] = useState({
+    full_name: '',
+    email: '',
     password: '',
     retypePassword: '',
   });
   const [form] = Form.useForm();
 
   const RULES = {
-    fullname: [
+    full_name: [
       { required: true, message: 'Vui lòng nhập họ tên' },
     ],
-    birthdate: [
-      { required: true, message: 'Vui lòng nhập ngày tháng năm sinh' },
-    ],
-    username: [
+    email: [
       { required: true, message: 'Vui lòng nhập tên tài khoản' },
+      () => ({
+        validator(_, value) {
+          if (/^[^@]+@[^@.]+\.[^@]+$/.test(value)) {
+            return Promise.resolve();
+          }
+
+          return Promise.reject(new Error('Vui lòng nhập đúng email'));
+        },
+      }),
     ],
     password: [
       { required: true, message: 'Vui lòng nhập mật khẩu' },
@@ -57,11 +67,24 @@ const Register = () => {
   };
 
   const handleSubmit = (formData) => {
-    console.log('formData', formData);
-    setUserInfo({
-      ...formData,
-      birthdate: formData.birthdate.format('YYYY-MM-DD'),
-    });
+    MeService.registerUser({
+      requestBody: formData,
+    })
+      .then((data) => {
+        if (data.is_active) {
+          modal.success({
+            title: 'Đăng ký thành công.',
+            onOk() {
+              router.push('/login');
+            },
+          });
+        }
+      })
+      .catch((e) => {
+        modal.error({
+          title: 'Đăng ký không thành công.',
+        });
+      });
   };
 
   return (
@@ -79,9 +102,9 @@ const Register = () => {
       >
         <Flex vertical gap="small">
           <Item
-            name="fullname"
+            name="full_name"
             label="Họ và tên"
-            rules={RULES.fullname}
+            rules={RULES.full_name}
             hasFeedback
           >
             <Input
@@ -90,25 +113,13 @@ const Register = () => {
             />
           </Item>
           <Item
-            name="birthdate"
-            label="Ngày sinh"
-            rules={RULES.birthdate}
-            hasFeedback
-          >
-            <DatePicker
-              size="large"
-              style={{ width: '100%' }}
-              placeholder="YYYY-MM-DD"
-            />
-          </Item>
-          <Item
-            name="username"
-            label="Tài khoản"
-            rules={RULES.username}
+            name="email"
+            label="Email"
+            rules={RULES.email}
             hasFeedback
           >
             <Input
-              autoComplete="username"
+              autoComplete="email"
               size="large"
             />
           </Item>
@@ -156,6 +167,7 @@ const Register = () => {
           </Item>
         </Flex>
       </Form>
+      {modalContext}
     </>
   );
 };

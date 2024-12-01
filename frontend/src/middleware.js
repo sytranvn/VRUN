@@ -1,15 +1,20 @@
 import { NextResponse } from 'next/server';
-import exampleMiddleware from '@/middlewares/example';
+import { TOKEN_KEY } from '@/utils/constants';
+import * as api from '@/client';
 
-export const middleware = (req) => {
-  if (req.nextUrl.pathname == '/') {
-    return exampleMiddleware(req);
+// This function can be marked `async` if using `await` inside
+export function middleware(request) {
+  const token = request.cookies.get(TOKEN_KEY);
+  if (!token || !token.value) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  console.log('default middleware');
-  return NextResponse.next();
-};
+  api.OpenAPI.TOKEN = token.value;
 
+  return NextResponse.next();
+}
+
+// See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/'],
+  matcher: '/((?!api|login|register|forgot-password|reset-password|_next/static|static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
 };

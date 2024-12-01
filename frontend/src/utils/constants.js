@@ -1,3 +1,5 @@
+export const TOKEN_KEY = 'vlxx';
+
 export const EXAM_ANCHOR = [
   {
     key: 'listening',
