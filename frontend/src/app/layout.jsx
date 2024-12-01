@@ -1,3 +1,4 @@
+import StoreProvider from '@/stores/StoreProvider';
 import '@/styles/global.scss';
 import localFont from 'next/font/local';
 import ScrollTop from '@/components/elements/ScrollTop';
@@ -30,7 +31,9 @@ const RootLayout = ({ children }) => {
   return (
     <html lang="en">
       <body className={myFont.className}>
-        {children}
+        <StoreProvider>
+          {children}
+        </StoreProvider>
         <ScrollTop />
       </body>
     </html>
