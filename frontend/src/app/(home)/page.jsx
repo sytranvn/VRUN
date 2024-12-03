@@ -5,10 +5,22 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import VoiceRecorder from '@/components/elements/VoiceRecorder';
+import getApiService from '@/services';
+import { useEffect, useState } from 'react';
 
 const { Text } = Typography;
 
 const Index = () => {
+  const api = getApiService();
+  const [exams, setExams] = useState([]);
+
+  useEffect(() => {
+    api.CandidateService.readAvailableExams({
+      limit: 100,
+      skip: 1,
+    }).then((resp) => setExams(resp.data));
+  }, [api.CandidateService]);
+
   return (
     <div>
       <Row
@@ -103,7 +115,11 @@ const Index = () => {
       </Row>
       <Flex justify="center">
         <Link href="/exam">
-          <Button size="large" type="primary">
+          <Button
+            size="large"
+            type="primary"
+            disabled={!exams.length}
+          >
             Bắt đầu thi
           </Button>
         </Link>
