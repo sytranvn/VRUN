@@ -1,61 +1,127 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
-  Card, Input, Form, Flex, Button, Modal,
+  Card, Input, Form, Flex, Button, Modal, Radio,
 } from 'antd';
 import { DeleteOutlined, SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import getApiService from '@/services';
+
+const { Item } = Form;
+const { TextArea } = Input;
+const { Group } = Radio;
 
 const AdminExamDetail = () => {
+  const { AdminService } = getApiService();
   const [modal, modalContext] = Modal.useModal();
 
   const router = useRouter();
   const params = useParams();
   const id = params.id?.[0];
 
-  const [record, setRecord] = useState({});
   const [form] = Form.useForm();
+
+  const RULES = {
+    title: [
+      { required: true, message: 'Vui lòng nhập tiêu đề' },
+    ],
+    description: [
+      { required: true, message: 'Vui lòng nhập mô tả' },
+    ],
+  };
 
   const handleDelete = () => {
     modal.confirm({
       title: 'Xác nhận xoá?',
-      onOk() {
-        console.log('delete');
+      async onOk() {
+        await AdminService.deleteExam({ id });
         router.push('/admin/exam');
       },
     });
   };
 
-  const handleSubmit = (formData) => {
-    console.log('formData', formData);
-    modal.success({
-      title: 'Đã lưu thành công!',
-      onOk() {
-        router.push('/admin/exam');
-      },
-    });
+  const handleSubmit = async (formData) => {
+    try {
+      let resp;
+
+      if (id) {
+        resp = await AdminService.updateExam({
+          id,
+          requestBody: formData,
+        });
+      } else {
+        resp = await AdminService.createExam({
+          requestBody: formData,
+        });
+      }
+
+      if (!resp.id) throw new Error();
+
+      modal.success({
+        title: 'Đã lưu thành công!',
+        onOk() {
+          router.push('/admin/exam');
+        },
+      });
+    } catch (e) {
+      modal.error({
+        title: id ? 'Không thể sửa đề thi' : 'Không thể tạo đề thi',
+      });
+    }
   };
+
+  useEffect(() => {
+    if (id) {
+      AdminService.readExam({ id })
+        .then((resp) => {
+          form.setFieldsValue(resp);
+        });
+    }
+  }, [AdminService, id, form]);
 
   return (
     <Card title={id ? `Đề thi #${id}` : 'Tạo đề thi'}>
       <Form
         form={form}
         onFinish={handleSubmit}
-        initialValues={record}
         labelCol={{ span: 3, style: { textAlign: 'left' }}}
         wrapperCol={{ span: 21 }}
         scrollToFirstError
       >
-        <Form.Item
-          name="id"
-          label="ID"
-          rules={[]}
+        <Item
+          name="title"
+          label="Tiêu đề"
+          rules={RULES.title}
           hasFeedback
         >
-          <Input placeholder="Enter ID" />
-        </Form.Item>
-        <Form.Item wrapperCol={{ span: 24 }}>
+          <Input placeholder="Nhập tiêu đề" />
+        </Item>
+        <Item
+          name="description"
+          label="Mô tả"
+          rules={RULES.description}
+          hasFeedback
+        >
+          <TextArea
+            rows={4}
+            placeholder="Nhập mô tả"
+            maxLength={100}
+          />
+        </Item>
+        <Item
+          name="status"
+          label="Trạng thái"
+        >
+          <Group
+            defaultValue="DRAFT"
+            options={[
+              { label: 'Nháp', value: 'DRAFT' },
+              { label: 'Đã duyệt', value: 'ACTIVE' },
+            ]}
+          />
+        </Item>
+        <Item wrapperCol={{ span: 24 }}>
           <Flex
             justify="space-between"
             align="center"
@@ -90,7 +156,7 @@ const AdminExamDetail = () => {
               </Button>
             </Flex>
           </Flex>
-        </Form.Item>
+        </Item>
       </Form>
       {modalContext}
     </Card>

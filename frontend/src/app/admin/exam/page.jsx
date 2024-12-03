@@ -1,40 +1,28 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Card, Flex, Button, Table, Modal,
 } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
-const COLUMN_CONFIG = [
-  {
-    key: 'id', dataIndex: 'id', title: 'ID', width: '100px', align: 'center',
-  },
-  {
-    key: 'examType', dataIndex: 'examType', title: 'Loại đề', align: 'center',
-  },
-  {
-    key: 'author', dataIndex: 'author', title: 'Người tạo', align: 'center',
-  },
-  {
-    key: 'date', dataIndex: 'date', title: 'Ngày tạo', align: 'center',
-  },
-];
+import getApiService from '@/services';
 
 const AdminExamManagement = () => {
+  const { AdminService } = getApiService();
   const router = useRouter();
   const [modal, modalContext] = Modal.useModal();
-  const [records, setRecords] = useState([
-    {
-      id: 1, date: '2020-11-11', examType: 'B2', author: 'Admin',
-    },
-    {
-      id: 2, date: '2020-11-11', examType: 'B2', author: 'Admin',
-    },
-  ]);
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [records, setRecords] = useState([]);
+
+  const loadExams = async (payload = { limit: 10, skip: 1 }) => {
+    const resp = await AdminService.readExams(payload);
+    setRecords(resp.data || []);
+  };
+
+  useEffect(() => {
+    loadExams();
+  }, []);
 
   const onRow = (record) => {
     return {
@@ -44,34 +32,57 @@ const AdminExamManagement = () => {
     };
   };
 
-  const rowSelection = {
-    onChange: (selectedRowKeys) => {
-      setSelectedIds(selectedRowKeys);
-    },
-  };
-
-  const handleDelete = () => {
+  const handleDelete = (id) => {
     modal.confirm({
       title: 'Xác nhận xoá?',
-      onOk() {
-        console.log('delete');
+      async onOk() {
+        await AdminService.deleteExam({ id });
+        loadExams();
       },
     });
   };
 
-  return (
-    <Card title="Quản lý đề thi">
-      <Flex vertical gap="middle">
-        <Flex gap="small" justify="space-between">
+  const COLUMN_CONFIG = [
+    {
+      key: 'title', dataIndex: 'title', title: 'Tên bài thi', align: 'center',
+    },
+    {
+      key: 'status',
+      dataIndex: 'status',
+      title: 'Trạng thái',
+      align: 'center',
+      render(text) {
+        return text == 'ACTIVE' ? 'Đã duyệt' : 'Nháp';
+      },
+    },
+    {
+      key: 'description', dataIndex: 'description', title: 'Mô tả', align: 'center',
+    },
+    {
+      key: 'settings',
+      dataIndex: 'settings',
+      title: '',
+      align: 'center',
+      width: '100px',
+      render(_, record) {
+        return (
           <Button
             icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.id)}
             type="primary"
             danger
-            disabled={!selectedIds.length}
-            onClick={handleDelete}
           >
             Xoá
           </Button>
+        );
+      },
+    },
+  ];
+
+  return (
+    <Card title="Quản lý đề thi">
+      <Flex vertical gap="middle">
+        <Flex gap="small" justify="flex-end">
           <Link href="/admin/exam/detail">
             <Button
               icon={<PlusOutlined />}
@@ -84,7 +95,6 @@ const AdminExamManagement = () => {
         <Table
           dataSource={records}
           onRow={onRow}
-          rowSelection={rowSelection}
           columns={COLUMN_CONFIG}
           bordered
           rowKey="id"

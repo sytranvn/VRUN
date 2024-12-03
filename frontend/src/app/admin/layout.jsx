@@ -13,7 +13,9 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import Logo from '@/components/elements/Logo';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import { TOKEN_KEY } from '@/utils/constants';
 
 const items = [
   {
@@ -64,6 +66,7 @@ const footerStyle = {
 };
 
 const AdminLayout = ({ children }) => {
+  const router = useRouter();
   const [selectedKeys, setSelectedKeys] = useState([]);
   const path = usePathname();
 
@@ -80,7 +83,8 @@ const AdminLayout = ({ children }) => {
   }, [path]);
 
   const handleLogout = () => {
-    console.log('handleLogout');
+    Cookies.set(TOKEN_KEY, '');
+    router.push('/login');
   };
 
   return (
