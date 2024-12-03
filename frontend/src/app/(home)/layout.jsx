@@ -11,6 +11,9 @@ import {
 } from '@ant-design/icons';
 import Logo from '@/components/elements/Logo';
 import getThemeOptions from '@/utils/antd/getThemeOptions';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { TOKEN_KEY } from '@/utils/constants';
 
 const themeOptions = getThemeOptions();
 
@@ -34,8 +37,11 @@ const footerStyle = {
 };
 
 const HomeLayout = ({ children }) => {
+  const router = useRouter();
+
   const handleLogout = () => {
-    console.log('logout');
+    Cookies.set(TOKEN_KEY, '');
+    router.push('/login');
   };
 
   const userMenu = () => (
