@@ -5,7 +5,7 @@ import {
   Flex, Form, Input, Button, Typography, Modal,
 } from 'antd';
 import Link from 'next/link';
-import useApiService from '@/services';
+import getApiService from '@/services';
 import { useRouter } from 'next/navigation';
 
 const { Item } = Form;
@@ -15,7 +15,7 @@ const { Title } = Typography;
 const Register = () => {
   const [modal, modalContext] = Modal.useModal();
   const router = useRouter();
-  const { MeService } = useApiService();
+  const { MeService } = getApiService();
   const [userInfo] = useState({
     full_name: '',
     email: '',
