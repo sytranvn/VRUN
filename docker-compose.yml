@@ -1,7 +1,11 @@
 services:
 
   db:
-    image: postgres:12
+    image: database:latest
+    build:
+      context: ./postgres
+      args:
+        - CRON_DB=${POSTGRES_DB}
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
@@ -18,37 +22,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_DB=${POSTGRES_DB?Variable not set}
-
-  # prestart:
-  #   image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
-  #   build:
-  #     context: ./backend
-  #   networks:
-  #     - default
-  #   depends_on:
-  #     db:
-  #       condition: service_healthy
-  #   command: bash scripts/prestart.sh
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     - DOMAIN=${DOMAIN}
-  #     - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
-  #     - ENVIRONMENT=${ENVIRONMENT}
-  #     - BACKEND_CORS_ORIGINS=${BACKEND_CORS_ORIGINS}
-  #     - SECRET_KEY=${SECRET_KEY?Variable not set}
-  #     - FIRST_SUPERUSER=${FIRST_SUPERUSER?Variable not set}
-  #     - FIRST_SUPERUSER_PASSWORD=${FIRST_SUPERUSER_PASSWORD?Variable not set}
-  #     - SMTP_HOST=${SMTP_HOST}
-  #     - SMTP_USER=${SMTP_USER}
-  #     - SMTP_PASSWORD=${SMTP_PASSWORD}
-  #     - EMAILS_FROM_EMAIL=${EMAILS_FROM_EMAIL}
-  #     - POSTGRES_SERVER=db
-  #     - POSTGRES_PORT=${POSTGRES_PORT}
-  #     - POSTGRES_DB=${POSTGRES_DB}
-  #     - POSTGRES_USER=${POSTGRES_USER?Variable not set}
-  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
-  #     - SENTRY_DSN=${SENTRY_DSN}
+    profiles: [core,backend]
 
   backend:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
@@ -91,6 +65,7 @@ services:
 
     build:
       context: ./backend
+    profiles: [backend]
 
   minio:
     image: quay.io/minio/minio
@@ -106,17 +81,6 @@ services:
       - 9001:9001
     healthcheck:
       test: curl -f http://localhost:9001
-
-
-  # frontend:
-  #   image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
-  #   restart: always
-  #   networks:
-  #     - default
-  #   build:
-  #     context: ./frontend
-  #     args:
-  #       - VITE_API_URL=https://api.${DOMAIN?Variable not set}
-  #       - NODE_ENV=production
+    profiles: [core,backend]
 volumes:
   app-db-data:

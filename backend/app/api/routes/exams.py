@@ -11,7 +11,7 @@ from app.view_models import (
     ExamFinished,
     ExamReadonly,
     ExamsReadonly,
-    RegisteredExam
+    RegisteredExamPublic
 )
 
 router = APIRouter()
@@ -48,7 +48,7 @@ def read_available_exam(session: SessionDep, id: uuid.UUID) -> Any:
     return exam
 
 
-@router.post("/{id}/register", response_model=List[RegisteredExam])
+@router.post("/{id}/register", response_model=List[RegisteredExamPublic])
 def register_exam(
     session: SessionDep,
     current_user: CurrentUser,
