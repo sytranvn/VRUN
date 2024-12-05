@@ -84,4 +84,5 @@ module.exports = {
     }],
     'react/no-array-index-key': 'off',
   },
+  "parser": "@typescript-eslint/parser",
 };

@@ -33,11 +33,14 @@ import type {
 	UpdatePassword,
 	UserRegister,
 	UserUpdateMe,
+	Body_candidate_add_speaking_record,
 	CandidateExamRegister,
+	ExamFinished,
 	ExamReadonly,
 	ExamsReadonly,
-	RegisteredExam,
-	RegisteredExams,
+	ExamSubmit,
+	RegisteredExamPublic,
+	RegisteredExamsPublic,
 } from "./models";
 
 export type TDataLoginAccessToken = {
@@ -1087,11 +1090,19 @@ export type TDataRegisterExam = {
 export type TDataReadRegisteredExam = {
 	id: string;
 };
+export type TDataReadExamResult = {
+	id: string;
+};
 export type TDataAddAnswer = {
+	id: string;
+};
+export type TDataAddSpeakingRecord = {
+	formData: Body_candidate_add_speaking_record;
 	id: string;
 };
 export type TDataSubmitAnswer = {
 	id: string;
+	requestBody: ExamSubmit;
 };
 
 export class CandidateService {
@@ -1143,12 +1154,12 @@ export class CandidateService {
 	/**
 	 * Register Exam
 	 * Register for an exam.
-	 * @returns RegisteredExam Successful Response
+	 * @returns RegisteredExamPublic Successful Response
 	 * @throws ApiError
 	 */
 	public static registerExam(
 		data: TDataRegisterExam,
-	): CancelablePromise<Array<RegisteredExam>> {
+	): CancelablePromise<Array<RegisteredExamPublic>> {
 		const { id, requestBody } = data;
 		return __request(OpenAPI, {
 			method: "POST",
@@ -1167,10 +1178,10 @@ export class CandidateService {
 	/**
 	 * Read Registered Exams
 	 * Retrieve exams.
-	 * @returns RegisteredExams Successful Response
+	 * @returns RegisteredExamsPublic Successful Response
 	 * @throws ApiError
 	 */
-	public static readRegisteredExams(): CancelablePromise<RegisteredExams> {
+	public static readRegisteredExams(): CancelablePromise<RegisteredExamsPublic> {
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/registered_exams/",
@@ -1180,12 +1191,12 @@ export class CandidateService {
 	/**
 	 * Read Registered Exam
 	 * Get exam by ID.
-	 * @returns RegisteredExams Successful Response
+	 * @returns RegisteredExamPublic Successful Response
 	 * @throws ApiError
 	 */
 	public static readRegisteredExam(
 		data: TDataReadRegisteredExam,
-	): CancelablePromise<RegisteredExams> {
+	): CancelablePromise<RegisteredExamPublic> {
 		const { id } = data;
 		return __request(OpenAPI, {
 			method: "GET",
@@ -1200,21 +1211,66 @@ export class CandidateService {
 	}
 
 	/**
+	 * Read Exam Result
+	 * Get exam result
+	 * @returns ExamFinished Successful Response
+	 * @throws ApiError
+	 */
+	public static readExamResult(
+		data: TDataReadExamResult,
+	): CancelablePromise<ExamFinished> {
+		const { id } = data;
+		return __request(OpenAPI, {
+			method: "GET",
+			url: "/api/v1/registered_exams/{id}/result",
+			path: {
+				id,
+			},
+			errors: {
+				422: `Validation Error`,
+			},
+		});
+	}
+
+	/**
 	 * Add Answer
 	 * Add an answer.
-	 * @returns ExamReadonly Successful Response
+	 * @returns RegisteredExamPublic Successful Response
 	 * @throws ApiError
 	 */
 	public static addAnswer(
 		data: TDataAddAnswer,
-	): CancelablePromise<ExamReadonly> {
+	): CancelablePromise<RegisteredExamPublic> {
 		const { id } = data;
 		return __request(OpenAPI, {
 			method: "POST",
-			url: "/api/v1/registered_exams/{id}/answer",
+			url: "/api/v1/registered_exams/{id}/answers",
 			path: {
 				id,
 			},
+			errors: {
+				422: `Validation Error`,
+			},
+		});
+	}
+
+	/**
+	 * Add Speaking Record
+	 * @returns RegisteredExamPublic Successful Response
+	 * @throws ApiError
+	 */
+	public static addSpeakingRecord(
+		data: TDataAddSpeakingRecord,
+	): CancelablePromise<RegisteredExamPublic> {
+		const { formData, id } = data;
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/registered_exams/{id}/essays",
+			path: {
+				id,
+			},
+			formData: formData,
+			mediaType: "multipart/form-data",
 			errors: {
 				422: `Validation Error`,
 			},
@@ -1230,13 +1286,15 @@ export class CandidateService {
 	public static submitAnswer(
 		data: TDataSubmitAnswer,
 	): CancelablePromise<ExamReadonly> {
-		const { id } = data;
+		const { id, requestBody } = data;
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/registered_exams/{id}/submit",
 			path: {
 				id,
 			},
+			body: requestBody,
+			mediaType: "application/json",
 			errors: {
 				422: `Validation Error`,
 			},

@@ -65,6 +65,28 @@ export const $Body_admin_create_question_group_resources = {
 	},
 } as const;
 
+export const $Body_candidate_add_speaking_record = {
+	properties: {
+		essay_in: {
+			type: "EssayIn",
+			isRequired: true,
+		},
+		file: {
+			type: "any-of",
+			contains: [
+				{
+					type: "binary",
+					format: "binary",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+	},
+} as const;
+
 export const $Body_login_login_access_token = {
 	properties: {
 		grant_type: {
@@ -128,7 +150,58 @@ export const $CandidateExamRegister = {
 
 export const $CandidateExamStatus = {
 	type: "Enum",
-	enum: ["SCHEDULED", "STARTED", "FINISHED", "CANCELED"],
+	enum: ["SCHEDULED", "STARTED", "FINISHED", "ASSESSED", "CANCELED"],
+} as const;
+
+export const $EssayIn = {
+	properties: {
+		question_id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		content: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+	},
+} as const;
+
+export const $EssaySubmit = {
+	properties: {
+		content: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		resource: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+	},
 } as const;
 
 export const $ExamCreate = {
@@ -140,6 +213,20 @@ export const $ExamCreate = {
 		},
 		description: {
 			type: "string",
+			isRequired: true,
+		},
+	},
+} as const;
+
+export const $ExamFinished = {
+	properties: {
+		id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		score: {
+			type: "number",
 			isRequired: true,
 		},
 	},
@@ -204,6 +291,18 @@ export const $ExamReadonly = {
 export const $ExamStatus = {
 	type: "Enum",
 	enum: ["DRAFT", "ACTIVE"],
+} as const;
+
+export const $ExamSubmit = {
+	properties: {
+		question_groups: {
+			type: "array",
+			contains: {
+				type: "QuestionGroupSubmit",
+			},
+			isRequired: true,
+		},
+	},
 } as const;
 
 export const $ExamUpdate = {
@@ -478,6 +577,30 @@ export const $QuestionGroupReadonly = {
 	},
 } as const;
 
+export const $QuestionGroupSubmit = {
+	properties: {
+		id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		questions: {
+			type: "array",
+			contains: {
+				type: "QuestionSubmit",
+			},
+			isRequired: true,
+		},
+		essays: {
+			type: "array",
+			contains: {
+				type: "EssaySubmit",
+			},
+			isRequired: true,
+		},
+	},
+} as const;
+
 export const $QuestionGroupUpdate = {
 	properties: {
 		description: {
@@ -566,6 +689,21 @@ export const $QuestionStatusEnum = {
 	enum: ["DRAFT", "ACTIVE"],
 } as const;
 
+export const $QuestionSubmit = {
+	properties: {
+		id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		answer: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+	},
+} as const;
+
 export const $QuestionUpdate = {
 	properties: {
 		description: {
@@ -612,7 +750,7 @@ export const $QuestionsPublic = {
 	},
 } as const;
 
-export const $RegisteredExam = {
+export const $RegisteredExamPublic = {
 	properties: {
 		id: {
 			type: "string",
@@ -623,19 +761,37 @@ export const $RegisteredExam = {
 			type: "CandidateExamStatus",
 			isRequired: true,
 		},
+		start_time: {
+			type: "string",
+			isRequired: true,
+			format: "date-time",
+		},
+		end_time: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
 		exam: {
-			type: "ExamReadonly",
+			type: "ExamPublic",
 			isRequired: true,
 		},
 	},
 } as const;
 
-export const $RegisteredExams = {
+export const $RegisteredExamsPublic = {
 	properties: {
 		data: {
 			type: "array",
 			contains: {
-				type: "RegisteredExam",
+				type: "RegisteredExamPublic",
 			},
 			isRequired: true,
 		},
@@ -703,7 +859,15 @@ export const $UserCreate = {
 			default: false,
 		},
 		role: {
-			type: "Role",
+			type: "any-of",
+			contains: [
+				{
+					type: "Role",
+				},
+				{
+					type: "null",
+				},
+			],
 			isRequired: true,
 		},
 		full_name: {
@@ -744,7 +908,15 @@ export const $UserPublic = {
 			default: false,
 		},
 		role: {
-			type: "Role",
+			type: "any-of",
+			contains: [
+				{
+					type: "Role",
+				},
+				{
+					type: "null",
+				},
+			],
 			isRequired: true,
 		},
 		full_name: {
@@ -820,7 +992,15 @@ export const $UserUpdate = {
 			default: false,
 		},
 		role: {
-			type: "Role",
+			type: "any-of",
+			contains: [
+				{
+					type: "Role",
+				},
+				{
+					type: "null",
+				},
+			],
 			isRequired: true,
 		},
 		full_name: {
