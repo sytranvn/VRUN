@@ -24,9 +24,19 @@ const items = [
     label: <Link href="/admin">Trang chủ</Link>,
   },
   {
-    key: 'exam-management',
+    key: 'exam',
     icon: React.createElement(PaperClipOutlined),
-    label: <Link href="/admin/exam">Quản lý đề thi</Link>,
+    label: 'Quản lý đề thi',
+    children: [
+      {
+        key: 'exam-management',
+        label: <Link href="/admin/exam">Đề thi</Link>,
+      },
+      {
+        key: 'question-group-management',
+        label: <Link href="/admin/question-group">Nhóm câu hỏi</Link>,
+      },
+    ]
   },
   {
     key: 'history-management',
@@ -77,6 +87,8 @@ const AdminLayout = ({ children }) => {
       setSelectedKeys(['history-management']);
     } else if (path.startsWith('/admin/user')) {
       setSelectedKeys(['user-management']);
+    }  else if (path.startsWith('/admin/question-group')) {
+      setSelectedKeys(['question-group-management']);
     } else {
       setSelectedKeys(['dashboard']);
     }

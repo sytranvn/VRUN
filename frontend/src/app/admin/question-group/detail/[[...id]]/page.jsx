@@ -3,17 +3,17 @@
 import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
-  Card, Input, Form, Flex, Button, Modal, Radio,
+  Card, Input, Form, Flex, Button, Modal, Radio, InputNumber,
 } from 'antd';
 import { DeleteOutlined, SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import getApiService from '@/services';
-import { STATUS_OPTIONS } from '@/utils/constants'
+import { SKILL_OPTIONS, STATUS_OPTIONS } from '@/utils/constants'
 
-const { Item } = Form;
+const { Item, List } = Form;
 const { TextArea } = Input;
 const { Group } = Radio;
 
-const AdminExamDetail = () => {
+const AdminQuestionGroupDetail = () => {
   const { AdminService } = getApiService();
   const [modal, modalContext] = Modal.useModal();
 
@@ -24,11 +24,17 @@ const AdminExamDetail = () => {
   const [form] = Form.useForm();
 
   const RULES = {
-    title: [
-      { required: true, message: 'Vui lòng nhập tiêu đề' },
+    skill: [
+      { required: true, message: 'Vui lòng chọn kỹ năng' },
+    ],
+    duration: [
+      { required: true, message: 'Vui lòng điều chỉnh thời lượng' },
     ],
     description: [
       { required: true, message: 'Vui lòng nhập mô tả' },
+    ],
+    resource: [
+      { required: true, message: 'Vui lòng thêm tài liệu' },
     ],
   };
 
@@ -36,8 +42,8 @@ const AdminExamDetail = () => {
     modal.confirm({
       title: 'Xác nhận xoá?',
       async onOk() {
-        await AdminService.deleteExam({ id });
-        router.push('/admin/exam');
+        await AdminService.deleteQuestionGroup({ id });
+        router.push('/admin/question-group');
       },
     });
   };
@@ -47,12 +53,13 @@ const AdminExamDetail = () => {
       let resp;
 
       if (id) {
-        resp = await AdminService.updateExam({
+        formData.id = id;
+        resp = await AdminService.updateQuestionGroup({
           id,
           requestBody: formData,
         });
       } else {
-        resp = await AdminService.createExam({
+        resp = await AdminService.createQuestionGroup({
           requestBody: formData,
         });
       }
@@ -62,7 +69,7 @@ const AdminExamDetail = () => {
       modal.success({
         title: 'Đã lưu thành công!',
         onOk() {
-          router.push('/admin/exam');
+          router.push('/admin/question-group');
         },
       });
     } catch (e) {
@@ -74,15 +81,18 @@ const AdminExamDetail = () => {
 
   useEffect(() => {
     if (id) {
-      AdminService.readExam({ id })
+      AdminService.readQuestionGroup({ id })
         .then((resp) => {
-          form.setFieldsValue(resp);
+          form.setFieldsValue({
+            ...resp,
+            status: STATUS_OPTIONS[0].value,
+          });
         });
     }
   }, [AdminService, id, form]);
 
   return (
-    <Card title={id ? `Đề thi #${id}` : 'Tạo đề thi'}>
+    <Card title={id ? `Nhóm câu hỏi #${id}` : 'Tạo nhóm câu hỏi'}>
       <Form
         form={form}
         onFinish={handleSubmit}
@@ -91,12 +101,32 @@ const AdminExamDetail = () => {
         scrollToFirstError
       >
         <Item
-          name="title"
-          label="Tiêu đề"
-          rules={RULES.title}
-          hasFeedback
+          name="status"
+          label="Trạng thái"
         >
-          <Input placeholder="Nhập tiêu đề" />
+          <Group
+            defaultValue={STATUS_OPTIONS[0].value}
+            options={STATUS_OPTIONS}
+          />
+        </Item>
+        <Item
+          name="skill"
+          label="Kỹ năng"
+          rules={RULES.skill}
+        >
+          <Group
+            defaultValue={SKILL_OPTIONS[0].value}
+            options={SKILL_OPTIONS}
+          />
+        </Item>
+        <Item
+          name="duration"
+          label="Thời lượng"
+          rules={RULES.duration}
+        >
+          <InputNumber
+            addonAfter="phút"
+          />
         </Item>
         <Item
           name="description"
@@ -110,13 +140,11 @@ const AdminExamDetail = () => {
           />
         </Item>
         <Item
-          name="status"
-          label="Trạng thái"
+          name="resource"
+          label="Tài liệu"
+          rules={RULES.resource}
         >
-          <Group
-            defaultValue={STATUS_OPTIONS[0].value}
-            options={STATUS_OPTIONS}
-          />
+          <Input />
         </Item>
         <Item wrapperCol={{ span: 24 }}>
           <Flex
@@ -128,7 +156,7 @@ const AdminExamDetail = () => {
               htmlType="button"
               type="default"
               icon={<ArrowLeftOutlined />}
-              onClick={() => router.push('/admin/exam')}
+              onClick={() => router.push('/admin/question-group')}
             >
               Quay lại
             </Button>
@@ -160,4 +188,4 @@ const AdminExamDetail = () => {
   );
 };
 
-export default AdminExamDetail;
+export default AdminQuestionGroupDetail;
