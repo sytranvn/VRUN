@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta, timezone
-from typing import List
+from typing import Annotated, List, Union
 import uuid
 
-from pydantic import BaseModel, EmailStr, SerializationInfo, field_serializer, field_validator
+from pydantic import BaseModel, EmailStr, SerializationInfo, field_serializer, field_validator, model_serializer, model_validator
 from sqlmodel import Field, SQLModel
 
 
@@ -127,6 +127,7 @@ class PartPublic(SQLModel):
     order: int
     question_group: "QuestionGroupPublic"
 
+
 class ExamQuestionGroupCreate(SQLModel):
     question_group_id: uuid.UUID
     order: int
@@ -138,13 +139,57 @@ class ExamReadonly(ExamBase):
     parts: List["PartReadonly"]
 
 
+class ExamSubmit(SQLModel):
+    question_groups: List["QuestionGroupSubmit"]
+
+
+class QuestionGroupSubmit(SQLModel):
+    id: uuid.UUID
+    questions: List["QuestionSubmit"]
+    essays: List["EssaySubmit"]
+
+
+class QuestionSubmit(SQLModel):
+    id: uuid.UUID
+    answer: uuid.UUID
+
+
+class EssaySubmit(SQLModel):
+    content: str | None
+    resource: str | None
+
+    @model_validator(mode='after')
+    def check_content_or_resource(self):
+        if not self.content and not self.resource:
+            raise ValueError("Either content or resource is required")
+        return self
+
+
 class ExamStarted(ExamBase):
     id: uuid.UUID
-    # parts: List["PartStarted"]
+    parts: List["PartStarted"]
 
-class ExamFinished(ExamBase):
+
+class PartStarted(SQLModel):
+    order: int
+    question_group: "QuestionGroupStarted"
+
+
+class QuestionGroupStarted(SQLModel):
+    id: uuid.UUID
+    questions: List["QuestionStarted"]
+
+
+class QuestionStarted(SQLModel):
+    id: uuid.UUID
+    description: str
+    answers: List["AnswerReadonly"]
+
+
+class ExamFinished(SQLModel):
     id: uuid.UUID
     # parts: List["PartFinished"]
+    score: float
 
 
 class PartReadonly(SQLModel):
@@ -152,18 +197,16 @@ class PartReadonly(SQLModel):
     question_group: "QuestionGroupReadonly"
 
 
-class RegisteredExam(SQLModel):
+class RegisteredExamPublic(SQLModel):
     id: uuid.UUID
-    # TODO: this part only visible when take exam
-    # question_groups: List["QuestionGroupReadonly"]
     status: CandidateExamStatus
-    exam: "ExamReadonly"
+    start_time: datetime
+    end_time: datetime | None
+    exam: "ExamPublic"
 
-
-class RegisteredExams(SQLModel):
-    data: List[RegisteredExam]
+class RegisteredExamsPublic(SQLModel):
+    data: List[RegisteredExamPublic]
     count: int
-
 
 class ExamsPublic(SQLModel):
     data: List[ExamPublic]
@@ -261,3 +304,9 @@ class AnswerUpdate(AnswerBase):
     id: uuid.UUID
     description: str | None  # type: ignore
     is_correct_answer: bool
+
+
+class EssayIn(SQLModel):
+    question_id: uuid.UUID
+    content: str | None
+

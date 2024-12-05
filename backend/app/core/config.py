@@ -58,6 +58,8 @@ class Settings(BaseSettings):
     MINIO_ENDPOINT: str = "localhost:9000"
     MINIO_KEY: str = ""
     MINIO_SECRET: str = ""
+    AI_MODEL: str = "google/gemini-1.5-flash"
+    GOOGLE_API_KEY: str = ""
 
     @computed_field  # type: ignore[prop-decorator]
     @property

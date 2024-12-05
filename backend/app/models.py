@@ -1,9 +1,9 @@
 import uuid
-from typing import List, Literal, Sequence
+from typing import List
 from datetime import datetime, timezone
 from enum import StrEnum
 from pydantic import EmailStr
-from sqlmodel import Column, Field, ForeignKey, ForeignKeyConstraint, Relationship, SQLModel, Enum, UniqueConstraint
+from sqlmodel import Column, Field, ForeignKeyConstraint, Relationship, SQLModel, Enum, UniqueConstraint
 
 
 class BaseTable:
@@ -21,6 +21,7 @@ class BaseTable:
 class AnswerStatus(StrEnum):
     DRAFT = "DRAFT"
     SUBMITED = "SUBMITED"
+
 
 class ExamStatus(StrEnum):
     DRAFT = "DRAFT"
@@ -49,46 +50,51 @@ class CandidateExamAnswer(SQLModel, table=True):
 
 class CandidateExamEssay(SQLModel, table=True):
     __tablename__ = "candiate_exam_essay"  # type: ignore
-    id: uuid.UUID = Field(
-        nullable=False, primary_key=True, foreign_key="candidate_exam.id", ondelete="CASCADE")
-
+    id: uuid.UUID | None = Field(nullable=False, default_factory=uuid.uuid4, primary_key=True)
     candidate_exam_id: uuid.UUID = Field(foreign_key="candidate_exam.id", nullable=False)
-    question_id: uuid.UUID = Field(
-        nullable=False, foreign_key="question.id")
-    status: AnswerStatus = Field(default=AnswerStatus.DRAFT,
-                                 sa_column=Column(Enum(AnswerStatus, native_enum=False)))
-    content: str = Field(nullable=True)
+    question_id: uuid.UUID = Field(nullable=False, foreign_key="question.id")
+    status: AnswerStatus | None = Field(default=AnswerStatus.DRAFT,
+                                        sa_column=Column(Enum(AnswerStatus, native_enum=False)))
+    content: str | None = Field(nullable=True)
     # link to voice record
-    resource: str = Field(nullable=True)
-    score: float = Field(nullable=True)
+    resource: str | None = Field(nullable=True)
+    score: float | None = Field(nullable=True)
+    assessment: str | None = Field(nullable=True)
+
+    question: "Question" = Relationship()
+    candidate_exam: "CandidateExam" = Relationship(back_populates="essays")
 
 
 class CandidateExamStatus(StrEnum):
     SCHEDULED = "SCHEDULED"
     STARTED = "STARTED"
     FINISHED = "FINISHED"
+    ASSESSED = "ASSESSED"
     CANCELED = "CANCELED"
 
 
 class CandidateExam(BaseTable, SQLModel, table=True):
     __tablename__ = "candidate_exam"  # type: ignore
+    __tableargs__ = (
+        UniqueConstraint("candidate_id", "exam_id"),
+    )
     id: uuid.UUID = Field(default_factory=uuid.uuid4, nullable=False, primary_key=True)
     candidate_id: uuid.UUID = Field(
-        foreign_key="user.id", nullable=False, ondelete="CASCADE", primary_key=True)
+        foreign_key="user.id", nullable=False, ondelete="CASCADE")
     exam_id: uuid.UUID = Field(
-        foreign_key="exam.id", nullable=False, ondelete="CASCADE", primary_key=True)
-    start_time: datetime
+        foreign_key="exam.id", nullable=False, ondelete="CASCADE")
+    start_time: datetime = Field(nullable=False)
+    end_time: datetime | None = Field(nullable=True)
     status: CandidateExamStatus = Field(default=CandidateExamStatus.SCHEDULED,
                                         sa_column=Column(Enum(CandidateExamStatus, native_enum=False)))
     exam: "Exam" = Relationship()
     candidate: "User" = Relationship(back_populates="exams")
     selected_answers: List[CandidateExamAnswer] = Relationship()
-    essays: List["CandidateExamEssay"] = Relationship(
-        sa_relationship_kwargs={
-            "primaryjoin": "CandidateExam.id==CandidateExamEssay.candidate_exam_id", 
-            "lazy": "joined"
-        }
-    )
+    essays: List["CandidateExamEssay"] = Relationship()
+
+    @property
+    def question_groups(self):
+        return [p.question_group for p in self.exam.parts]
 
 # Shared properties
 
@@ -102,15 +108,15 @@ class UserBase(SQLModel):
     email: EmailStr = Field(unique=True, index=True, max_length=255)
     is_active: bool = True
     is_superuser: bool = False
-    role: Role = Field(default=Role.CANDIDATE)
+    role: Role | None
     full_name: str | None = Field(default=None, max_length=255)
 
 
 # Database model, database table inferred from class name
 class User(BaseTable, UserBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    role: Role = Field(default=Role.CANDIDATE,
-                       sa_column=Column(Enum(Role, native_enum=False)))
+    role: Role | None = Field(default=Role.CANDIDATE,
+                              sa_column=Column(Enum(Role, native_enum=False)))
 
     hashed_password: str
     exams: List["CandidateExam"] = Relationship()
@@ -129,9 +135,6 @@ class Part(BaseTable, SQLModel, table=True):
     order: int
     question_group: "QuestionGroup" = Relationship()
     exam: "Exam" = Relationship(back_populates="parts")
-
-
-
 
 
 class ExamBase(SQLModel):

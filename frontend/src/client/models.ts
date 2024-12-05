@@ -19,6 +19,11 @@ export type Body_admin_create_question_group_resources = {
 	file: Blob | File;
 };
 
+export type Body_candidate_add_speaking_record = {
+	essay_in: EssayIn;
+	file: Blob | File | null;
+};
+
 export type Body_login_login_access_token = {
 	grant_type?: string | null;
 	username: string;
@@ -36,12 +41,28 @@ export enum CandidateExamStatus {
 	SCHEDULED = "SCHEDULED",
 	STARTED = "STARTED",
 	FINISHED = "FINISHED",
+	ASSESSED = "ASSESSED",
 	CANCELED = "CANCELED",
 }
+
+export type EssayIn = {
+	question_id: string;
+	content: string | null;
+};
+
+export type EssaySubmit = {
+	content: string | null;
+	resource: string | null;
+};
 
 export type ExamCreate = {
 	title: string;
 	description: string;
+};
+
+export type ExamFinished = {
+	id: string;
+	score: number;
 };
 
 export type ExamPublic = {
@@ -63,6 +84,10 @@ export enum ExamStatus {
 	DRAFT = "DRAFT",
 	ACTIVE = "ACTIVE",
 }
+
+export type ExamSubmit = {
+	question_groups: Array<QuestionGroupSubmit>;
+};
 
 export type ExamUpdate = {
 	title: string | null;
@@ -137,6 +162,12 @@ export type QuestionGroupReadonly = {
 	duration: number;
 };
 
+export type QuestionGroupSubmit = {
+	id: string;
+	questions: Array<QuestionSubmit>;
+	essays: Array<EssaySubmit>;
+};
+
 export type QuestionGroupUpdate = {
 	description: string;
 	resource: string | null;
@@ -162,6 +193,11 @@ export enum QuestionStatusEnum {
 	ACTIVE = "ACTIVE",
 }
 
+export type QuestionSubmit = {
+	id: string;
+	answer: string;
+};
+
 export type QuestionUpdate = {
 	description: string | null;
 	id: string | null;
@@ -172,14 +208,16 @@ export type QuestionsPublic = {
 	count: number;
 };
 
-export type RegisteredExam = {
+export type RegisteredExamPublic = {
 	id: string;
 	status: CandidateExamStatus;
-	exam: ExamReadonly;
+	start_time: string;
+	end_time: string | null;
+	exam: ExamPublic;
 };
 
-export type RegisteredExams = {
-	data: Array<RegisteredExam>;
+export type RegisteredExamsPublic = {
+	data: Array<RegisteredExamPublic>;
 	count: number;
 };
 
@@ -209,7 +247,7 @@ export type UserCreate = {
 	email: string;
 	is_active?: boolean;
 	is_superuser?: boolean;
-	role: Role;
+	role: Role | null;
 	full_name?: string | null;
 	password: string;
 };
@@ -218,7 +256,7 @@ export type UserPublic = {
 	email: string;
 	is_active?: boolean;
 	is_superuser?: boolean;
-	role: Role;
+	role: Role | null;
 	full_name?: string | null;
 	id: string;
 };
@@ -233,7 +271,7 @@ export type UserUpdate = {
 	email?: string | null;
 	is_active?: boolean;
 	is_superuser?: boolean;
-	role: Role;
+	role: Role | null;
 	full_name?: string | null;
 	password?: string | null;
 };

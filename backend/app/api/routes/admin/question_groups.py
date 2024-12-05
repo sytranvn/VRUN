@@ -1,7 +1,6 @@
-from datetime import timedelta
-import uuid
-from typing import Any
 import os
+from typing import Any
+import uuid
 
 from fastapi import APIRouter, HTTPException, UploadFile
 from sqlmodel import func, select
@@ -9,7 +8,11 @@ from sqlmodel import func, select
 from app.api.deps import CurrentUser, MinioDep, SessionDep
 from app.models import QuestionGroup, QuestionStatusEnum, Skill
 from app.view_models import (
-QuestionGroupCreate, QuestionGroupPublic, QuestionGroupsPublic, QuestionGroupUpdate, Message
+    Message,
+    QuestionGroupCreate,
+    QuestionGroupPublic,
+    QuestionGroupUpdate,
+    QuestionGroupsPublic,
 )
 
 
@@ -48,13 +51,6 @@ def read_question_group(session: SessionDep, minio: MinioDep,  id: uuid.UUID) ->
     question_group = session.get(QuestionGroup, id)
     if not question_group:
         raise HTTPException(status_code=404, detail="QuestionGroup not found")
-    if question_group.resource:
-        question_group.resource = minio.get_presigned_url(
-            "GET",
-            "vrun",
-            question_group.resource,
-            expires=timedelta(days=1)
-        )
     return question_group
 
 
@@ -139,16 +135,10 @@ def create_question_group_resources(
 
     stored_filename = f"{id}{fext}"
     minio.put_object("vrun", stored_filename, file.file, file.size or -1)
-    resource_url = minio.get_presigned_url(
-        "GET",
-        "vrun",
-        stored_filename,
-        expires=timedelta(days=1)
-    )
+
     question_group.resource = stored_filename
     session.add(question_group)
     session.commit()
     session.refresh(question_group)
-    question_group.resource = resource_url
     return question_group
 

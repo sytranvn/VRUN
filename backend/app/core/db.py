@@ -1,4 +1,4 @@
-from sqlmodel import Session, create_engine, select
+from sqlmodel import Session, create_engine, select, text
 
 from app import crud
 from app.core.config import settings
@@ -21,7 +21,6 @@ def init_db(session: Session) -> None:
 
     # This works because the models are already imported and registered from app.models
     SQLModel.metadata.create_all(engine)
-
     user = session.exec(
         select(User).where(User.email == settings.FIRST_SUPERUSER)
     ).first()
