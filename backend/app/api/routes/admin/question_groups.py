@@ -56,15 +56,36 @@ def read_question_group(session: SessionDep, minio: MinioDep,  id: uuid.UUID) ->
 
 @router.post("/", response_model=QuestionGroupPublic)
 def create_question_group(
-    session: SessionDep, current_user: CurrentUser, question_group_in: QuestionGroupCreate
+    session: SessionDep,
+    minio: MinioDep,
+    question_group_in: QuestionGroupCreate,
+    file: UploadFile | None
 ) -> Any:
     """
     Create new question group.
     """
     question_group = QuestionGroup.model_validate(question_group_in)
+
+    if file is not None:
+        if file.content_type != "audio/mpeg":
+            raise HTTPException(status_code=400, detail=f"Invalid content type, please upload audio file.")
+        _, fext = os.path.splitext(file.filename or "")
+        if fext != ".mp3":
+            raise HTTPException(status_code=400, detail="Invalid file type, please upload mp3 file")
+        if file.size is None:
+            raise HTTPException(status_code=400, detail="Invalid file size")
+        if file.size > 3 * 2**20:
+            raise HTTPException(status_code=400, detail="File too large.")
+
     session.add(question_group)
     session.commit()
     session.refresh(question_group)
+
+    if file is not None:
+        _, fext = os.path.splitext(file.filename or "")
+        stored_filename = f"{question_group.id}{fext}"
+        minio.put_object("vrun", stored_filename, file.file, file.size or -1)
+
     return question_group
 
 
