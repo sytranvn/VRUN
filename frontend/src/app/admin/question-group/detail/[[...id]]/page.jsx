@@ -6,11 +6,11 @@ import {
   Card, Input, Form, Flex, Button, Modal, Radio, InputNumber,
 } from 'antd';
 import { DeleteOutlined, SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import FroalaTextEditor from '@/components/elements/FroalaTextEditor';
 import getApiService from '@/services';
 import { SKILL_OPTIONS, STATUS_OPTIONS } from '@/utils/constants';
 
 const { Item, List } = Form;
-const { TextArea } = Input;
 const { Group } = Radio;
 
 const AdminQuestionGroupDetail = () => {
@@ -133,13 +133,12 @@ const AdminQuestionGroupDetail = () => {
         </Item>
         <Item
           name="description"
-          label="Mô tả"
+          label="Đề thi"
           rules={RULES.description}
         >
-          <TextArea
-            rows={4}
-            placeholder="Nhập mô tả"
-            maxLength={1000}
+          <FroalaTextEditor
+            placeholder="Nhập đề thi"
+            showCount
           />
         </Item>
         <Item

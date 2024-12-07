@@ -43,7 +43,14 @@ const AdminQuestionGroup = () => {
       key: 'skill', dataIndex: 'skill', title: 'Kỹ năng', align: 'center', width: '250px',
     },
     {
-      key: 'description', dataIndex: 'description', title: 'Chú thích',
+      key: 'description',
+      dataIndex: 'description',
+      title: 'Chú thích',
+      width: '500px',
+      ellipse: true,
+      render(text) {
+        return text.length > 100 ? `${text.slice(0, 100)}...` : text;
+      },
     },
     {
       key: 'duration', dataIndex: 'duration', title: 'Thời lượng (phút)', align: 'center', width: '150px',
