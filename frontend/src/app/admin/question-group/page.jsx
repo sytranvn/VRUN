@@ -17,8 +17,10 @@ const AdminQuestionGroup = () => {
   const [list, loadList, reset] = usePagination(AdminService.readQuestionGroups);
 
   useEffect(() => {
-    loadList();
-  }, [loadList]);
+    if (!list.records.length) {
+      loadList();
+    }
+  }, [loadList, list]);
 
   const onRow = (record) => {
     return {
@@ -46,7 +48,7 @@ const AdminQuestionGroup = () => {
       key: 'description',
       dataIndex: 'description',
       title: 'Chú thích',
-      width: '500px',
+      width: '600px',
       ellipse: true,
       render(text) {
         return text.length > 100 ? `${text.slice(0, 100)}...` : text;

@@ -4,7 +4,7 @@ const PAGE_SIZE = 10;
 
 const INIT_STATE = {
   records: [],
-  currentPage: 0, // default API param is 0
+  currentPage: 1, // default API param is 0
   pageSize: PAGE_SIZE,
   total: 1,
   totalCount: 0,
@@ -19,7 +19,11 @@ const usePagination = (callback) => {
     const limit = pageSize || PAGE_SIZE;
     const skip = page || list.currentPage;
 
-    const resp = await callback({ limit, skip, ...others });
+    const resp = await callback({
+      limit,
+      skip: skip - 1, // API skip starts with 0
+      ...others,
+    });
 
     const totalPage = Math.ceil(resp.count / limit);
 
