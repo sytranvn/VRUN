@@ -9,8 +9,12 @@ import Link from 'next/link';
 import {
   UserOutlined, LogoutOutlined, SettingOutlined, HistoryOutlined,
 } from '@ant-design/icons';
+import AuthProvider from '@/components/sections/Provider/AuthProvider';
 import Logo from '@/components/elements/Logo';
 import getThemeOptions from '@/utils/antd/getThemeOptions';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
+import { TOKEN_KEY } from '@/utils/constants';
 
 const themeOptions = getThemeOptions();
 
@@ -34,8 +38,11 @@ const footerStyle = {
 };
 
 const HomeLayout = ({ children }) => {
+  const router = useRouter();
+
   const handleLogout = () => {
-    console.log('logout');
+    Cookies.set(TOKEN_KEY, '');
+    router.push('/login');
   };
 
   const userMenu = () => (
@@ -72,36 +79,38 @@ const HomeLayout = ({ children }) => {
       <ConfigProvider
         theme={themeOptions}
       >
-        <Layout>
-          <Layout.Header style={headerStyle}>
-            <Flex
-              justify="space-between"
-              align="center"
-            >
-              <Logo />
-              <Flex gap="small">
-                <Popover
-                  content={userMenu}
-                  trigger="click"
-                  placement="bottomRight"
-                  arrow={false}
-                >
-                  <button type="button">
-                    <Avatar
-                      icon={<UserOutlined />}
-                    />
-                  </button>
-                </Popover>
+        <AuthProvider>
+          <Layout>
+            <Layout.Header style={headerStyle}>
+              <Flex
+                justify="space-between"
+                align="center"
+              >
+                <Logo />
+                <Flex gap="small">
+                  <Popover
+                    content={userMenu}
+                    trigger="click"
+                    placement="bottomRight"
+                    arrow={false}
+                  >
+                    <button type="button">
+                      <Avatar
+                        icon={<UserOutlined />}
+                      />
+                    </button>
+                  </Popover>
+                </Flex>
               </Flex>
-            </Flex>
-          </Layout.Header>
-          <Layout.Content style={contentStyle}>
-            {children}
-          </Layout.Content>
-          <Layout.Footer style={footerStyle}>
-            VRUN © {new Date().getFullYear()}
-          </Layout.Footer>
-        </Layout>
+            </Layout.Header>
+            <Layout.Content style={contentStyle}>
+              {children}
+            </Layout.Content>
+            <Layout.Footer style={footerStyle}>
+              VRUN © {new Date().getFullYear()}
+            </Layout.Footer>
+          </Layout>
+        </AuthProvider>
       </ConfigProvider>
     </AntdRegistry>
   );

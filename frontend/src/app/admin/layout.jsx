@@ -13,7 +13,10 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import Logo from '@/components/elements/Logo';
-import { usePathname } from 'next/navigation';
+import AuthProvider from '@/components/sections/Provider/AuthProvider';
+import { usePathname, useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import { TOKEN_KEY } from '@/utils/constants';
 
 const items = [
   {
@@ -22,9 +25,19 @@ const items = [
     label: <Link href="/admin">Trang chủ</Link>,
   },
   {
-    key: 'exam-management',
+    key: 'exam',
     icon: React.createElement(PaperClipOutlined),
-    label: <Link href="/admin/exam">Quản lý đề thi</Link>,
+    label: 'Quản lý đề thi',
+    children: [
+      {
+        key: 'exam-management',
+        label: <Link href="/admin/exam">Đề thi</Link>,
+      },
+      {
+        key: 'question-group-management',
+        label: <Link href="/admin/question-group">Nhóm câu hỏi</Link>,
+      },
+    ],
   },
   {
     key: 'history-management',
@@ -64,6 +77,7 @@ const footerStyle = {
 };
 
 const AdminLayout = ({ children }) => {
+  const router = useRouter();
   const [selectedKeys, setSelectedKeys] = useState([]);
   const path = usePathname();
 
@@ -74,13 +88,16 @@ const AdminLayout = ({ children }) => {
       setSelectedKeys(['history-management']);
     } else if (path.startsWith('/admin/user')) {
       setSelectedKeys(['user-management']);
+    } else if (path.startsWith('/admin/question-group')) {
+      setSelectedKeys(['question-group-management']);
     } else {
       setSelectedKeys(['dashboard']);
     }
   }, [path]);
 
   const handleLogout = () => {
-    console.log('handleLogout');
+    Cookies.set(TOKEN_KEY, '');
+    router.push('/login');
   };
 
   return (
@@ -93,32 +110,34 @@ const AdminLayout = ({ children }) => {
           },
         }}
       >
-        <Layout hasSider>
-          <Layout.Sider>
-            <Menu
-              style={menuStyle}
-              mode="inline"
-              selectedKeys={selectedKeys}
-              items={items}
-            />
-          </Layout.Sider>
-          <Layout>
-            <Layout.Header style={headerStyle}>
-              <Flex justify="space-between" align="center">
-                <Logo href="/admin" />
-                <Button onClick={handleLogout} type="link">
-                  Đăng xuất
-                </Button>
-              </Flex>
-            </Layout.Header>
-            <Layout.Content style={contentStyle}>
-              {children}
-            </Layout.Content>
-            <Layout.Footer style={footerStyle}>
-              VRUN © {new Date().getFullYear()}
-            </Layout.Footer>
+        <AuthProvider>
+          <Layout hasSider>
+            <Layout.Sider>
+              <Menu
+                style={menuStyle}
+                mode="inline"
+                selectedKeys={selectedKeys}
+                items={items}
+              />
+            </Layout.Sider>
+            <Layout>
+              <Layout.Header style={headerStyle}>
+                <Flex justify="space-between" align="center">
+                  <Logo href="/admin" />
+                  <Button onClick={handleLogout} type="link">
+                    Đăng xuất
+                  </Button>
+                </Flex>
+              </Layout.Header>
+              <Layout.Content style={contentStyle}>
+                {children}
+              </Layout.Content>
+              <Layout.Footer style={footerStyle}>
+                VRUN © {new Date().getFullYear()}
+              </Layout.Footer>
+            </Layout>
           </Layout>
-        </Layout>
+        </AuthProvider>
       </ConfigProvider>
     </AntdRegistry>
   );

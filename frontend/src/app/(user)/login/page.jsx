@@ -5,7 +5,7 @@ import {
   Flex, Form, Input, Button, Typography, Modal,
 } from 'antd';
 import Link from 'next/link';
-import useApiService from '@/services';
+import getApiService from '@/services';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { TOKEN_KEY } from '@/utils/constants';
@@ -17,7 +17,7 @@ const { Title } = Typography;
 const Login = () => {
   const router = useRouter();
   const [modal, modalContext] = Modal.useModal();
-  const { LoginService } = useApiService();
+  const { LoginService } = getApiService();
   const [userInfo] = useState({
     username: '',
     password: '',

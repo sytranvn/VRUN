@@ -4,6 +4,7 @@ import React from 'react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { ConfigProvider } from 'antd';
 import getThemeOptions from '@/utils/antd/getThemeOptions';
+import AuthProvider from '@/components/sections/Provider/AuthProvider';
 
 const themeOptions = getThemeOptions();
 
@@ -13,7 +14,9 @@ const ExamLayout = ({ children }) => {
       <ConfigProvider
         theme={themeOptions}
       >
-        { children }
+        <AuthProvider>
+          { children }
+        </AuthProvider>
       </ConfigProvider>
     </AntdRegistry>
   );

@@ -5,10 +5,30 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import VoiceRecorder from '@/components/elements/VoiceRecorder';
+import getApiService from '@/services';
+import { useEffect, useState } from 'react';
+import randomInt from '@/utils/math/randomInt';
 
 const { Text } = Typography;
 
 const Index = () => {
+  const { CandidateService } = getApiService();
+  const [examId, setExamId] = useState(null);
+
+  useEffect(() => {
+    CandidateService.readAvailableExams({
+      limit: 100,
+      skip: 0,
+    }).then((resp) => {
+      /* Pick random exam to test */
+      const randomExam = resp.data[randomInt(0, resp.data.length - 1)];
+
+      if (randomExam) {
+        setExamId(randomExam.id);
+      }
+    });
+  }, [CandidateService]);
+
   return (
     <div>
       <Row
@@ -102,8 +122,12 @@ const Index = () => {
         </Col>
       </Row>
       <Flex justify="center">
-        <Link href="/exam">
-          <Button size="large" type="primary">
+        <Link href={`/exam/${examId}`}>
+          <Button
+            size="large"
+            type="primary"
+            disabled={!examId}
+          >
             Bắt đầu thi
           </Button>
         </Link>

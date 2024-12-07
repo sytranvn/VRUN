@@ -152,7 +152,7 @@ class Exam(BaseTable, ExamBase, table=True):
 class Skill(StrEnum):
     LISTENING = "LISTENING"
     READING = "READING"
-    WRITING = "WRITING "
+    WRITING = "WRITING"
     SPEAKING = "SPEAKING"
 
 

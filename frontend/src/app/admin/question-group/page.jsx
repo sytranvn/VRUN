@@ -10,11 +10,11 @@ import { useRouter } from 'next/navigation';
 import getApiService from '@/services';
 import usePagination from '@/hooks/usePagniation';
 
-const AdminExamManagement = () => {
+const AdminQuestionGroup = () => {
   const { AdminService } = getApiService();
   const router = useRouter();
   const [modal, modalContext] = Modal.useModal();
-  const [list, loadList, reset] = usePagination(AdminService.readExams);
+  const [list, loadList, reset] = usePagination(AdminService.readQuestionGroups);
 
   useEffect(() => {
     if (!list.records.length) {
@@ -25,7 +25,7 @@ const AdminExamManagement = () => {
   const onRow = (record) => {
     return {
       onDoubleClick: () => {
-        router.push(`/admin/exam/detail/${record.id}`);
+        router.push(`/admin/question-group/detail/${record.id}`);
       },
     };
   };
@@ -34,7 +34,7 @@ const AdminExamManagement = () => {
     modal.confirm({
       title: 'Xác nhận xoá?',
       async onOk() {
-        await AdminService.deleteExam({ id });
+        await AdminService.deleteQuestionGroup({ id });
         reset();
       },
     });
@@ -42,19 +42,30 @@ const AdminExamManagement = () => {
 
   const COLUMN_CONFIG = [
     {
-      key: 'title', dataIndex: 'title', title: 'Tên bài thi', align: 'center',
+      key: 'skill', dataIndex: 'skill', title: 'Kỹ năng', align: 'center', width: '250px',
     },
     {
-      key: 'status',
-      dataIndex: 'status',
-      title: 'Trạng thái',
-      align: 'center',
+      key: 'description',
+      dataIndex: 'description',
+      title: 'Chú thích',
+      width: '600px',
+      ellipse: true,
       render(text) {
-        return text == 'ACTIVE' ? 'Đã duyệt' : 'Nháp';
+        return text.length > 100 ? `${text.slice(0, 100)}...` : text;
       },
     },
     {
-      key: 'description', dataIndex: 'description', title: 'Mô tả', align: 'center',
+      key: 'duration', dataIndex: 'duration', title: 'Thời lượng (phút)', align: 'center', width: '150px',
+    },
+    {
+      key: 'count',
+      dataIndex: 'count',
+      title: 'Số câu hỏi',
+      align: 'center',
+      render(_, record) {
+        return (record.questions || []).length;
+      },
+      width: '150px',
     },
     {
       key: 'settings',
@@ -78,15 +89,15 @@ const AdminExamManagement = () => {
   ];
 
   return (
-    <Card title="Quản lý đề thi">
+    <Card title="Quản lý nhóm câu hỏi">
       <Flex vertical gap="middle">
         <Flex gap="small" justify="flex-end">
-          <Link href="/admin/exam/detail">
+          <Link href="/admin/question-group/detail">
             <Button
               icon={<PlusOutlined />}
               type="primary"
             >
-              Tạo đề thi
+              Tạo nhóm
             </Button>
           </Link>
         </Flex>
@@ -110,4 +121,4 @@ const AdminExamManagement = () => {
   );
 };
 
-export default AdminExamManagement;
+export default AdminQuestionGroup;
