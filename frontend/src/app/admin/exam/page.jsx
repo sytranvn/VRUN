@@ -18,7 +18,7 @@ const AdminExamManagement = () => {
 
   useEffect(() => {
     loadList();
-  }, []);
+  }, [loadList]);
 
   const onRow = (record) => {
     return {
@@ -96,7 +96,7 @@ const AdminExamManagement = () => {
             current: list.currentPage > 0 ? list.currentPage : 1,
             pageSize: list.pageSize,
             total: list.totalCount,
-            onChange: (page, pageSize) => loadList({ page, pageSize })
+            onChange: (page, pageSize) => loadList({ page, pageSize }),
           }}
           bordered
           rowKey="id"

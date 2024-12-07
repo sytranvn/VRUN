@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import { DeleteOutlined, SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import getApiService from '@/services';
-import { STATUS_OPTIONS } from '@/utils/constants'
+import { STATUS_OPTIONS } from '@/utils/constants';
 
 const { Item } = Form;
 const { TextArea } = Input;
@@ -22,6 +22,9 @@ const AdminExamDetail = () => {
   const id = params.id?.[0];
 
   const [form] = Form.useForm();
+  const initValues = {
+    status: STATUS_OPTIONS[0].value,
+  };
 
   const RULES = {
     title: [
@@ -85,6 +88,7 @@ const AdminExamDetail = () => {
     <Card title={id ? `Đề thi #${id}` : 'Tạo đề thi'}>
       <Form
         form={form}
+        initialValues={initValues}
         onFinish={handleSubmit}
         labelCol={{ span: 3, style: { textAlign: 'left' }}}
         wrapperCol={{ span: 21 }}
@@ -114,7 +118,6 @@ const AdminExamDetail = () => {
           label="Trạng thái"
         >
           <Group
-            defaultValue={STATUS_OPTIONS[0].value}
             options={STATUS_OPTIONS}
           />
         </Item>

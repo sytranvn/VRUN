@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import { DeleteOutlined, SaveOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import getApiService from '@/services';
-import { SKILL_OPTIONS, STATUS_OPTIONS } from '@/utils/constants'
+import { SKILL_OPTIONS, STATUS_OPTIONS } from '@/utils/constants';
 
 const { Item, List } = Form;
 const { TextArea } = Input;
@@ -22,6 +22,10 @@ const AdminQuestionGroupDetail = () => {
   const id = params.id?.[0];
 
   const [form] = Form.useForm();
+  const initValues = {
+    status: STATUS_OPTIONS[0].value,
+    skill: SKILL_OPTIONS[0].value,
+  };
 
   const RULES = {
     skill: [
@@ -95,6 +99,7 @@ const AdminQuestionGroupDetail = () => {
     <Card title={id ? `Nhóm câu hỏi #${id}` : 'Tạo nhóm câu hỏi'}>
       <Form
         form={form}
+        initialValues={initValues}
         onFinish={handleSubmit}
         labelCol={{ span: 3, style: { textAlign: 'left' }}}
         wrapperCol={{ span: 21 }}
@@ -105,7 +110,6 @@ const AdminQuestionGroupDetail = () => {
           label="Trạng thái"
         >
           <Group
-            defaultValue={STATUS_OPTIONS[0].value}
             options={STATUS_OPTIONS}
           />
         </Item>
@@ -115,7 +119,6 @@ const AdminQuestionGroupDetail = () => {
           rules={RULES.skill}
         >
           <Group
-            defaultValue={SKILL_OPTIONS[0].value}
             options={SKILL_OPTIONS}
           />
         </Item>

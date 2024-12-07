@@ -16,8 +16,8 @@ const usePagination = (callback) => {
 
   const loadList = async (payload = {}) => {
     const { pageSize, page, ...others } = payload;
-    const limit = payload.pageSize || PAGE_SIZE;
-    const skip = payload.page || list.currentPage;
+    const limit = pageSize || PAGE_SIZE;
+    const skip = page || list.currentPage;
 
     const resp = await callback({ limit, skip, ...others });
 
@@ -40,7 +40,7 @@ const usePagination = (callback) => {
     const resp = await loadList(payload);
 
     return resp;
-  }
+  };
 
   return [list, loadList, reset];
 };

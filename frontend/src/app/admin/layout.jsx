@@ -37,7 +37,7 @@ const items = [
         key: 'question-group-management',
         label: <Link href="/admin/question-group">Nhóm câu hỏi</Link>,
       },
-    ]
+    ],
   },
   {
     key: 'history-management',
@@ -88,7 +88,7 @@ const AdminLayout = ({ children }) => {
       setSelectedKeys(['history-management']);
     } else if (path.startsWith('/admin/user')) {
       setSelectedKeys(['user-management']);
-    }  else if (path.startsWith('/admin/question-group')) {
+    } else if (path.startsWith('/admin/question-group')) {
       setSelectedKeys(['question-group-management']);
     } else {
       setSelectedKeys(['dashboard']);

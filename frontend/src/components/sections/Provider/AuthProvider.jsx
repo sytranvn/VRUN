@@ -1,9 +1,10 @@
-'use client'
+'use client';
+
 import { useEffect, useState } from 'react';
-import getApiService from '@/services'
-import { useDispatch, useSelector } from 'react-redux'
-import { setUser } from '@/stores/slices/user'
-import { useRouter, usePathname } from 'next/navigation'
+import getApiService from '@/services';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '@/stores/slices/user';
+import { useRouter, usePathname } from 'next/navigation';
 import { TOKEN_KEY } from '@/utils/constants';
 import Cookies from 'js-cookie';
 
@@ -16,33 +17,35 @@ const AuthProvider = ({ children }) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    if(!userInfo) {
+    if (!userInfo) {
       MeService.readUserMe()
-        .then(user => {
-          if(!user?.is_active) {
+        .then((user) => {
+          if (!user?.is_active) {
             throw new Error('Invalid User');
           }
-  
-          if(pathname.startsWith('/admin') && !user.is_superuser) {
+
+          if (pathname.startsWith('/admin') && !user.is_superuser) {
             return router.push('/');
           }
-  
+
           dispatch(setUser(user));
           setIsReady(true);
         })
-        .catch(error => {
-          console.error(error)
+        .catch((error) => {
+          console.error(error);
           Cookies.set(TOKEN_KEY, '');
-          router.push('/login')
+          router.push('/login');
         });
     } else {
       setIsReady(true);
     }
-  }, [dispatch]);
+  }, [dispatch, MeService, pathname, router, userInfo]);
 
   return (
-    <>{ isReady && children }</>
-  )
+    <div>
+      { isReady && children }
+    </div>
+  );
 };
 
 export default AuthProvider;
