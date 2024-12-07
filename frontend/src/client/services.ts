@@ -11,6 +11,7 @@ import type {
 	AnswerCreate,
 	AnswerPublic,
 	AnswerUpdate,
+	Body_admin_create_question_group,
 	Body_admin_create_question_group_resources,
 	ExamCreate,
 	ExamPublic,
@@ -18,7 +19,6 @@ import type {
 	ExamUpdate,
 	PartCreate,
 	QuestionCreate,
-	QuestionGroupCreate,
 	QuestionGroupPublic,
 	QuestionGroupsPublic,
 	QuestionGroupUpdate,
@@ -248,7 +248,7 @@ export type TDataReadQuestionGroups = {
 	status?: QuestionStatusEnum | null;
 };
 export type TDataCreateQuestionGroup = {
-	requestBody: QuestionGroupCreate;
+	formData: Body_admin_create_question_group;
 };
 export type TDataReadQuestionGroup = {
 	id: string;
@@ -631,12 +631,12 @@ export class AdminService {
 	public static createQuestionGroup(
 		data: TDataCreateQuestionGroup,
 	): CancelablePromise<QuestionGroupPublic> {
-		const { requestBody } = data;
+		const { formData } = data;
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/admin/question_groups/",
-			body: requestBody,
-			mediaType: "application/json",
+			formData: formData,
+			mediaType: "multipart/form-data",
 			errors: {
 				422: `Validation Error`,
 			},

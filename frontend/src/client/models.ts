@@ -15,6 +15,11 @@ export type AnswerUpdate = {
 	is_correct_answer: boolean;
 };
 
+export type Body_admin_create_question_group = {
+	question_group_in: QuestionGroupCreate;
+	file: Blob | File | null;
+};
+
 export type Body_admin_create_question_group_resources = {
 	file: Blob | File;
 };

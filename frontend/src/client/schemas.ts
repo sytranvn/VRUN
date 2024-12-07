@@ -55,6 +55,28 @@ export const $AnswerUpdate = {
 	},
 } as const;
 
+export const $Body_admin_create_question_group = {
+	properties: {
+		question_group_in: {
+			type: "QuestionGroupCreate",
+			isRequired: true,
+		},
+		file: {
+			type: "any-of",
+			contains: [
+				{
+					type: "binary",
+					format: "binary",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+	},
+} as const;
+
 export const $Body_admin_create_question_group_resources = {
 	properties: {
 		file: {
