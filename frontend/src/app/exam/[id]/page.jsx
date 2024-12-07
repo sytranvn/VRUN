@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Layout, Flex, Button, Statistic, Modal, Anchor, Row, Col,
 } from 'antd';
@@ -13,7 +13,8 @@ import SpeakingPart from '@/components/sections/SpeakingPart';
 import disableBodyScroll from '@/utils/scroll/disableBodyScroll';
 import enableBodyScroll from '@/utils/scroll/enableBodyScroll';
 import { EXAM_ANCHOR } from '@/utils/constants';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
+import getApiService from '@/services';
 
 const { Countdown } = Statistic;
 
@@ -32,8 +33,12 @@ const contentStyle = {
 };
 
 const Exam = () => {
+  const { CandidateService } = getApiService();
   const [modal, modalContext] = Modal.useModal();
   const router = useRouter();
+  const params = useParams();
+  const id = params.id;
+  const [exam, setExam] = useState();
 
   const finishExam = () => {
     modal.confirm({
@@ -57,6 +62,29 @@ const Exam = () => {
   const saveExam = () => {
     console.log('save');
   };
+
+  useEffect(() => {
+    if (!exam) {
+      CandidateService.readAvailableExam({ id })
+        .then((data) => {
+          const groupedExam = (data.parts || [])
+            .reduce((current, obj) => {
+              if (!Array.isArray(current[obj.question_group.skill])) {
+                current[obj.question_group.skill] = [];
+              }
+
+              current[obj.question_group.skill].push({
+                ...obj.question_group,
+                order: obj.order,
+              });
+              return current;
+            }, {});
+
+          console.log('data', groupedExam);
+          setExam(groupedExam);
+        });
+    }
+  }, [CandidateService, exam, id]);
 
   useEffect(() => {
     disableBodyScroll(document.body);

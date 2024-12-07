@@ -7,19 +7,27 @@ import Link from 'next/link';
 import VoiceRecorder from '@/components/elements/VoiceRecorder';
 import getApiService from '@/services';
 import { useEffect, useState } from 'react';
+import randomInt from '@/utils/math/randomInt';
 
 const { Text } = Typography;
 
 const Index = () => {
-  const api = getApiService();
-  const [exams, setExams] = useState([]);
+  const { CandidateService } = getApiService();
+  const [examId, setExamId] = useState(null);
 
   useEffect(() => {
-    api.CandidateService.readAvailableExams({
+    CandidateService.readAvailableExams({
       limit: 100,
-      skip: 1,
-    }).then((resp) => setExams(resp.data));
-  }, [api.CandidateService]);
+      skip: 0,
+    }).then((resp) => {
+      /* Pick random exam to test */
+      const randomExam = resp.data[randomInt(0, resp.data.length - 1)];
+
+      if (randomExam) {
+        setExamId(randomExam.id);
+      }
+    });
+  }, [CandidateService]);
 
   return (
     <div>
@@ -114,11 +122,11 @@ const Index = () => {
         </Col>
       </Row>
       <Flex justify="center">
-        <Link href="/exam">
+        <Link href={`/exam/${examId}`}>
           <Button
             size="large"
             type="primary"
-            disabled={!exams.length}
+            disabled={!examId}
           >
             Bắt đầu thi
           </Button>
