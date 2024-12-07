@@ -13,6 +13,7 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import Logo from '@/components/elements/Logo';
+import AuthProvider from '@/components/sections/Provider/AuthProvider';
 import { usePathname, useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import { TOKEN_KEY } from '@/utils/constants';
@@ -109,32 +110,34 @@ const AdminLayout = ({ children }) => {
           },
         }}
       >
-        <Layout hasSider>
-          <Layout.Sider>
-            <Menu
-              style={menuStyle}
-              mode="inline"
-              selectedKeys={selectedKeys}
-              items={items}
-            />
-          </Layout.Sider>
-          <Layout>
-            <Layout.Header style={headerStyle}>
-              <Flex justify="space-between" align="center">
-                <Logo href="/admin" />
-                <Button onClick={handleLogout} type="link">
-                  Đăng xuất
-                </Button>
-              </Flex>
-            </Layout.Header>
-            <Layout.Content style={contentStyle}>
-              {children}
-            </Layout.Content>
-            <Layout.Footer style={footerStyle}>
-              VRUN © {new Date().getFullYear()}
-            </Layout.Footer>
+        <AuthProvider>
+          <Layout hasSider>
+            <Layout.Sider>
+              <Menu
+                style={menuStyle}
+                mode="inline"
+                selectedKeys={selectedKeys}
+                items={items}
+              />
+            </Layout.Sider>
+            <Layout>
+              <Layout.Header style={headerStyle}>
+                <Flex justify="space-between" align="center">
+                  <Logo href="/admin" />
+                  <Button onClick={handleLogout} type="link">
+                    Đăng xuất
+                  </Button>
+                </Flex>
+              </Layout.Header>
+              <Layout.Content style={contentStyle}>
+                {children}
+              </Layout.Content>
+              <Layout.Footer style={footerStyle}>
+                VRUN © {new Date().getFullYear()}
+              </Layout.Footer>
+            </Layout>
           </Layout>
-        </Layout>
+        </AuthProvider>
       </ConfigProvider>
     </AntdRegistry>
   );

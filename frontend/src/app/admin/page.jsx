@@ -1,7 +1,12 @@
+'use client'
+import { useSelector } from 'react-redux'
+
 const AdminDashboard = () => {
+  const userInfo = useSelector((state) => state.user.userInfo);
+
   return (
     <div>
-      Dashboard
+      Hello { userInfo.email }
     </div>
   );
 };
