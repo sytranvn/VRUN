@@ -10,6 +10,7 @@ from app.api.deps import (
 )
 from app.core.security import get_password_hash, verify_password
 from app.models import (
+    Role,
     User
 )
 from app.view_models import (
@@ -35,7 +36,7 @@ def register_user(session: SessionDep, user_in: UserRegister) -> Any:
             status_code=400,
             detail="The user with this email already exists in the system",
         )
-    user_create = UserCreate.model_validate(user_in)
+    user_create = UserCreate.model_validate(dict(role=Role.CANDIDATE, **user_in.model_dump()))
     user = crud.create_user(session=session, user_create=user_create)
     return user
 
