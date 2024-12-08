@@ -69,7 +69,7 @@ def create_question(
     session.refresh(question)
     for ans in answers:
         ans = Answer.model_validate({**ans.model_dump(), "question_id": question.id})
-        question.answers.append(ans)
+        session.add(ans)
     session.commit()
     return question
 

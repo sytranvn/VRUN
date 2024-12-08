@@ -627,11 +627,6 @@ export const $QuestionGroupUpdate = {
 			type: "number",
 			isRequired: true,
 		},
-		id: {
-			type: "string",
-			isRequired: true,
-			format: "uuid",
-		},
 		status: {
 			type: "any-of",
 			contains: [

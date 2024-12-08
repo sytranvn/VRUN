@@ -223,7 +223,6 @@ class QuestionGroupCreate(QuestionGroupBase):
 
 
 class QuestionGroupUpdate(QuestionGroupBase):
-    id: uuid.UUID
     status: QuestionStatusEnum | None
 
 

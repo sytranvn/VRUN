@@ -173,7 +173,6 @@ export type QuestionGroupUpdate = {
 	resource: string | null;
 	skill: Skill;
 	duration: number;
-	id: string;
 	status: QuestionStatusEnum | null;
 };
 

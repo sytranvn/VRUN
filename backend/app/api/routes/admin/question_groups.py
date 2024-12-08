@@ -31,13 +31,16 @@ def read_question_groups(
     """
 
     count_statement = select(func.count()).select_from(QuestionGroup)
+    filters = []
     if skill:
-        count_statement = count_statement.where(QuestionGroup.skill == skill)
+        filters.append(QuestionGroup.skill == skill)
     if status:
-        count_statement = count_statement.where(QuestionGroup.status == status)
+        filters.append(QuestionGroup.status == status)
 
+    count_statement = count_statement.where(*filters)
     count = session.exec(count_statement).one()
-    statement = select(QuestionGroup).offset(skip).limit(limit)
+
+    statement = select(QuestionGroup).where(*filters).offset(skip).limit(limit)
     question_groups = session.exec(statement).all()
 
     return QuestionGroupsPublic(data=question_groups, count=count)  # type: ignore
@@ -104,6 +107,10 @@ def delete_question_group(
     question_group = session.get(QuestionGroup, id)
     if not question_group:
         raise HTTPException(status_code=404, detail="QuestionGroup not found")
+    if len(question_group.parts) > 0:
+        raise HTTPException(status_code=401, detail=f"Question group is used by {len(question_group.parts)} exams")
+    # for q in question_group.questions:
+    #     session.delete(q)
     session.delete(question_group)
     session.commit()
     return Message(message="QuestionGroup deleted successfully")

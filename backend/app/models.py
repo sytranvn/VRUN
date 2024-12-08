@@ -50,8 +50,10 @@ class CandidateExamAnswer(SQLModel, table=True):
 
 class CandidateExamEssay(SQLModel, table=True):
     __tablename__ = "candiate_exam_essay"  # type: ignore
-    id: uuid.UUID | None = Field(nullable=False, default_factory=uuid.uuid4, primary_key=True)
-    candidate_exam_id: uuid.UUID = Field(foreign_key="candidate_exam.id", nullable=False)
+    id: uuid.UUID | None = Field(
+        nullable=False, default_factory=uuid.uuid4, primary_key=True)
+    candidate_exam_id: uuid.UUID = Field(
+        foreign_key="candidate_exam.id", nullable=False)
     question_id: uuid.UUID = Field(nullable=False, foreign_key="question.id")
     status: AnswerStatus | None = Field(default=AnswerStatus.DRAFT,
                                         sa_column=Column(Enum(AnswerStatus, native_enum=False)))
@@ -78,7 +80,8 @@ class CandidateExam(BaseTable, SQLModel, table=True):
     __tableargs__ = (
         UniqueConstraint("candidate_id", "exam_id"),
     )
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, nullable=False, primary_key=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4,
+                          nullable=False, primary_key=True)
     candidate_id: uuid.UUID = Field(
         foreign_key="user.id", nullable=False, ondelete="CASCADE")
     exam_id: uuid.UUID = Field(
@@ -146,7 +149,7 @@ class Exam(BaseTable, ExamBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     status: ExamStatus = Field(default=ExamStatus.DRAFT.value,
                                sa_column=Column(Enum(ExamStatus, native_enum=False)))
-    parts: List[Part ]= Relationship()
+    parts: List[Part] = Relationship()
 
 
 class Skill(StrEnum):
@@ -177,9 +180,12 @@ class QuestionGroup(BaseTable, QuestionGroupBase, table=True):
                                        sa_column=Column(
                                            Enum(QuestionStatusEnum,
                                                 native_enum=False)))
-    questions: List["Question"] = Relationship(back_populates="question_group")
-    # exams: List["Exam"] = Relationship(back_populates="question_groups", link_model=Part)
-    part: Part = Relationship(back_populates="question_group")
+    questions: List["Question"] = Relationship(back_populates="question_group",
+                                               cascade_delete=True,
+                                               sa_relationship_kwargs={
+                                                   "cascade": "delete"},
+                                               )
+    parts: List[Part] = Relationship(back_populates="question_group")
 
 
 class QuestionType(StrEnum):
@@ -192,12 +198,16 @@ class QuestionBase(SQLModel):
 
 
 class Question(BaseTable, QuestionBase, table=True):
-    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True, unique=True)
+    id: uuid.UUID = Field(default_factory=uuid.uuid4,
+                          primary_key=True, unique=True)
     question_group_id: uuid.UUID = Field(
         foreign_key="question_group.id", nullable=False, ondelete="CASCADE", primary_key=True
     )
     question_group: QuestionGroup = Relationship(back_populates="questions")
-    answers: List["Answer"] = Relationship(back_populates="question")
+    answers: List["Answer"] = Relationship(back_populates="question",
+                                           sa_relationship_kwargs={
+                                               "cascade": "delete"
+                                           })
 
 
 class AnswerBase(SQLModel):
@@ -216,7 +226,6 @@ class Answer(BaseTable, AnswerBase, table=True):
 class EssaySkill(StrEnum):
     WRITING = Skill.WRITING.value
     SPEAKING = Skill.SPEAKING.value
-
 
 
 class Configuration(BaseTable, SQLModel, table=True):
