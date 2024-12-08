@@ -1,50 +1,67 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { Table, Typography, Button } from 'antd';
 import Link from 'next/link';
+import dayjs from 'dayjs';
+import getApiService from '@/services';
+import usePagination from '@/hooks/usePagniation';
+import { CANDIDATE_EXAM_STATUS } from '@/utils/constants';
 
 const { Title } = Typography;
 
-const COLUMN_CONFIG = [
-  { key: 'id', dataIndex: 'id', title: 'ID' },
-  {
-    key: 'date', dataIndex: 'date', title: 'Ngày thi', align: 'center',
-  },
-  {
-    key: 'lpoint', dataIndex: 'lpoint', title: 'Listening', width: '120px', align: 'right',
-  },
-  {
-    key: 'rpoint', dataIndex: 'rpoint', title: 'Reading', width: '120px', align: 'right',
-  },
-  {
-    key: 'wpoint', dataIndex: 'wpoint', title: 'Writing', width: '120px', align: 'right',
-  },
-  {
-    key: 'spoint', dataIndex: 'spoint', title: 'Speaking', width: '120px', align: 'right',
-  },
-  {
-    key: 'totalPoint', dataIndex: 'totalPoint', title: 'Tổng điểm', width: '120px', align: 'right',
-  },
-  {
-    key: 'settings',
-    dataIndex: 'settings',
-    width: '150px',
-    align: 'center',
-    render: (_, record) => (
-      <Link href={`/history/${record.id}`}>
-        <Button type="primary">Xem lại</Button>
-      </Link>
-    ),
-  },
-];
-
 const History = () => {
-  const [records, setRecords] = useState([
+  const { CandidateService } = getApiService();
+  const [list, loadList] = usePagination(CandidateService.readRegisteredExams);
+
+  useEffect(() => {
+    if (!list.isFullyLoaded) {
+      loadList();
+    }
+  }, [loadList, list]);
+
+  const COLUMN_CONFIG = [
     {
-      id: 1, date: '2020-11-11', lpoint: 8.5, rpoint: 5.5, wpoint: 7.5, spoint: 8.0, totalPoint: 10,
+      key: 'status',
+      dataIndex: 'status',
+      title: 'Trạng thái',
+      align: 'center',
+      render(text) {
+        return CANDIDATE_EXAM_STATUS.find((i) => i.value == text)?.label || '-';
+      },
     },
-  ]);
+    {
+      key: 'start_time',
+      dataIndex: 'start_time',
+      title: 'Giờ làm bài',
+      align: 'center',
+      render(text) {
+        return dayjs(text).format('DD-MM-YYYY');
+      },
+    },
+    {
+      key: 'end_time',
+      dataIndex: 'end_time',
+      title: 'Giờ nộp bài',
+      align: 'center',
+      render(text) {
+        return dayjs(text).format('DD-MM-YYYY');
+      },
+    },
+    {
+      key: 'settings',
+      dataIndex: 'settings',
+      width: '150px',
+      align: 'center',
+      render: (_, record) => (
+        <Link href={`/history/${record.id}`}>
+          <Button type="primary">
+            Xem lại
+          </Button>
+        </Link>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -52,10 +69,15 @@ const History = () => {
         Lịch sử thi
       </Title>
       <Table
-        dataSource={records}
+        dataSource={list.records}
         columns={COLUMN_CONFIG}
+        pagination={{
+          current: list.currentPage > 0 ? list.currentPage : 1,
+          pageSize: list.pageSize,
+          total: list.totalCount,
+          onChange: (page, pageSize) => loadList({ page, pageSize }),
+        }}
         bordered
-        pagination={false}
         rowKey="id"
         scroll={{ x: 'max-content' }}
       />

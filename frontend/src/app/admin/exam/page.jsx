@@ -17,7 +17,7 @@ const AdminExamManagement = () => {
   const [list, loadList, reset] = usePagination(AdminService.readExams);
 
   useEffect(() => {
-    if (!list.records.length) {
+    if (!list.isFullyLoaded) {
       loadList();
     }
   }, [loadList, list]);

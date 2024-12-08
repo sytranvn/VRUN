@@ -14,6 +14,7 @@ import Logo from '@/components/elements/Logo';
 import getThemeOptions from '@/utils/antd/getThemeOptions';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 import { TOKEN_KEY } from '@/utils/constants';
 
 const themeOptions = getThemeOptions();
@@ -39,6 +40,7 @@ const footerStyle = {
 
 const HomeLayout = ({ children }) => {
   const router = useRouter();
+  const userInfo = useSelector((state) => state.user.userInfo);
 
   const handleLogout = () => {
     Cookies.set(TOKEN_KEY, '');
@@ -95,6 +97,9 @@ const HomeLayout = ({ children }) => {
                     arrow={false}
                   >
                     <button type="button">
+                      <span style={{ marginRight: '10px' }}>
+                        {userInfo?.full_name}
+                      </span>
                       <Avatar
                         icon={<UserOutlined />}
                       />
