@@ -1,24 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import {
-  Flex, Form, Input, Button, DatePicker, Typography,
+  Flex, Form, Input, Button, Typography, Modal,
 } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
 import Link from 'next/link';
+import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { setUser } from '@/stores/slices/user'
+import getApiService from '@/services';
+import AuthProvider from '@/components/sections/Provider/AuthProvider';
 
 const { Item } = Form;
 const { Title } = Typography;
 
 const Profile = () => {
-  const [userInfo, setUserInfo] = useState({
-    fullname: '',
-    birthdate: '',
-    username: '',
-    password: '',
-    retypePassword: '',
-  });
+  const { MeService } = getApiService();
+  const [modal, modalContext] = Modal.useModal();
+  const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.user.userInfo);
   const [form] = Form.useForm();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (userInfo) {
+      form.setFieldValue(userInfo);
+    }
+  }, [form, userInfo]);
 
   const RULES = {
     fullname: [
@@ -56,30 +65,43 @@ const Profile = () => {
     ],
   };
 
-  const handleSubmit = (formData) => {
-    console.log('formData', formData);
-    setUserInfo({
-      ...formData,
-      birthdate: formData.birthdate.format('YYYY-MM-DD'),
-    });
+  const handleSubmit = async (formData) => {
+    try {
+      const data = await MeService.updateUserMe({
+        requestBody: formData,
+      });
+
+      if (data.id) {
+        dispatch(setUser(data))
+        modal.success({
+          title: 'Chỉnh sửa thông tin thành công.',
+          onOk: () => router.push('/'),
+        });
+      }
+    } catch (e) {
+      console.error(e);
+      modal.error({
+        title: 'Không thể cập nhật thông tin.',
+      });
+    }
   };
 
   return (
-    <>
+    <AuthProvider>
       <Title level={3} style={{ textAlign: 'center' }}>
-        Chỉnh sửa thông tin
+        Chỉnh sửa thông tin cá nhân
       </Title>
       <Form
         form={form}
         onFinish={handleSubmit}
-        style={{ width: '100%', maxWidth: '500px' }}
+        style={{ width: '100vw', maxWidth: '500px' }}
         initialValues={userInfo}
         labelCol={{ span: 8, style: { textAlign: 'left' }}}
         scrollToFirstError
       >
         <Flex vertical gap="small">
           <Item
-            name="fullname"
+            name="full_name"
             label="Họ và tên"
             rules={RULES.fullname}
             hasFeedback
@@ -90,32 +112,17 @@ const Profile = () => {
             />
           </Item>
           <Item
-            name="birthdate"
-            label="Ngày sinh"
-            rules={RULES.birthdate}
-            hasFeedback
-          >
-            <DatePicker
-              size="large"
-              style={{ width: '100%' }}
-              placeholder="YYYY-MM-DD"
-            />
-          </Item>
-          <Item
-            name="username"
+            name="email"
             label="Tài khoản"
           >
             <Input
-              autoComplete="username"
+              autoComplete="email"
               size="large"
               readOnly
             />
           </Item>
           <Item
-            name="password"
             label="Mật khẩu"
-            rules={RULES.password}
-            hasFeedback
           >
             <Link href="/change-password">
               <Button>Thay đổi mật khẩu</Button>
@@ -147,7 +154,8 @@ const Profile = () => {
           </Item>
         </Flex>
       </Form>
-    </>
+      {modalContext}
+    </AuthProvider>
   );
 };
 

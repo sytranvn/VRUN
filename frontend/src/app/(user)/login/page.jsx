@@ -26,7 +26,7 @@ const Login = () => {
   const handleSubmit = async (formData) => {
     LoginService.loginAccessToken({ formData })
       .then((data) => {
-        Cookies.set(TOKEN_KEY, data.access_token);
+        Cookies.set(TOKEN_KEY, data.access_token, { expires: 1 });
         router.push('/');
       })
       .catch(() => {
