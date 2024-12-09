@@ -83,5 +83,6 @@ module.exports = {
       ignoreRegExpLiterals: true,
     }],
     'react/no-array-index-key': 'off',
+    'react-hooks/exhaustive-deps': 'off',
   },
 };

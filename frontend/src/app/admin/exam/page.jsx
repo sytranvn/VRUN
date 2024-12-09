@@ -17,10 +17,10 @@ const AdminExamManagement = () => {
   const [list, loadList, reset] = usePagination(AdminService.readExams);
 
   useEffect(() => {
-    if (!list.isFullyLoaded) {
+    if (!list.isFullyLoaded && !list.length) {
       loadList();
     }
-  }, [loadList, list]);
+  }, []);
 
   const onRow = (record) => {
     return {

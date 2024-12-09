@@ -15,10 +15,10 @@ const History = () => {
   const [list, loadList] = usePagination(CandidateService.readRegisteredExams);
 
   useEffect(() => {
-    if (!list.isFullyLoaded) {
+    if (!list.isFullyLoaded && !list.length) {
       loadList();
     }
-  }, [loadList, list]);
+  }, []);
 
   const COLUMN_CONFIG = [
     {

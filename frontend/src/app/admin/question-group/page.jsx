@@ -17,10 +17,10 @@ const AdminQuestionGroup = () => {
   const [list, loadList, reset] = usePagination(AdminService.readQuestionGroups);
 
   useEffect(() => {
-    if (!list.isFullyLoaded) {
+    if (!list.isFullyLoaded && !list.length) {
       loadList();
     }
-  }, [loadList, list]);
+  }, []);
 
   const onRow = (record) => {
     return {
