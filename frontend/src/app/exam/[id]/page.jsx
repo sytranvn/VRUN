@@ -65,6 +65,8 @@ const Exam = () => {
   };
 
   useEffect(() => {
+    disableBodyScroll(document.body);
+
     if (!exam) {
       let durationCount = 0;
       CandidateService.readAvailableExam({ id })
@@ -110,10 +112,6 @@ const Exam = () => {
           setExam(groupedExam);
         });
     }
-  }, [CandidateService, exam, id]);
-
-  useEffect(() => {
-    disableBodyScroll(document.body);
     return () => {
       enableBodyScroll(document.body);
     };

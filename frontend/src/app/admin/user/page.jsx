@@ -1,71 +1,116 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import {
   Card, Flex, Button, Table, Modal,
 } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import getApiService from '@/services';
+import usePagination from '@/hooks/usePagniation';
+import { ROLE_OPTIONS } from '@/utils/constants';
 
-const COLUMN_CONFIG = [
-  {
-    key: 'id', dataIndex: 'id', title: 'ID', width: '100px', align: 'center',
-  },
-  {
-    key: 'fullname', dataIndex: 'fullname', title: 'Họ và Tên', align: 'center',
-  },
-  {
-    key: 'birthdate', dataIndex: 'birthdate', title: 'Ngày sinh', align: 'center',
-  },
-  {
-    key: 'username', dataIndex: 'username', title: 'Tài khoản', align: 'center',
-  },
-];
-
-const AdminExamManagement = () => {
+const AdminUserManagement = () => {
+  const { AdminService } = getApiService();
+  const router = useRouter();
   const [modal, modalContext] = Modal.useModal();
-  const [records, setRecords] = useState([
-    {
-      id: 1, birthdate: '2020-11-11', username: 'abc123', fullname: 'Admin',
-    },
-    {
-      id: 2, birthdate: '2020-11-11', username: 'abc123', fullname: 'Admin',
-    },
-  ]);
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [list, loadList, reset] = usePagination(AdminService.readUsers);
 
-  const rowSelection = {
-    onChange: (selectedRowKeys) => {
-      setSelectedIds(selectedRowKeys);
-    },
+  useEffect(() => {
+    if (!list.isFullyLoaded && !list.length) {
+      loadList();
+    }
+  }, []);
+
+  const onRow = (record) => {
+    return {
+      onDoubleClick: () => {
+        router.push(`/admin/user/detail/${record.id}`);
+      },
+    };
   };
 
-  const handleDelete = () => {
+  const handleDelete = (userId) => {
     modal.confirm({
       title: 'Xác nhận xoá?',
-      onOk() {
-        console.log('delete');
+      async onOk() {
+        await AdminService.deleteUser({ userId });
+        reset();
       },
     });
   };
 
-  return (
-    <Card title="Quản lý người dùng">
-      <Flex vertical gap="middle">
-        <Flex gap="small" justify="space-between">
+  const COLUMN_CONFIG = [
+    {
+      key: 'email', dataIndex: 'email', title: 'Email', align: 'center',
+    },
+    {
+      key: 'full_name', dataIndex: 'full_name', title: 'Tên người dùng', align: 'center',
+    },
+    {
+      key: 'role',
+      dataIndex: 'role',
+      title: 'Nhóm người dùng',
+      align: 'center',
+      render(text) {
+        return ROLE_OPTIONS.find((i) => i.value == text)?.label;
+      },
+    },
+    {
+      key: 'is_active',
+      dataIndex: 'is_active',
+      title: 'Trạng thái',
+      align: 'center',
+      render(isActive) {
+        return isActive ? 'Đang hoạt động' : 'Đã khoá';
+      },
+    },
+    {
+      key: 'settings',
+      dataIndex: 'settings',
+      title: '',
+      align: 'center',
+      width: '100px',
+      render(_, record) {
+        return (
           <Button
             icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.id)}
             type="primary"
             danger
-            disabled={!selectedIds.length}
-            onClick={handleDelete}
+            disabled={record.is_superuser}
           >
             Xoá
           </Button>
+        );
+      },
+    },
+  ];
+
+  return (
+    <Card title="Quản lý tài khoản người dùng">
+      <Flex vertical gap="middle">
+        <Flex gap="small" justify="flex-end">
+          <Link href="/admin/user/detail">
+            <Button
+              icon={<PlusOutlined />}
+              type="primary"
+            >
+              Tạo tài khoản
+            </Button>
+          </Link>
         </Flex>
         <Table
-          dataSource={records}
-          rowSelection={rowSelection}
+          dataSource={list.records}
+          onRow={onRow}
           columns={COLUMN_CONFIG}
+          pagination={{
+            current: list.currentPage > 0 ? list.currentPage : 1,
+            pageSize: list.pageSize,
+            total: list.totalCount,
+            onChange: (page, pageSize) => loadList({ page, pageSize }),
+          }}
           bordered
           rowKey="id"
           scroll={{ x: 'max-content' }}
@@ -76,4 +121,4 @@ const AdminExamManagement = () => {
   );
 };
 
-export default AdminExamManagement;
+export default AdminUserManagement;

@@ -8,7 +8,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { TOKEN_KEY } from '@/utils/constants';
 import Cookies from 'js-cookie';
 
-const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children, onReady }) => {
   const { MeService } = getApiService();
   const [isReady, setIsReady] = useState(false);
   const router = useRouter();
@@ -30,6 +30,7 @@ const AuthProvider = ({ children }) => {
 
           dispatch(setUser(user));
           setIsReady(true);
+          onReady && onReady(user);
         })
         .catch((error) => {
           console.error(error);
@@ -38,8 +39,9 @@ const AuthProvider = ({ children }) => {
         });
     } else {
       setIsReady(true);
+      onReady && onReady(userInfo);
     }
-  }, [dispatch, MeService, pathname, router, userInfo]);
+  }, [userInfo]);
 
   return (
     <div>

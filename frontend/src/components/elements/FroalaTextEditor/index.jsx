@@ -45,7 +45,7 @@ const FroalaTextEditor = ({
       import('froala-editor/js/plugins/paragraph_format.min'),
       import('froala-editor/js/plugins/word_counter.min'),
     ]).then(() => setIsFroalaReady(true));
-  }, [setIsFroalaReady]);
+  }, []);
 
   return (
     <div>

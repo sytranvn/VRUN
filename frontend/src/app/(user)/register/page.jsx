@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Flex, Form, Input, Button, Typography, Modal,
 } from 'antd';
 import Link from 'next/link';
 import getApiService from '@/services';
 import { useRouter } from 'next/navigation';
+import AuthProvider from '@/components/sections/Provider/AuthProvider';
 
 const { Item } = Form;
 const { Password } = Input;
@@ -16,12 +16,6 @@ const Register = () => {
   const [modal, modalContext] = Modal.useModal();
   const router = useRouter();
   const { MeService } = getApiService();
-  const [userInfo] = useState({
-    full_name: '',
-    email: '',
-    password: '',
-    retypePassword: '',
-  });
   const [form] = Form.useForm();
 
   const RULES = {
@@ -44,11 +38,11 @@ const Register = () => {
       { required: true, message: 'Vui lòng nhập mật khẩu' },
       () => ({
         validator(_, value) {
-          if (value.length > 8) {
-            return Promise.resolve();
+          if (value && value.length < 8) {
+            return Promise.reject(new Error('Mật khẩu có ít nhất 8 ký tự'));
           }
 
-          return Promise.reject(new Error('Mật khẩu có ít nhất 8 ký tự'));
+          return Promise.resolve();
         },
       }),
     ],
@@ -56,11 +50,11 @@ const Register = () => {
       { required: true, message: 'Vui lòng nhập lại mật khẩu' },
       ({ getFieldValue }) => ({
         validator(_, value) {
-          if (value && getFieldValue('password') == value) {
-            return Promise.resolve();
+          if (value && getFieldValue('password') !== value) {
+            return Promise.reject(new Error('Mật khẩu không trùng khớp'));
           }
 
-          return Promise.reject(new Error('Mật khẩu không trùng khớp'));
+          return Promise.resolve();
         },
       }),
     ],
@@ -88,15 +82,14 @@ const Register = () => {
   };
 
   return (
-    <>
+    <AuthProvider onReady={() => router.push('/')}>
       <Title level={3} style={{ textAlign: 'center' }}>
         Đăng ký
       </Title>
       <Form
         form={form}
         onFinish={handleSubmit}
-        style={{ width: '100%', maxWidth: '500px' }}
-        initialValues={userInfo}
+        style={{ width: '100vw', maxWidth: '500px' }}
         labelCol={{ span: 8, style: { textAlign: 'left' }}}
         scrollToFirstError
       >
@@ -168,7 +161,7 @@ const Register = () => {
         </Flex>
       </Form>
       {modalContext}
-    </>
+    </AuthProvider>
   );
 };
 
