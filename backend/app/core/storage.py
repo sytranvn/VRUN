@@ -17,3 +17,4 @@ def init_storage():
                 pass
             else:
                 raise
+        client.fput_object("vrun", "dummy.mp3", "app/tests/files/real.mp3")

@@ -60,6 +60,7 @@ class Settings(BaseSettings):
     MINIO_SECRET: str = ""
     AI_MODEL: str = "google/gemini-1.5-flash"
     GOOGLE_API_KEY: str = ""
+    GOOGLE_CREDENTIAL: str = ""
 
     @computed_field  # type: ignore[prop-decorator]
     @property
@@ -101,6 +102,7 @@ class Settings(BaseSettings):
     # TODO: update type to EmailStr when sqlmodel supports it
     FIRST_SUPERUSER: str
     FIRST_SUPERUSER_PASSWORD: str
+    REDIS_ENDPOINT: str = "redis://127.0.0.1:6379"
 
     def _check_default_secret(self, var_name: str, value: str | None) -> None:
         if value == "changethis":

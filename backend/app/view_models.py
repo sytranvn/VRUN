@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta, timezone
 from typing import Annotated, List, Union
 import uuid
+from html.parser import HTMLParser
 
 from pydantic import BaseModel, EmailStr, SerializationInfo, field_serializer, field_validator, model_serializer, model_validator
 from sqlmodel import Field, SQLModel
@@ -20,6 +21,15 @@ from .models import (
 
 # Properties to receive via API on creation
 context = None
+
+
+class SafeHTMLParser(HTMLParser):
+    def handle_starttag(self,
+                        tag: str,
+                        attrs: list[tuple[str, str | None]]) -> None:
+        super().handle_starttag(tag, attrs)
+        if tag == "script":
+            raise ValueError("Invalid content")
 
 
 def get_context():
@@ -95,13 +105,14 @@ class ExamCreate(ExamBase):
 
 
 class CandidateExamRegister(BaseModel):
-    start_time: datetime
+    start_time: datetime | None = Field(default_factory=lambda: datetime.now(tz=timezone.utc).replace(second=0, microsecond=0))
 
     @field_validator('start_time')
     @classmethod
-    def validate_date(cls, v):
+    def validate_date(cls, v: datetime):
         if v < datetime.now(tz=timezone.utc):
             raise AssertionError("Start time must be in future")
+        v.replace(second=0, microsecond=0)
         return v
 
 
@@ -221,6 +232,13 @@ class ExamsReadonly(SQLModel):
 class QuestionGroupCreate(QuestionGroupBase):
     pass
 
+    @field_validator('description')
+    @classmethod
+    def safe_html(cls, v: str):
+        parser = SafeHTMLParser()
+        parser.feed(v)
+        return v
+
 
 class QuestionGroupUpdate(QuestionGroupBase):
     status: QuestionStatusEnum | None
@@ -265,6 +283,13 @@ class QuestionGroupsPublic(SQLModel):
 class QuestionCreate(QuestionBase):
     answers: List["AnswerCreate"]
 
+    @field_validator('description')
+    @classmethod
+    def safe_html(cls, v: str):
+        parser = SafeHTMLParser()
+        parser.feed(v)
+        return v
+
 
 class QuestionUpdate(QuestionBase):
     id: uuid.UUID | None
@@ -305,7 +330,20 @@ class AnswerUpdate(AnswerBase):
     is_correct_answer: bool
 
 
+class AnswerIn(SQLModel):
+    question_id: uuid.UUID
+    answer_id: uuid.UUID
+
+
 class EssayIn(SQLModel):
     question_id: uuid.UUID
     content: str | None
+
+    @field_validator('content')
+    @classmethod
+    def safe_html(cls, v: str):
+        if v:
+            parser = SafeHTMLParser()
+            parser.feed(v)
+        return v
 

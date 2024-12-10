@@ -41,12 +41,12 @@ class CandidateExamAnswer(SQLModel, table=True):
         nullable=False, primary_key=True, foreign_key="candidate_exam.id", ondelete="CASCADE")
     question_id: uuid.UUID = Field(nullable=False, primary_key=True)
     answer_id: uuid.UUID = Field(nullable=False, primary_key=True)
-    status: AnswerStatus = Field(
-        default=AnswerStatus.DRAFT,
-        sa_column=Column(Enum(AnswerStatus, native_enum=False))
-    )
     answer: "Answer" = Relationship()
 
+
+class EssayStatus(StrEnum):
+    SUBMITTED = "SUBMITTED"
+    ASSESSED = "ASSESSED"
 
 class CandidateExamEssay(SQLModel, table=True):
     __tablename__ = "candiate_exam_essay"  # type: ignore
@@ -55,8 +55,8 @@ class CandidateExamEssay(SQLModel, table=True):
     candidate_exam_id: uuid.UUID = Field(
         foreign_key="candidate_exam.id", nullable=False)
     question_id: uuid.UUID = Field(nullable=False, foreign_key="question.id")
-    status: AnswerStatus | None = Field(default=AnswerStatus.DRAFT,
-                                        sa_column=Column(Enum(AnswerStatus, native_enum=False)))
+    status: EssayStatus | None = Field(default=EssayStatus.SUBMITTED,
+                                        sa_column=Column(Enum(EssayStatus, native_enum=False)))
     content: str | None = Field(nullable=True)
     # link to voice record
     resource: str | None = Field(nullable=True)
@@ -183,7 +183,8 @@ class QuestionGroup(BaseTable, QuestionGroupBase, table=True):
     questions: List["Question"] = Relationship(back_populates="question_group",
                                                cascade_delete=True,
                                                sa_relationship_kwargs={
-                                                   "cascade": "delete"},
+                                                   "cascade": "delete"
+                                               },
                                                )
     parts: List[Part] = Relationship(back_populates="question_group")
 

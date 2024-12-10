@@ -8,7 +8,6 @@ from app.api.deps import CurrentUser, SessionDep
 from app.models import CandidateExam, CandidateExamStatus, Exam, ExamStatus
 from app.view_models import (
     CandidateExamRegister,
-    ExamFinished,
     ExamReadonly,
     ExamsReadonly,
     RegisteredExamPublic
