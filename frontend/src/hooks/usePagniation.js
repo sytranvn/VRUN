@@ -21,7 +21,7 @@ const usePagination = (callback) => {
 
     const resp = await callback({
       limit,
-      skip: skip - 1, // API skip starts with 0
+      skip: (skip - 1) * limit, // API skip starts with 0
       ...others,
     });
 

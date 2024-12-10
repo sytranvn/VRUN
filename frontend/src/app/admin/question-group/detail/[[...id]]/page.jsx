@@ -17,7 +17,7 @@ import { SKILL_OPTIONS, STATUS_OPTIONS } from '@/utils/constants';
 const { Item, List } = Form;
 const { Group } = Radio;
 const { Dragger } = Upload;
-const ACCEPT = '.mp3,.mp4,.jpg,.png,.gif';
+const ACCEPT = '.mp3';
 
 const AdminQuestionGroupDetail = () => {
   const { AdminService } = getApiService();
