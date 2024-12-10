@@ -22,4 +22,6 @@ COPY ./pyproject.toml ./pdm.lock ./alembic.ini /app/
 
 COPY ./app /app/app
 
+COPY ./app/tests/files/ ./app/tests/files/
+
 CMD ["fastapi", "run", "--workers", "4", "app/main.py"]
