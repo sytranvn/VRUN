@@ -1,8 +1,9 @@
 FROM postgres:15
 
-ARG CRON_DB
+ARG CRON_DB=vrun
 ENV CRON_DB $CRON_DB
 
+COPY ./pg_cron.sql /docker-entrypoint-initdb.d/init.sql
 
 RUN apt-get update && apt-get install -y curl
 RUN apt-get -y install postgresql-15-cron

@@ -1,3 +1,5 @@
+\connect vrun
+
 CREATE EXTENSION IF NOT EXISTS pg_cron;
 
 SELECT cron.schedule(
@@ -10,7 +12,7 @@ $$
 	FROM
 	(
 		SELECT 
-		e.id, sum(qg.duration) as duration
+		e.id, COALESCE(SUM(qg.duration), 0) as duration
 		FROM exam e 
 		JOIN part p 
 		ON e.id  = p.exam_id 
@@ -28,7 +30,7 @@ SELECT cron.schedule(
 $$
 	UPDATE candidate_exam SET
 	status = 'FINISHED'
-	WHERE end_time <= now() AND status = 'STARTED'
+	WHERE end_time IS NOT NULL AND end_time <= now() AND status = 'STARTED'
 $$
 );
 
