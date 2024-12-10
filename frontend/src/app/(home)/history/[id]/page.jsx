@@ -22,7 +22,6 @@ const HistoryDetail = () => {
 
   useEffect(() => {
     if (!exam) {
-      let durationCount = 0;
       CandidateService.readAvailableExam({ id })
         .then((data) => {
           /* Group parts */
@@ -37,7 +36,6 @@ const HistoryDetail = () => {
                 order: obj.order,
               });
 
-              durationCount += parseInt(obj.question_group?.duration || 0);
               return current;
             }, {});
 
@@ -65,7 +63,7 @@ const HistoryDetail = () => {
           setExam(groupedExam);
         });
     }
-  }, [CandidateService, exam, id]);
+  }, []);
 
   return (
     <>

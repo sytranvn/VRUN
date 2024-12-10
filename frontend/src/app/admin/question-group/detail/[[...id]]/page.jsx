@@ -148,7 +148,7 @@ const AdminQuestionGroupDetail = () => {
           });
         });
     }
-  }, [AdminService, id, form]);
+  }, []);
 
   return (
     <Card title={id ? `Nhóm câu hỏi #${id}` : 'Tạo nhóm câu hỏi'}>

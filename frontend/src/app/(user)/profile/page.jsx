@@ -8,7 +8,7 @@ import { SaveOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/navigation';
-import { setUser } from '@/stores/slices/user'
+import { setUser } from '@/stores/slices/user';
 import getApiService from '@/services';
 import AuthProvider from '@/components/sections/Provider/AuthProvider';
 
@@ -27,7 +27,7 @@ const Profile = () => {
     if (userInfo) {
       form.setFieldValue(userInfo);
     }
-  }, [form, userInfo]);
+  }, [userInfo]);
 
   const RULES = {
     fullname: [
@@ -72,7 +72,7 @@ const Profile = () => {
       });
 
       if (data.id) {
-        dispatch(setUser(data))
+        dispatch(setUser(data));
         modal.success({
           title: 'Chỉnh sửa thông tin thành công.',
           onOk: () => router.push('/'),
