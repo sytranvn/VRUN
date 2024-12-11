@@ -3,6 +3,11 @@ export type AnswerCreate = {
 	is_correct_answer: boolean;
 };
 
+export type AnswerIn = {
+	question_id: string;
+	answer_id: string;
+};
+
 export type AnswerPublic = {
 	description: string;
 	id: string;
@@ -20,8 +25,8 @@ export type Body_admin_create_question_group_resources = {
 };
 
 export type Body_candidate_add_speaking_record = {
-	essay_in: EssayIn;
 	file: Blob | File | null;
+	essay_in: EssayIn;
 };
 
 export type Body_login_login_access_token = {
@@ -33,8 +38,33 @@ export type Body_login_login_access_token = {
 	client_secret?: string | null;
 };
 
-export type CandidateExamRegister = {
+export type CandidateExam = {
+	created_time?: string;
+	updated_time?: string;
+	id?: string;
+	candidate_id: string;
+	exam_id: string;
 	start_time: string;
+	end_time: string | null;
+	status?: CandidateExamStatus;
+	score: number | null;
+	listening_score: number | null;
+	reading_score: number | null;
+	speaking_score: number | null;
+	writing_score: number | null;
+};
+
+export type CandidateExamEssayResult = {
+	id: string;
+	question_id: string;
+	content: string | null;
+	resource: string | null;
+	score: number | null;
+	assessment: string | null;
+};
+
+export type CandidateExamRegister = {
+	start_time?: string | null;
 };
 
 export enum CandidateExamStatus {
@@ -50,11 +80,6 @@ export type EssayIn = {
 	content: string | null;
 };
 
-export type EssaySubmit = {
-	content: string | null;
-	resource: string | null;
-};
-
 export type ExamCreate = {
 	title: string;
 	description: string;
@@ -63,6 +88,12 @@ export type ExamCreate = {
 export type ExamFinished = {
 	id: string;
 	score: number;
+	listening_score: number;
+	reading_score: number;
+	speaking_score: number;
+	writing_score: number;
+	selected_answers: Array<AnswerIn>;
+	essays: Array<CandidateExamEssayResult>;
 };
 
 export type ExamPublic = {
@@ -84,10 +115,6 @@ export enum ExamStatus {
 	DRAFT = "DRAFT",
 	ACTIVE = "ACTIVE",
 }
-
-export type ExamSubmit = {
-	question_groups: Array<QuestionGroupSubmit>;
-};
 
 export type ExamUpdate = {
 	title: string | null;
@@ -162,12 +189,6 @@ export type QuestionGroupReadonly = {
 	duration: number;
 };
 
-export type QuestionGroupSubmit = {
-	id: string;
-	questions: Array<QuestionSubmit>;
-	essays: Array<EssaySubmit>;
-};
-
 export type QuestionGroupUpdate = {
 	description: string;
 	resource: string | null;
@@ -191,11 +212,6 @@ export enum QuestionStatusEnum {
 	DRAFT = "DRAFT",
 	ACTIVE = "ACTIVE",
 }
-
-export type QuestionSubmit = {
-	id: string;
-	answer: string;
-};
 
 export type QuestionUpdate = {
 	description: string | null;
@@ -228,7 +244,7 @@ export enum Role {
 export enum Skill {
 	LISTENING = "LISTENING",
 	READING = "READING",
-	WRITING_ = "WRITING ",
+	WRITING = "WRITING",
 	SPEAKING = "SPEAKING",
 }
 

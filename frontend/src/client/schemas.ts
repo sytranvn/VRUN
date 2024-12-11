@@ -11,6 +11,21 @@ export const $AnswerCreate = {
 	},
 } as const;
 
+export const $AnswerIn = {
+	properties: {
+		question_id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		answer_id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+	},
+} as const;
+
 export const $AnswerPublic = {
 	properties: {
 		description: {
@@ -67,10 +82,6 @@ export const $Body_admin_create_question_group_resources = {
 
 export const $Body_candidate_add_speaking_record = {
 	properties: {
-		essay_in: {
-			type: "EssayIn",
-			isRequired: true,
-		},
 		file: {
 			type: "any-of",
 			contains: [
@@ -82,6 +93,10 @@ export const $Body_candidate_add_speaking_record = {
 					type: "null",
 				},
 			],
+			isRequired: true,
+		},
+		essay_in: {
+			type: "EssayIn",
 			isRequired: true,
 		},
 	},
@@ -138,23 +153,122 @@ export const $Body_login_login_access_token = {
 	},
 } as const;
 
-export const $CandidateExamRegister = {
+export const $CandidateExam = {
 	properties: {
+		created_time: {
+			type: "string",
+			format: "date-time",
+		},
+		updated_time: {
+			type: "string",
+			format: "date-time",
+		},
+		id: {
+			type: "string",
+			format: "uuid",
+		},
+		candidate_id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		exam_id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
 		start_time: {
 			type: "string",
 			isRequired: true,
 			format: "date-time",
 		},
+		end_time: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		status: {
+			type: "CandidateExamStatus",
+			default: SCHEDULED,
+		},
+		score: {
+			type: "any-of",
+			contains: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		listening_score: {
+			type: "any-of",
+			contains: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		reading_score: {
+			type: "any-of",
+			contains: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		speaking_score: {
+			type: "any-of",
+			contains: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		writing_score: {
+			type: "any-of",
+			contains: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
 	},
 } as const;
 
-export const $CandidateExamStatus = {
-	type: "Enum",
-	enum: ["SCHEDULED", "STARTED", "FINISHED", "ASSESSED", "CANCELED"],
-} as const;
-
-export const $EssayIn = {
+export const $CandidateExamEssayResult = {
 	properties: {
+		id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
 		question_id: {
 			type: "string",
 			isRequired: true,
@@ -172,12 +286,7 @@ export const $EssayIn = {
 			],
 			isRequired: true,
 		},
-	},
-} as const;
-
-export const $EssaySubmit = {
-	properties: {
-		content: {
+		resource: {
 			type: "any-of",
 			contains: [
 				{
@@ -189,7 +298,63 @@ export const $EssaySubmit = {
 			],
 			isRequired: true,
 		},
-		resource: {
+		score: {
+			type: "any-of",
+			contains: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		assessment: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+	},
+} as const;
+
+export const $CandidateExamRegister = {
+	properties: {
+		start_time: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+					format: "date-time",
+				},
+				{
+					type: "null",
+				},
+			],
+		},
+	},
+} as const;
+
+export const $CandidateExamStatus = {
+	type: "Enum",
+	enum: ["SCHEDULED", "STARTED", "FINISHED", "ASSESSED", "CANCELED"],
+} as const;
+
+export const $EssayIn = {
+	properties: {
+		question_id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		content: {
 			type: "any-of",
 			contains: [
 				{
@@ -227,6 +392,36 @@ export const $ExamFinished = {
 		},
 		score: {
 			type: "number",
+			isRequired: true,
+		},
+		listening_score: {
+			type: "number",
+			isRequired: true,
+		},
+		reading_score: {
+			type: "number",
+			isRequired: true,
+		},
+		speaking_score: {
+			type: "number",
+			isRequired: true,
+		},
+		writing_score: {
+			type: "number",
+			isRequired: true,
+		},
+		selected_answers: {
+			type: "array",
+			contains: {
+				type: "AnswerIn",
+			},
+			isRequired: true,
+		},
+		essays: {
+			type: "array",
+			contains: {
+				type: "CandidateExamEssayResult",
+			},
 			isRequired: true,
 		},
 	},
@@ -291,18 +486,6 @@ export const $ExamReadonly = {
 export const $ExamStatus = {
 	type: "Enum",
 	enum: ["DRAFT", "ACTIVE"],
-} as const;
-
-export const $ExamSubmit = {
-	properties: {
-		question_groups: {
-			type: "array",
-			contains: {
-				type: "QuestionGroupSubmit",
-			},
-			isRequired: true,
-		},
-	},
 } as const;
 
 export const $ExamUpdate = {
@@ -577,30 +760,6 @@ export const $QuestionGroupReadonly = {
 	},
 } as const;
 
-export const $QuestionGroupSubmit = {
-	properties: {
-		id: {
-			type: "string",
-			isRequired: true,
-			format: "uuid",
-		},
-		questions: {
-			type: "array",
-			contains: {
-				type: "QuestionSubmit",
-			},
-			isRequired: true,
-		},
-		essays: {
-			type: "array",
-			contains: {
-				type: "EssaySubmit",
-			},
-			isRequired: true,
-		},
-	},
-} as const;
-
 export const $QuestionGroupUpdate = {
 	properties: {
 		description: {
@@ -682,21 +841,6 @@ export const $QuestionPublic = {
 export const $QuestionStatusEnum = {
 	type: "Enum",
 	enum: ["DRAFT", "ACTIVE"],
-} as const;
-
-export const $QuestionSubmit = {
-	properties: {
-		id: {
-			type: "string",
-			isRequired: true,
-			format: "uuid",
-		},
-		answer: {
-			type: "string",
-			isRequired: true,
-			format: "uuid",
-		},
-	},
 } as const;
 
 export const $QuestionUpdate = {
@@ -804,7 +948,7 @@ export const $Role = {
 
 export const $Skill = {
 	type: "Enum",
-	enum: ["LISTENING", "READING", "WRITING ", "SPEAKING"],
+	enum: ["LISTENING", "READING", "WRITING", "SPEAKING"],
 } as const;
 
 export const $Token = {

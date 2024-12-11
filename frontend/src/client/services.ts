@@ -33,12 +33,13 @@ import type {
 	UpdatePassword,
 	UserRegister,
 	UserUpdateMe,
+	AnswerIn,
 	Body_candidate_add_speaking_record,
+	CandidateExam,
 	CandidateExamRegister,
 	ExamFinished,
 	ExamReadonly,
 	ExamsReadonly,
-	ExamSubmit,
 	RegisteredExamPublic,
 	RegisteredExamsPublic,
 } from "./models";
@@ -1093,8 +1094,9 @@ export type TDataReadRegisteredExam = {
 export type TDataReadExamResult = {
 	id: string;
 };
-export type TDataAddAnswer = {
+export type TDataAddAnswers = {
 	id: string;
+	requestBody: Array<AnswerIn>;
 };
 export type TDataAddSpeakingRecord = {
 	formData: Body_candidate_add_speaking_record;
@@ -1102,7 +1104,6 @@ export type TDataAddSpeakingRecord = {
 };
 export type TDataSubmitAnswer = {
 	id: string;
-	requestBody: ExamSubmit;
 };
 
 export class CandidateService {
@@ -1233,21 +1234,23 @@ export class CandidateService {
 	}
 
 	/**
-	 * Add Answer
+	 * Add Answers
 	 * Add an answer.
-	 * @returns RegisteredExamPublic Successful Response
+	 * @returns AnswerIn Successful Response
 	 * @throws ApiError
 	 */
-	public static addAnswer(
-		data: TDataAddAnswer,
-	): CancelablePromise<RegisteredExamPublic> {
-		const { id } = data;
+	public static addAnswers(
+		data: TDataAddAnswers,
+	): CancelablePromise<Array<AnswerIn>> {
+		const { id, requestBody } = data;
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/registered_exams/{id}/answers",
 			path: {
 				id,
 			},
+			body: requestBody,
+			mediaType: "application/json",
 			errors: {
 				422: `Validation Error`,
 			},
@@ -1279,22 +1282,20 @@ export class CandidateService {
 
 	/**
 	 * Submit Answer
-	 * Submit questions' answers of a skill.
-	 * @returns ExamReadonly Successful Response
+	 * Update exam as finished.
+	 * @returns CandidateExam Successful Response
 	 * @throws ApiError
 	 */
 	public static submitAnswer(
 		data: TDataSubmitAnswer,
-	): CancelablePromise<ExamReadonly> {
-		const { id, requestBody } = data;
+	): CancelablePromise<CandidateExam> {
+		const { id } = data;
 		return __request(OpenAPI, {
 			method: "POST",
 			url: "/api/v1/registered_exams/{id}/submit",
 			path: {
 				id,
 			},
-			body: requestBody,
-			mediaType: "application/json",
 			errors: {
 				422: `Validation Error`,
 			},
