@@ -1160,7 +1160,7 @@ export class CandidateService {
 	 */
 	public static registerExam(
 		data: TDataRegisterExam,
-	): CancelablePromise<Array<RegisteredExamPublic>> {
+	): CancelablePromise<RegisteredExamPublic> {
 		const { id, requestBody } = data;
 		return __request(OpenAPI, {
 			method: "POST",

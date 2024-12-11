@@ -47,7 +47,7 @@ def read_available_exam(session: SessionDep, id: uuid.UUID) -> Any:
     return exam
 
 
-@router.post("/{id}/register", response_model=List[RegisteredExamPublic])
+@router.post("/{id}/register", response_model=RegisteredExamPublic)
 def register_exam(
     session: SessionDep,
     current_user: CurrentUser,
@@ -71,13 +71,12 @@ def register_exam(
                   False)
     if exists:
         raise HTTPException(status_code=400, detail="You have registered this exam.")
-    current_user.exams.append(
-        CandidateExam(
+    registered_exam = CandidateExam(
             candidate_id=current_user.id,
             exam_id=exam.id,
             **register_in.model_dump()
         )
-    )
+    session.add(registered_exam)
     session.commit()
     session.refresh(current_user)
-    return list(current_user.exams)
+    return registered_exam
