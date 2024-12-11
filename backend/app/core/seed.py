@@ -1,5 +1,3 @@
-
-from uuid import uuid4
 from app.models import Answer, Exam, ExamStatus, Part, Question, QuestionGroup, Skill
 
 
@@ -56,9 +54,9 @@ def create_multiple_choice(session, exam, num_part: int, skill: Skill, descripti
                  exam_id=exam.id))
 
 
-def insert_seed_data(session):
+def insert_seed_data(session, i):
     exam = Exam(
-        title="Enlish testing",
+        title=f"Enlish testing {i}",
         description="This is a sample exam"
     )
     session.add(exam)
@@ -66,7 +64,7 @@ def insert_seed_data(session):
     session.refresh(exam)
 
     # NOTE: Listening
-    create_multiple_choice(session, exam, 3, Skill.LISTENING, 
+    create_multiple_choice(session, exam, 3, Skill.LISTENING,
         """<b>Directions:</b> In this section of the test, you will have an opportunity to demonstrate your ability to understand conversations and talks in English. There are three parts in this section with special directions for each part. Answer all the questions on the basis of what is stated or implied by the speakers in the recording. There will be time for you to read the questions and check your work. All the recordings will be played ONCE only.<br><br><b>Directions:</b> In this part, you will hear EIGHT short announcements or instructions. There is one question for each announcement or instruction. For each question, choose the correct answer A, B, C or D.<br><i>Now, let's listen to an example. In the recording, you will hear:</i><br><b>Woman:</b> Hello. This is the travel agency returning your call. You left a message about the holiday you’ve booked, asking which meals are included in the cost during your stay at Sunny Hotel. Lunch and dinner are free but if you wish to have breakfast in the hotel, you will need to pay an extra amount of money, depending on what you order. Let me know if I can help you with any other information. Goodbye.<br><i>On the screen, you will read:</i><br>Which meal is NOT included in the price of the holiday?<br>A. Breakfast<br>B. Lunch<br>C. Dinner<br>D. All<br><i>The correct answer is A. Breakfast. <br>We are ready to start. First, you have some time to look at questions 1 to 8.</i>""",  # noqa
     )
 
@@ -114,7 +112,6 @@ def insert_seed_data(session):
             description="<i>- <em>Do you enjoy reading? Why?<br>- What sort of things do you read? <br>- What are the advantages of reading?</em></i><em><br><br></em>",
         ))
         session.add(Question(
-            id=uuid4(),
             question_group_id=question_group.id,
             description="Now, let’s talk about your neighbourhood.<i><br>- <em>What do you like about the area where you live?<br>- How do you think it could be improved?<br>- Do you think it is better to live in the centre of town or outside in the country? Why?</em></i>",
         ))
@@ -132,5 +129,6 @@ def insert_seed_data(session):
     exam.status = ExamStatus.ACTIVE
     session.commit()
     session.refresh(exam)
+    
 
 

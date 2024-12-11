@@ -78,7 +78,10 @@ async def transcribe_file(audio_file: Any) -> str:
     Returns:
         str: The response containing the transcription results
     """
-    credentials = Credentials.from_service_account_file(settings.GOOGLE_CREDENTIAL)
+    if settings.GOOGLE_CREDENTIAL:
+        credentials = Credentials.from_service_account_file(settings.GOOGLE_CREDENTIAL)
+    else:
+        credentials = None
     client = speech.SpeechAsyncClient(credentials=credentials)
 
     audio_content = audio_file.read()

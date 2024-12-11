@@ -34,4 +34,5 @@ def init_db(session: Session) -> None:
         )
         user = crud.create_user(session=session, user_create=user_in)
         if settings.ENVIRONMENT == "local":
-            insert_seed_data(session)
+            for i in range(1, 21):
+                insert_seed_data(session, i)

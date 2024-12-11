@@ -9,6 +9,8 @@ from sqlmodel import Field, SQLModel
 
 from .models import (
     AnswerBase,
+    CandidateExamAnswer,
+    CandidateExamEssay,
     CandidateExamStatus,
     ExamBase,
     ExamStatus,
@@ -150,10 +152,6 @@ class ExamReadonly(ExamBase):
     parts: List["PartReadonly"]
 
 
-class ExamSubmit(SQLModel):
-    question_groups: List["QuestionGroupSubmit"]
-
-
 class QuestionGroupSubmit(SQLModel):
     id: uuid.UUID
     questions: List["QuestionSubmit"]
@@ -197,10 +195,25 @@ class QuestionStarted(SQLModel):
     answers: List["AnswerReadonly"]
 
 
+class CandidateExamEssayResult(SQLModel):
+    id: uuid.UUID
+    question_id: uuid.UUID
+    content: str | None
+    # link to voice record
+    resource: str | None
+    score: float | None
+    assessment: str | None
+
+
 class ExamFinished(SQLModel):
     id: uuid.UUID
-    # parts: List["PartFinished"]
     score: float
+    listening_score: float
+    reading_score: float
+    speaking_score: float
+    writing_score: float
+    selected_answers: List["AnswerIn"]
+    essays: List["CandidateExamEssayResult"]
 
 
 class PartReadonly(SQLModel):
