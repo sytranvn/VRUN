@@ -153,18 +153,74 @@ export const $Body_login_login_access_token = {
 	},
 } as const;
 
-export const $CandidateExam = {
+export const $CandidateExamEssayResult = {
 	properties: {
-		created_time: {
-			type: "string",
-			format: "date-time",
-		},
-		updated_time: {
-			type: "string",
-			format: "date-time",
-		},
 		id: {
 			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		question_id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		content: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		resource: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		score: {
+			type: "any-of",
+			contains: [
+				{
+					type: "number",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		assessment: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+	},
+} as const;
+
+export const $CandidateExamPublic = {
+	properties: {
+		id: {
+			type: "string",
+			isRequired: true,
 			format: "uuid",
 		},
 		candidate_id: {
@@ -183,21 +239,13 @@ export const $CandidateExam = {
 			format: "date-time",
 		},
 		end_time: {
-			type: "any-of",
-			contains: [
-				{
-					type: "string",
-					format: "date-time",
-				},
-				{
-					type: "null",
-				},
-			],
+			type: "string",
 			isRequired: true,
+			format: "date-time",
 		},
 		status: {
 			type: "CandidateExamStatus",
-			default: SCHEDULED,
+			isRequired: true,
 		},
 		score: {
 			type: "any-of",
@@ -252,69 +300,6 @@ export const $CandidateExam = {
 			contains: [
 				{
 					type: "number",
-				},
-				{
-					type: "null",
-				},
-			],
-			isRequired: true,
-		},
-	},
-} as const;
-
-export const $CandidateExamEssayResult = {
-	properties: {
-		id: {
-			type: "string",
-			isRequired: true,
-			format: "uuid",
-		},
-		question_id: {
-			type: "string",
-			isRequired: true,
-			format: "uuid",
-		},
-		content: {
-			type: "any-of",
-			contains: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			isRequired: true,
-		},
-		resource: {
-			type: "any-of",
-			contains: [
-				{
-					type: "string",
-				},
-				{
-					type: "null",
-				},
-			],
-			isRequired: true,
-		},
-		score: {
-			type: "any-of",
-			contains: [
-				{
-					type: "number",
-				},
-				{
-					type: "null",
-				},
-			],
-			isRequired: true,
-		},
-		assessment: {
-			type: "any-of",
-			contains: [
-				{
-					type: "string",
 				},
 				{
 					type: "null",

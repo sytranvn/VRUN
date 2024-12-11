@@ -35,7 +35,7 @@ import type {
 	UserUpdateMe,
 	AnswerIn,
 	Body_candidate_add_speaking_record,
-	CandidateExam,
+	CandidateExamPublic,
 	CandidateExamRegister,
 	ExamFinished,
 	ExamReadonly,
@@ -1283,12 +1283,12 @@ export class CandidateService {
 	/**
 	 * Submit Answer
 	 * Update exam as finished.
-	 * @returns CandidateExam Successful Response
+	 * @returns CandidateExamPublic Successful Response
 	 * @throws ApiError
 	 */
 	public static submitAnswer(
 		data: TDataSubmitAnswer,
-	): CancelablePromise<CandidateExam> {
+	): CancelablePromise<CandidateExamPublic> {
 		const { id } = data;
 		return __request(OpenAPI, {
 			method: "POST",

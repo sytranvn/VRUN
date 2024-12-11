@@ -4,16 +4,15 @@ import uuid
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, UploadFile
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import SessionTransaction
 from sqlmodel import select
 
 from app.api.deps import MinioDep, SessionDep, CurrentUser
-from app.models import CandidateExam, CandidateExamAnswer, CandidateExamEssay, CandidateExamStatus, Exam, Part, Question, Skill
+from app.models import CandidateExam, CandidateExamAnswer, CandidateExamEssay, CandidateExamStatus, Question, Skill
 from app.services.ai_service import AssessmentResult, assess_speaking_essay, assess_writing_essay, transcribe_file
 from app.view_models import (
     AnswerIn,
+    CandidateExamPublic,
     ExamFinished,
-    ExamReadonly,
     RegisteredExamPublic,
     RegisteredExamsPublic,
     EssayIn,
@@ -179,7 +178,7 @@ def grade_exam(session: SessionDep, candidate_exam: CandidateExam):
     # update status
 
 
-@router.post("/{id}/submit", response_model=CandidateExam)
+@router.post("/{id}/submit", response_model=CandidateExamPublic)
 def submit_answer(session: SessionDep,
                   id: uuid.UUID,
                   background_tasks: BackgroundTasks) -> Any:
