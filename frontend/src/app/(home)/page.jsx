@@ -16,14 +16,14 @@ const Index = () => {
   const [examId, setExamId] = useState(null);
 
   useEffect(() => {
-    if(!examId) {
+    if (!examId) {
       CandidateService.readAvailableExams({
         limit: 100,
         skip: 0,
       }).then((resp) => {
         /* Pick random exam to test */
         const randomExam = resp.data[randomInt(0, resp.data.length - 1)];
-  
+
         if (randomExam) {
           setExamId(randomExam.id);
         }
