@@ -25,8 +25,7 @@ export type Body_admin_create_question_group_resources = {
 };
 
 export type Body_candidate_add_speaking_record = {
-	file: Blob | File | null;
-	essay_in: EssayIn;
+	file: Blob | File;
 };
 
 export type Body_login_login_access_token = {
@@ -76,6 +75,13 @@ export enum CandidateExamStatus {
 export type EssayIn = {
 	question_id: string;
 	content: string | null;
+};
+
+export type EssayPublic = {
+	id: string;
+	question_id: string;
+	content: string | null;
+	resource: string | null;
 };
 
 export type ExamCreate = {

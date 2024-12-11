@@ -5,14 +5,14 @@ import controlflow as cf
 from controlflow.defaults import get_model
 from google.cloud import speech
 from google.oauth2.service_account import Credentials
+from pydantic import BaseModel
 
 from app.core.config import settings
 
 cf.defaults.model = get_model(settings.AI_MODEL, google_api_key=settings.GOOGLE_API_KEY)
 
 
-@dataclass
-class Assessment:
+class Assessment(BaseModel):
     content: str
     argumentation: str
     organization: str
@@ -21,8 +21,7 @@ class Assessment:
     summary: str
 
 
-@dataclass
-class AssessmentScore:
+class AssessmentScore(BaseModel):
     content: float
     argumentation: float
     organization: float
@@ -31,8 +30,7 @@ class AssessmentScore:
     summary: float
 
 
-@dataclass
-class AssessmentResult:
+class AssessmentResult(BaseModel):
     score: AssessmentScore
     assessment: Assessment
 
@@ -84,7 +82,7 @@ async def transcribe_file(audio_file: Any) -> str:
         credentials = None
     client = speech.SpeechAsyncClient(credentials=credentials)
 
-    audio_content = audio_file.read()
+    audio_content = await audio_file.read()
 
     audio = speech.RecognitionAudio(content=audio_content)
     config = speech.RecognitionConfig(
@@ -131,11 +129,11 @@ scoring_assessor = cf.Agent(
 
 
 @cf.flow
-def assess_writing_essay(question: str, essay: str) -> AssessmentResult:
+def assess_writing_essay(description: str, question: str, essay: str) -> AssessmentResult:
     assessment = writing_assessor.run(
-        'Asset the following essay written in response to the question',
+        'Asset the following essay written in response to the description and following question',
         result_type=Assessment,
-        context=dict(question=question, essay=essay)
+        context=dict(description=description, question=question, essay=essay)
     )
 
     score = scoring_assessor.run(
@@ -154,11 +152,11 @@ def assess_writing_essay(question: str, essay: str) -> AssessmentResult:
 
 
 @cf.flow
-def assess_speaking_essay(question: str, transcribed_essay) -> AssessmentResult:
+def assess_speaking_essay(description: str, question: str, transcribed_essay) -> AssessmentResult:
     assessment = speaking_assessor.run(
-        'Asset the following transcribed essay in response to the question',
+        'Asset the following transcribed essay in response to the description and folowing question',
         result_type=Assessment,
-        context=dict(question=question, transcribed_essay=transcribed_essay)
+        context=dict(description=description, question=question, transcribed_essay=transcribed_essay)
     )
 
     score = scoring_assessor.run(

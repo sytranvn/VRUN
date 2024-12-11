@@ -1,9 +1,9 @@
 import uuid
-from typing import List
+from typing import List, Optional
 from datetime import datetime, timezone
 from enum import StrEnum
 from pydantic import EmailStr
-from sqlmodel import Column, Field, ForeignKeyConstraint, Relationship, SQLModel, Enum, UniqueConstraint
+from sqlmodel import JSON, Column, Field, ForeignKeyConstraint, Relationship, SQLModel, Enum, UniqueConstraint
 
 
 class BaseTable:
@@ -49,7 +49,19 @@ class EssayStatus(StrEnum):
     ASSESSED = "ASSESSED"
 
 
-class CandidateExamEssay(SQLModel, table=True):
+class CandidateExamEssayBase(SQLModel):
+    candidate_exam_id: uuid.UUID
+    status: EssayStatus | None = None
+    content: str | None = None
+    # link to voice record
+    resource: str | None = None
+    score: float | None = None
+    assessment: str | None = None
+    score_info: Optional[dict] = None
+    assessment_info: Optional[dict] = None
+
+
+class CandidateExamEssay(CandidateExamEssayBase, table=True):
     __tablename__ = "candiate_exam_essay"  # type: ignore
     id: uuid.UUID | None = Field(
         nullable=False, default_factory=uuid.uuid4, primary_key=True)
@@ -58,12 +70,8 @@ class CandidateExamEssay(SQLModel, table=True):
     question_id: uuid.UUID = Field(nullable=False, foreign_key="question.id")
     status: EssayStatus | None = Field(default=EssayStatus.SUBMITTED,
                                        sa_column=Column(Enum(EssayStatus, native_enum=False)))
-    content: str | None = Field(nullable=True)
-    # link to voice record
-    resource: str | None = Field(nullable=True)
-    score: float | None = Field(nullable=True)
-    assessment: str | None = Field(nullable=True)
-
+    score_info: Optional[dict] = Field(default_factory=dict, sa_column=Column(JSON))
+    assessment_info: Optional[dict] = Field(default_factory=dict, sa_column=Column(JSON))
     question: "Question" = Relationship()
     candidate_exam: "CandidateExam" = Relationship(back_populates="essays")
 

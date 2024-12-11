@@ -363,6 +363,13 @@ class EssayIn(SQLModel):
         return v
 
 
+class EssayPublic(SQLModel):
+    id: uuid.UUID
+    question_id: uuid.UUID
+    content: str | None
+    resource: str | None
+
+
 class CandidateExamPublic(SQLModel):
     id: uuid.UUID
     candidate_id: uuid.UUID

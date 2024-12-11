@@ -37,6 +37,8 @@ import type {
 	Body_candidate_add_speaking_record,
 	CandidateExamPublic,
 	CandidateExamRegister,
+	EssayIn,
+	EssayPublic,
 	ExamFinished,
 	ExamReadonly,
 	ExamsReadonly,
@@ -1098,9 +1100,14 @@ export type TDataAddAnswers = {
 	id: string;
 	requestBody: Array<AnswerIn>;
 };
+export type TDataAddWritingRecord = {
+	id: string;
+	requestBody: EssayIn;
+};
 export type TDataAddSpeakingRecord = {
 	formData: Body_candidate_add_speaking_record;
 	id: string;
+	questionId: string;
 };
 export type TDataSubmitAnswer = {
 	id: string;
@@ -1258,19 +1265,45 @@ export class CandidateService {
 	}
 
 	/**
+	 * Add Writing Record
+	 * @returns EssayPublic Successful Response
+	 * @throws ApiError
+	 */
+	public static addWritingRecord(
+		data: TDataAddWritingRecord,
+	): CancelablePromise<EssayPublic> {
+		const { id, requestBody } = data;
+		return __request(OpenAPI, {
+			method: "POST",
+			url: "/api/v1/registered_exams/{id}/writing_essays",
+			path: {
+				id,
+			},
+			body: requestBody,
+			mediaType: "application/json",
+			errors: {
+				422: `Validation Error`,
+			},
+		});
+	}
+
+	/**
 	 * Add Speaking Record
-	 * @returns RegisteredExamPublic Successful Response
+	 * @returns EssayPublic Successful Response
 	 * @throws ApiError
 	 */
 	public static addSpeakingRecord(
 		data: TDataAddSpeakingRecord,
-	): CancelablePromise<RegisteredExamPublic> {
-		const { formData, id } = data;
+	): CancelablePromise<EssayPublic> {
+		const { formData, id, questionId } = data;
 		return __request(OpenAPI, {
 			method: "POST",
-			url: "/api/v1/registered_exams/{id}/essays",
+			url: "/api/v1/registered_exams/{id}/speaking_essays",
 			path: {
 				id,
+			},
+			query: {
+				question_id: questionId,
 			},
 			formData: formData,
 			mediaType: "multipart/form-data",

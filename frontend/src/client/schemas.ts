@@ -83,21 +83,9 @@ export const $Body_admin_create_question_group_resources = {
 export const $Body_candidate_add_speaking_record = {
 	properties: {
 		file: {
-			type: "any-of",
-			contains: [
-				{
-					type: "binary",
-					format: "binary",
-				},
-				{
-					type: "null",
-				},
-			],
+			type: "binary",
 			isRequired: true,
-		},
-		essay_in: {
-			type: "EssayIn",
-			isRequired: true,
+			format: "binary",
 		},
 	},
 } as const;
@@ -340,6 +328,45 @@ export const $EssayIn = {
 			format: "uuid",
 		},
 		content: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+	},
+} as const;
+
+export const $EssayPublic = {
+	properties: {
+		id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		question_id: {
+			type: "string",
+			isRequired: true,
+			format: "uuid",
+		},
+		content: {
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+				},
+				{
+					type: "null",
+				},
+			],
+			isRequired: true,
+		},
+		resource: {
 			type: "any-of",
 			contains: [
 				{
