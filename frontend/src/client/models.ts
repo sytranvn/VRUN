@@ -38,22 +38,6 @@ export type Body_login_login_access_token = {
 	client_secret?: string | null;
 };
 
-export type CandidateExam = {
-	created_time?: string;
-	updated_time?: string;
-	id?: string;
-	candidate_id: string;
-	exam_id: string;
-	start_time: string;
-	end_time: string | null;
-	status?: CandidateExamStatus;
-	score: number | null;
-	listening_score: number | null;
-	reading_score: number | null;
-	speaking_score: number | null;
-	writing_score: number | null;
-};
-
 export type CandidateExamEssayResult = {
 	id: string;
 	question_id: string;
@@ -61,6 +45,20 @@ export type CandidateExamEssayResult = {
 	resource: string | null;
 	score: number | null;
 	assessment: string | null;
+};
+
+export type CandidateExamPublic = {
+	id: string;
+	candidate_id: string;
+	exam_id: string;
+	start_time: string;
+	end_time: string;
+	status: CandidateExamStatus;
+	score: number | null;
+	listening_score: number | null;
+	reading_score: number | null;
+	speaking_score: number | null;
+	writing_score: number | null;
 };
 
 export type CandidateExamRegister = {

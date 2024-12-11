@@ -9,8 +9,7 @@ from sqlmodel import Field, SQLModel
 
 from .models import (
     AnswerBase,
-    CandidateExamAnswer,
-    CandidateExamEssay,
+    CandidateExam,
     CandidateExamStatus,
     ExamBase,
     ExamStatus,
@@ -107,7 +106,8 @@ class ExamCreate(ExamBase):
 
 
 class CandidateExamRegister(BaseModel):
-    start_time: datetime | None = Field(default_factory=lambda: datetime.now(tz=timezone.utc).replace(second=0, microsecond=0))
+    start_time: datetime | None = Field(default_factory=lambda: datetime.now(
+        tz=timezone.utc).replace(second=0, microsecond=0))
 
     @field_validator('start_time')
     @classmethod
@@ -228,9 +228,11 @@ class RegisteredExamPublic(SQLModel):
     end_time: datetime | None
     exam: "ExamPublic"
 
+
 class RegisteredExamsPublic(SQLModel):
     data: List[RegisteredExamPublic]
     count: int
+
 
 class ExamsPublic(SQLModel):
     data: List[ExamPublic]
@@ -360,3 +362,18 @@ class EssayIn(SQLModel):
             parser.feed(v)
         return v
 
+
+class CandidateExamPublic(SQLModel):
+    id: uuid.UUID
+    candidate_id: uuid.UUID
+    exam_id: uuid.UUID
+    start_time: datetime
+    end_time: datetime
+    status: CandidateExamStatus
+    score: float | None
+    listening_score: float | None
+    reading_score: float | None
+    speaking_score: float | None
+    writing_score: float | None
+    # selected_answers: List[AnswerIn]
+    # essays: List["EssayIn"]
