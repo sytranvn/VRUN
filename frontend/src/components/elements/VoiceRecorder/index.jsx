@@ -33,10 +33,11 @@ const VoiceRecorder = ({
     }),
   );
   record?.on('record-end', (blob) => {
-    const recordedUrl = URL.createObjectURL(blob);
-    setAudioUrl(recordedUrl);
+    const recordUrl = URL.createObjectURL(blob);
+    const recordFile = new File([blob], new Date().getTime().toString());
+    setAudioUrl(recordUrl);
     if (blob.size > 0) {
-      onStop && onStop(recordedUrl);
+      onStop && onStop({ url: recordUrl, file: recordFile });
     }
   });
   const onPlayPause = useCallback(() => {

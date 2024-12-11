@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Layout, Flex, Button, Statistic, Modal, Anchor, Row, Col,
 } from 'antd';
-import { CheckOutlined, SaveOutlined } from '@ant-design/icons';
+import { CheckOutlined } from '@ant-design/icons';
 import Logo from '@/components/elements/Logo';
 import ListeningPart from '@/components/sections/ListeningPart';
 import ReadingPart from '@/components/sections/ReadingPart';
@@ -12,8 +12,12 @@ import WritingPart from '@/components/sections/WritingPart';
 import SpeakingPart from '@/components/sections/SpeakingPart';
 import disableBodyScroll from '@/utils/scroll/disableBodyScroll';
 import enableBodyScroll from '@/utils/scroll/enableBodyScroll';
+import { useSelector } from 'react-redux';
 import { useRouter, useParams } from 'next/navigation';
 import getApiService from '@/services';
+import dayjs from 'dayjs';
+import examSample from '@/assets/data/examSample.json';
+import AuthProvider from '@/components/sections/Provider/AuthProvider';
 
 const { Countdown } = Statistic;
 
@@ -36,17 +40,63 @@ const Exam = () => {
   const [modal, modalContext] = Modal.useModal();
   const router = useRouter();
   const params = useParams();
-  const id = params.id;
-  const [exam, setExam] = useState();
+  const userInfo = useSelector((state) => state.user.userInfo);
+  const [id, setId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [exam, setExam] = useState(null);
   const [totalTime, setTotalTime] = useState(0);
   const [examAnchor, setExamAnchor] = useState([]);
+  const [submitQuestions, setSubmitQuestions] = useState([]);
+  const [submitEssays, setSubmitEssays] = useState([]);
+  const [submitRecords, setSubmitRecords] = useState([]);
 
-  const finishExam = () => {
+  const saveAnswer = (payload) => {
+    const excluded = submitQuestions.filter((i) => i.question_id != payload.question_id);
+    setSubmitQuestions([...excluded].concat(payload));
+  };
+
+  const saveEssay = (payload) => {
+    const excluded = submitEssays.filter((i) => i.question_id != payload.question_id);
+    setSubmitEssays([...excluded].concat(payload));
+  };
+
+  const saveRecord = (payload) => {
+    const excluded = submitRecords.filter((i) => i.question_id != payload.question_id);
+    setSubmitRecords([...excluded].concat(payload));
+  };
+
+  const submitExam = async () => {
+    setIsLoading(true);
+
+    await Promise.all([
+      CandidateService.addAnswers({
+        id,
+        requestBody: submitQuestions,
+      }),
+      submitEssays.forEach((essay) => {
+        CandidateService.addSpeakingRecord({
+          id,
+          requestBody: essay,
+        });
+      }),
+      submitRecords.forEach((record) => {
+        CandidateService.addSpeakingRecord({
+          id,
+          requestBody: record,
+        });
+      }),
+    ]);
+
+    await submitAnswer({ id: xxx });
+    setIsLoading(false);
+  };
+
+  const onFinish = () => {
     modal.confirm({
       title: 'Bạn có chắc muốn kết thúc bài thi?',
-      onOk() {
-        enableBodyScroll(document.body);
-        router.push('/finish');
+      async onOk() {
+        await submitExam();
+        // router.push('/finish');
       },
     });
   };
@@ -54,63 +104,76 @@ const Exam = () => {
   const onTimeout = () => {
     modal.warning({
       title: 'Hết giờ làm bài.',
-      onOk() {
-        router.push('/finish');
+      async onOk() {
+        await submitExam();
+        // router.push('/finish');
       },
     });
-  };
-
-  const saveExam = () => {
-    console.log('save');
   };
 
   useEffect(() => {
     disableBodyScroll(document.body);
 
     if (!exam) {
-      let durationCount = 0;
-      CandidateService.readAvailableExam({ id })
-        .then((data) => {
-          /* Group parts */
-          const groupedExam = (data.parts || [])
-            .reduce((current, obj) => {
-              if (!Array.isArray(current[obj.question_group.skill])) {
-                current[obj.question_group.skill] = [];
-              }
+      try {
+        CandidateService.registerExam({
+          id,
+          requestBody: {
+            start_time: dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
+          },
+        });
 
-              current[obj.question_group.skill].push({
-                ...obj.question_group,
-                order: obj.order,
+        /* TODO */
+        Promise.resolve(examSample[0])
+        // CandidateService.readRegisteredExam({ id: userInfo.id })
+          .then((data) => {
+            setId(data.id);
+            let duration = 0;
+
+            /* Group parts */
+            const groupedExam = (data.exam?.parts || [])
+              .reduce((current, obj) => {
+                if (!Array.isArray(current[obj.question_group.skill])) {
+                  current[obj.question_group.skill] = [];
+                }
+
+                current[obj.question_group.skill].push({
+                  ...obj.question_group,
+                  order: obj.order,
+                });
+
+                duration += obj.question_group.duration * 60 * 1000;
+
+                return current;
+              }, {});
+
+            /* Menu anchor */
+            const anchor = Object.entries(groupedExam)
+              .map(([key, parts]) => {
+                let totalQuestions = 0;
+                for (const part of parts) {
+                  totalQuestions += part.questions?.length || 0;
+                }
+
+                return {
+                  key,
+                  href: `#${key}`,
+                  title: `${key} - ${totalQuestions} câu`,
+                  children: parts.map((_, idx) => ({
+                    key: `${key}-p${idx + 1}`,
+                    href: `#${key}-p${idx + 1}`,
+                    title: `Part ${idx + 1}`,
+                  })),
+                };
               });
 
-              durationCount += parseInt(obj.question_group?.duration || 0);
-              return current;
-            }, {});
-
-          /* Menu anchor */
-          const anchor = Object.entries(groupedExam)
-            .map(([key, parts]) => {
-              let totalQuestions = 0;
-              for (const part of parts) {
-                totalQuestions += part.answers?.length || 0;
-              }
-
-              return {
-                key,
-                href: `#${key}`,
-                title: `${key} - ${totalQuestions} câu`,
-                children: parts.map((_, idx) => ({
-                  key: `${key}-p${idx + 1}`,
-                  href: `#${key}-p${idx + 1}`,
-                  title: `Part ${idx + 1}`,
-                })),
-              };
-            });
-
-          setTotalTime(+(new Date().getTime()) + durationCount * 60 * 1000);
-          setExamAnchor(anchor);
-          setExam(groupedExam);
-        });
+            setTotalTime(+(new Date().getTime()) + duration);
+            setExamAnchor(anchor);
+            setExam(groupedExam);
+          });
+      } catch (e) {
+        console.error(e);
+      }
     }
     return () => {
       enableBodyScroll(document.body);
@@ -118,90 +181,101 @@ const Exam = () => {
   }, []);
 
   return (
-    <Layout>
-      <Layout.Header style={headerStyle}>
-        <Flex
-          justify="space-between"
-          align="center"
-        >
-          <Logo />
-          <Countdown
-            value={totalTime}
-            onFinish={onTimeout}
-          />
-          <Flex gap="small">
-            <Button
-              icon={<SaveOutlined />}
-              onClick={saveExam}
-            >
-              Lưu bài
-            </Button>
-            <Button
-              type="primary"
-              icon={<CheckOutlined />}
-              onClick={finishExam}
-            >
-              Nộp bài
-            </Button>
+    <AuthProvider>
+      <Layout>
+        <Layout.Header style={headerStyle}>
+          <Flex
+            justify="space-between"
+            align="center"
+          >
+            <Logo />
+            <Countdown
+              value={totalTime}
+              onFinish={onTimeout}
+            />
+            <Flex gap="small">
+              <Button
+                type="primary"
+                icon={<CheckOutlined />}
+                loading={isLoading}
+                onClick={onFinish}
+              >
+                Nộp bài
+              </Button>
+            </Flex>
           </Flex>
-        </Flex>
-      </Layout.Header>
-      {exam && (
-        <Layout.Content style={contentStyle}>
-          <Row>
-            <Col span={21}>
-              {Object.entries(exam).map(([key, parts], idx) => (
-                <div id={key} key={idx}>
-                  {parts.map((part, pidx) => {
-                    switch (key) {
-                      case 'LISTENING':
-                        return (
-                          <ListeningPart
-                            id={`${key}-p${pidx + 1}`}
-                            key={pidx}
-                          />
-                        );
-                      case 'READING':
-                        return (
-                          <ReadingPart
-                            id={`${key}-p${pidx + 1}`}
-                            key={pidx}
-                          />
-                        );
-                      case 'WRITING':
-                        return (
-                          <WritingPart
-                            id={`${key}-p${pidx + 1}`}
-                            key={pidx}
-                          />
-                        );
-                      case 'SPEAKING':
-                        return (
-                          <SpeakingPart
-                            id={`${key}-p${pidx + 1}`}
-                            key={pidx}
-                          />
-                        );
-                      default:
-                        return null;
-                    }
-                  })}
+        </Layout.Header>
+        {exam && (
+          <Layout.Content style={contentStyle}>
+            <Row>
+              <Col span={21}>
+                {Object.entries(exam).map(([key, parts], idx) => (
+                  <div id={key} key={idx}>
+                    {parts.map((part, pidx) => {
+                      switch (key) {
+                        case 'LISTENING':
+                          return (
+                            <ListeningPart
+                              id={`${key}-p${pidx + 1}`}
+                              key={pidx}
+                              task={part.description}
+                              questions={part.questions}
+                              resource={part.resource}
+                              onAnswer={(payload) => saveAnswer(payload)}
+                            />
+                          );
+                        case 'READING':
+                          return (
+                            <ReadingPart
+                              id={`${key}-p${pidx + 1}`}
+                              key={pidx}
+                              task={part.description}
+                              questions={part.questions}
+                              resource={part.resource}
+                              onAnswer={(payload) => saveAnswer(payload)}
+                            />
+                          );
+                        case 'WRITING':
+                          return (
+                            <WritingPart
+                              id={`${key}-p${pidx + 1}`}
+                              key={pidx}
+                              task={part.description}
+                              questions={part.questions}
+                              onAnswer={(payload) => saveEssay(payload)}
+                            />
+                          );
+                        case 'SPEAKING':
+                          return (
+                            <SpeakingPart
+                              id={`${key}-p${pidx + 1}`}
+                              key={pidx}
+                              task={part.description}
+                              questions={part.questions}
+                              onAnswer={(payload) => saveRecord(payload)}
+                            />
+                          );
+                        default:
+                          return null;
+                      }
+                    })}
+                  </div>
+                ))}
+              </Col>
+              <Col span={3}>
+                <div className="padding_top_bottom_3 padding_left_right_1">
+                  <Anchor
+                    offsetTop={60}
+                    items={examAnchor}
+                  />
                 </div>
-              ))}
-            </Col>
-            <Col span={3}>
-              <div className="padding_top_bottom_3 padding_left_right_1">
-                <Anchor
-                  offsetTop={60}
-                  items={examAnchor}
-                />
-              </div>
-            </Col>
-          </Row>
-        </Layout.Content>
-      )}
-      {modalContext}
-    </Layout>
+              </Col>
+            </Row>
+          </Layout.Content>
+        )}
+        {modalContext}
+      </Layout>
+    </AuthProvider>
   );
 };
 

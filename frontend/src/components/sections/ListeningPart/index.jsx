@@ -1,12 +1,12 @@
 import { Flex, Splitter } from 'antd';
 import Question from '@/components/elements/Question';
-import htmlSample from '@/assets/data/htmlSample';
-import questionSample from '@/assets/data/questionSample';
 import style from './style.module.scss';
 
 const { Panel } = Splitter;
 
-const ListeningPart = ({ id }) => {
+const ListeningPart = ({
+  id, task, questions, resource, onAnswer,
+}) => {
   return (
     <Flex
       id={id}
@@ -18,7 +18,7 @@ const ListeningPart = ({ id }) => {
         <audio controls>
           <track kind="captions" />
           <source
-            src="/static/audio/dummy.mp3"
+            src={resource}
             type="audio/mp3"
           />
         </audio>
@@ -28,18 +28,21 @@ const ListeningPart = ({ id }) => {
           <Panel>
             <div
               className={style.content}
-              dangerouslySetInnerHTML={{ __html: htmlSample }}
+              dangerouslySetInnerHTML={{ __html: task }}
             />
           </Panel>
           <Panel>
             <div className={style.content}>
               <Flex vertical gap="middle">
-                {questionSample.map((question) => (
+                {questions.map((question) => (
                   <Question
                     key={question.id}
-                    title={question.title}
-                    order={question.order}
+                    title={question.description}
                     answers={question.answers}
+                    onCheck={(answer) => onAnswer({
+                      question_id: question.id,
+                      answer_id: answer.id,
+                    })}
                   />
                 ))}
               </Flex>

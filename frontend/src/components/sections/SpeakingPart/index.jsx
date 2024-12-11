@@ -1,21 +1,19 @@
 'use client';
 
-import { useState } from 'react';
 import { Flex, Splitter } from 'antd';
 import VoiceRecorder from '@/components/elements/VoiceRecorder';
-import htmlSample4 from '@/assets/data/htmlSample4';
 import style from './style.module.scss';
 
 const { Panel } = Splitter;
 
-const ReadingPart = ({ id }) => {
-  const [isCompleted, setIsCompleted] = useState();
-  const handleStart = () => {
-    console.log('start');
-  };
-  const handleStop = (recordedUrl) => {
-    console.log('stop', recordedUrl);
-    setIsCompleted(true);
+const ReadingPart = ({
+  id, task, questions, onAnswer,
+}) => {
+  const handleStop = (question, payload) => {
+    onAnswer({
+      question_id: question.id,
+      file: payload.file,
+    });
   };
 
   return (
@@ -30,17 +28,26 @@ const ReadingPart = ({ id }) => {
           <Panel defaultSize="50%">
             <div
               className={style.content}
-              dangerouslySetInnerHTML={{ __html: htmlSample4 }}
+              dangerouslySetInnerHTML={{ __html: task }}
             />
           </Panel>
           <Panel defaultSize="50%">
             <div className={style.content}>
-              <VoiceRecorder
-                disabled={isCompleted}
-                replay={false}
-                onStart={handleStart}
-                onStop={handleStop}
-              />
+              {questions.map((question) => (
+                <Flex
+                  vertical
+                  gap="middle"
+                  key={question.id}
+                  style={{ marginBottom: '30px' }}
+                >
+                  <div
+                    dangerouslySetInnerHTML={{ __html: question.description }}
+                  />
+                  <VoiceRecorder
+                    onStop={(payload) => handleStop(question, payload)}
+                  />
+                </Flex>
+              ))}
             </div>
           </Panel>
         </Splitter>
