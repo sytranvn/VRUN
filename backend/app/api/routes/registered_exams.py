@@ -14,7 +14,6 @@ from app.view_models import (
     AnswerIn,
     ExamFinished,
     ExamReadonly,
-    ExamSubmit,
     RegisteredExamPublic,
     RegisteredExamsPublic,
     EssayIn,
@@ -61,24 +60,24 @@ def read_exam_result(session: SessionDep,
         raise HTTPException(status_code=404, detail="Exam not found")
     if exam.status != CandidateExamStatus.ASSESSED:
         raise HTTPException(status_code=404, detail="Result not available")
-    score = sum(ans.answer.is_correct_answer for ans in exam.selected_answers)
-    essay_score = sum(essay.score or 0 for essay in exam.essays)
+    # PERF: this is slow
 
     return ExamFinished(**exam.model_dump(), score=score + essay_score)
 
 
 @router.post("/{id}/answers", response_model=List[AnswerIn])
 def add_answers(session: SessionDep,
-               current_user: CurrentUser,
-               answers_in: List[AnswerIn],
-               id: uuid.UUID) -> Any:
+                current_user: CurrentUser,
+                answers_in: List[AnswerIn],
+                id: uuid.UUID) -> Any:
     """
     Add an answer.
     """
     exam = session.get(CandidateExam, id)
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
-    answers = [CandidateExamAnswer(candidate_exam_id=exam.id, **a.model_dump()) for a in answers_in]
+    answers = [CandidateExamAnswer(
+        candidate_exam_id=exam.id, **a.model_dump()) for a in answers_in]
     try:
         for a in exam.selected_answers:
             session.delete(a)
@@ -122,34 +121,39 @@ def add_speaking_record(session: SessionDep,
         raise HTTPException(status_code=404, detail="Question not found")
 
     if question.question_group.skill not in (Skill.WRITING, Skill.SPEAKING):
-        raise HTTPException(status_code=400, detail="Not a writing or speaking question")
+        raise HTTPException(
+            status_code=400, detail="Not a writing or speaking question")
 
     if question.question_group.skill == Skill.SPEAKING:
         if file is None:
-            raise HTTPException(status_code=400, detail="Speaking essay must be audio")
+            raise HTTPException(
+                status_code=400, detail="Speaking essay must be audio")
         if file.content_type != "audio/mpeg":
-            raise HTTPException(status_code=400, detail="Invalid content type, please upload audio file.")
+            raise HTTPException(
+                status_code=400, detail="Invalid content type, please upload audio file.")
         _, fext = os.path.splitext(file.filename or "")
         if fext != ".mp3":
-            raise HTTPException(status_code=400, detail="Invalid file type, please upload mp3 file")
+            raise HTTPException(
+                status_code=400, detail="Invalid file type, please upload mp3 file")
         if file.size is None:
             raise HTTPException(status_code=400, detail="Invalid file size")
         if file.size > 100 * 2**20:
             raise HTTPException(status_code=400, detail="File too large.")
 
-        essay = CandidateExamEssay.model_validate(dict(**essay_in.model_dump()))
+        essay = CandidateExamEssay.model_validate(
+            dict(**essay_in.model_dump()))
         session.add(essay)
-        content, resource = upload_speaking_essay(minio, id, essay_in.question_id, file)
+        content, resource = upload_speaking_essay(
+            minio, id, essay_in.question_id, file)
         essay.content = content
         essay.resource = resource
     else:
         essay = CandidateExamEssay.model_validate(essay_in)
         session.add(essay)
-        
+
     session.refresh(exam)
 
     return exam
-
 
 
 def grade_exam(session: SessionDep, candidate_exam: CandidateExam):
@@ -175,27 +179,21 @@ def grade_exam(session: SessionDep, candidate_exam: CandidateExam):
     # update status
 
 
-@router.post("/{id}/submit", response_model=ExamReadonly)
+@router.post("/{id}/submit", response_model=CandidateExam)
 def submit_answer(session: SessionDep,
-                  current_user: CurrentUser,
                   id: uuid.UUID,
-                  exam_in: ExamSubmit,
                   background_tasks: BackgroundTasks) -> Any:
     """
-    Submit questions' answers of a skill.
+    Update exam as finished.
     """
     exam: CandidateExam | None = session.exec(
-        select(CandidateExam).where(CandidateExam.id == id)
+        select(CandidateExam)
+        .where(CandidateExam.id == id,
+               CandidateExam.status == CandidateExamStatus.STARTED)
     ).first()
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
-    parts = session.exec(
-        select(Part).where(
-            Part.question_group_id.in_([p.id for p in exam_in.question_groups]),  # type: ignore
-            Part.exam_id == exam.id
-        )
-    ).all()
-    exam.exam.parts = [Part(**part.model_dump()) for part in parts]
+    exam.status = CandidateExamStatus.FINISHED
     session.commit()
     session.refresh(exam)
     background_tasks.add_task(grade_exam, session, exam)

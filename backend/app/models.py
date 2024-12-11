@@ -48,6 +48,7 @@ class EssayStatus(StrEnum):
     SUBMITTED = "SUBMITTED"
     ASSESSED = "ASSESSED"
 
+
 class CandidateExamEssay(SQLModel, table=True):
     __tablename__ = "candiate_exam_essay"  # type: ignore
     id: uuid.UUID | None = Field(
@@ -56,7 +57,7 @@ class CandidateExamEssay(SQLModel, table=True):
         foreign_key="candidate_exam.id", nullable=False)
     question_id: uuid.UUID = Field(nullable=False, foreign_key="question.id")
     status: EssayStatus | None = Field(default=EssayStatus.SUBMITTED,
-                                        sa_column=Column(Enum(EssayStatus, native_enum=False)))
+                                       sa_column=Column(Enum(EssayStatus, native_enum=False)))
     content: str | None = Field(nullable=True)
     # link to voice record
     resource: str | None = Field(nullable=True)
@@ -90,6 +91,11 @@ class CandidateExam(BaseTable, SQLModel, table=True):
     end_time: datetime | None = Field(nullable=True)
     status: CandidateExamStatus = Field(default=CandidateExamStatus.SCHEDULED,
                                         sa_column=Column(Enum(CandidateExamStatus, native_enum=False)))
+    score: float | None = Field(nullable=True)
+    listening_score: float | None = Field(nullable=True)
+    reading_score: float | None = Field(nullable=True)
+    speaking_score: float | None = Field(nullable=True)
+    writing_score: float | None = Field(nullable=True)
     exam: "Exam" = Relationship()
     candidate: "User" = Relationship(back_populates="exams")
     selected_answers: List[CandidateExamAnswer] = Relationship()
