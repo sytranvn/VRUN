@@ -133,7 +133,7 @@ const Index = () => {
               <Flex gap="middle" vertical>
                 <Text>
                   <strong>Bước 4:</strong> Nếu không nghe được giọng nói của mình
-                  vui lòng thông báo với giám thị trông thi
+                  vui lòng thông báo với giám thị coi thi
                 </Text>
               </Flex>
             </Flex>
@@ -167,7 +167,7 @@ const Index = () => {
           onClick={startExam}
           loading={loading}
         >
-          Bắt đầu thi - {JSON.stringify(loading)}
+          Bắt đầu thi
         </Button>
       </Flex>
       {modalContext}

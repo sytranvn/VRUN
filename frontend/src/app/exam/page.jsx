@@ -99,10 +99,10 @@ const Exam = () => {
       }
 
       Cookies.set(EXAM_KEY, '');
-      router.push('/finish');
+      router.push(`/finish/${resp.id}`);
     } catch (e) {
       modal.error({
-        title: 'Không thể nộp bài, vui lòng liên hệ giám khảo coi thi.',
+        title: 'Không thể nộp bài, vui lòng liên hệ giám thị coi thi.',
       });
     } finally {
       setIsLoading(false);
@@ -126,70 +126,66 @@ const Exam = () => {
   useEffect(() => {
     disableBodyScroll(document.body);
 
-    if (!exam) {
-      try {
-        const examKey = Cookies.get(EXAM_KEY);
-        if (!examKey) {
-          return modal.error({
-            title: 'Bạn chưa đăng ký bài thi nào.',
-            onOk() {
-              router.push('/');
-            },
-          });
-        }
+    const examKey = Cookies.get(EXAM_KEY);
+    if (!examKey) {
+      router.push('/');
 
-        setId(examKey);
+      return () => enableBodyScroll(document.body);
+    }
 
-        CandidateService.readRegisteredExam({ id: examKey })
-          .then((data) => {
-            setId(data.id);
-            let duration = 0;
+    try {
+      setId(examKey);
 
-            /* Group parts */
-            const groupedExam = (data.exam?.parts || [])
-              .reduce((current, obj) => {
-                if (!Array.isArray(current[obj.question_group.skill])) {
-                  current[obj.question_group.skill] = [];
-                }
+      CandidateService.readRegisteredExam({ id: examKey })
+        .then((data) => {
+          setId(data.id);
+          let duration = 0;
 
-                current[obj.question_group.skill].push({
-                  ...obj.question_group,
-                  order: obj.order,
-                });
+          /* Group parts */
+          const groupedExam = (data.exam?.parts || [])
+            .reduce((current, obj) => {
+              if (!Array.isArray(current[obj.question_group.skill])) {
+                current[obj.question_group.skill] = [];
+              }
 
-                duration += obj.question_group.duration * 60 * 1000;
-
-                return current;
-              }, {});
-
-            /* Menu anchor */
-            const anchor = Object.entries(groupedExam)
-              .map(([key, parts]) => {
-                let totalQuestions = 0;
-                for (const part of parts) {
-                  totalQuestions += part.questions?.length || 0;
-                }
-
-                return {
-                  key,
-                  href: `#${key}`,
-                  title: `${key} - ${totalQuestions} câu`,
-                  children: parts.map((_, idx) => ({
-                    key: `${key}-p${idx + 1}`,
-                    href: `#${key}-p${idx + 1}`,
-                    title: `Part ${idx + 1}`,
-                  })),
-                };
+              current[obj.question_group.skill].push({
+                ...obj.question_group,
+                order: obj.order,
               });
 
-            setTotalTime(+(new Date().getTime()) + duration);
-            setExamAnchor(anchor);
-            setExam(groupedExam);
-          });
-      } catch (e) {
-        console.error(e);
-      }
+              duration += obj.question_group.duration * 60 * 1000;
+
+              return current;
+            }, {});
+
+          /* Menu anchor */
+          const anchor = Object.entries(groupedExam)
+            .map(([key, parts]) => {
+              let totalQuestions = 0;
+              for (const part of parts) {
+                totalQuestions += part.questions?.length || 0;
+              }
+
+              return {
+                key,
+                href: `#${key}`,
+                title: `${key} - ${totalQuestions} câu`,
+                children: parts.map((_, idx) => ({
+                  key: `${key}-p${idx + 1}`,
+                  href: `#${key}-p${idx + 1}`,
+                  title: `Part ${idx + 1}`,
+                })),
+              };
+            });
+
+          setTotalTime(+(new Date().getTime()) + duration);
+          setExamAnchor(anchor);
+          setExam(groupedExam);
+        });
+    } catch (e) {
+      console.error(e);
     }
+
     return () => {
       enableBodyScroll(document.body);
     };
