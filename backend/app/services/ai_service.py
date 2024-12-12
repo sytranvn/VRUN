@@ -101,7 +101,6 @@ async def transcribe_file(audio_file: Any) -> str:
     audio = speech.RecognitionAudio(content=audio_content)
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.ENCODING_UNSPECIFIED,
-        sample_rate_hertz=16000,
         language_code="en-US",
         enable_automatic_punctuation=True,
     )

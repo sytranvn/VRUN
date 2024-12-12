@@ -214,12 +214,12 @@ def add_speaking_record(session: SessionDep,
 
     if question.question_group.skill != Skill.SPEAKING:
         raise HTTPException(status_code=400, detail="Not a speaking question")
-    allowed_mimes = ("audio/mpeg", "audio/wav")
-    if file.content_type != allowed_mimes:
+    allowed_mimes = ("audio/wav", "audio/x-wav")
+    if file.content_type not in allowed_mimes:
         raise HTTPException(
             status_code=400, detail=f"Invalid content type, please upload audio file.")
     _, fext = os.path.splitext(file.filename or "")
-    allowed_types = (".mp3", ".wav")
+    allowed_types = (".wav",)
     if fext.lower() not in allowed_types:
         raise HTTPException(
             status_code=400, detail=f"Invalid file type, please upload {allowed_types} file")
