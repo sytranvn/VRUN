@@ -5,6 +5,7 @@ import controlflow as cf
 from controlflow.defaults import get_model
 from google.cloud import speech
 from google.oauth2.service_account import Credentials
+from proto.marshal.marshal import RepeatedComposite
 from pydantic import BaseModel
 
 from app.core.config import settings
@@ -42,7 +43,6 @@ class AssessmentResult(BaseModel):
 
 
 writing_assessor = cf.Agent(
-    # model=settings.AI_MODEL,
     name="WritingAssessor",
     instructions="""
     You are an English examiner. Evaluate the following English language essay, focusing on the following criteria:
@@ -53,17 +53,31 @@ writing_assessor = cf.Agent(
     Please provide specific feedback on each criterion.
     """,
 )
-scoring_assessor = cf.Agent(
-    # model=settings.AI_MODEL,
-    name="WritingAssessor",
+
+
+speaking_assessor = cf.Agent(
+    name="SpeakingAssessor",
     instructions="""
-    Please grade essay score by following weights.
+    You are an English examiner. Evaluate the following English language speech audio file, focusing on the following criteria:
+    - Content: Relevance, coherence, and depth of ideas.
+    - Organization: Logical flow, paragraph structure, and use of transitions.
+    - Language Use: Vocabulary, grammar, and sentence structure.
+    - Mechanics: Punctuation, spelling, and capitalization.
+    Please provide specific feedback on each criterion.
+    """,
+)
+
+scoring_assessor = cf.Agent(
+    name="ScoringAssessor",
+    instructions="""
+    You are an English examiner. An other agent has given assessments on speech or essay. Please use those assessments to grade 
+    essay or speech score.
     - Content: weight 20%
     - Argumentation: weight 20%
     - Organization: weight 20%
     - Language use: weight 20%
     - Mechnics: weight 20%
-    Please provide a score for each criterion and an overall score for the essay.
+    Please provide a score for each criterion and an overall score.
     """,
 )
 
@@ -82,13 +96,14 @@ async def transcribe_file(audio_file: Any) -> str:
         credentials = None
     client = speech.SpeechAsyncClient(credentials=credentials)
 
-    audio_content = await audio_file.read()
+    audio_content = audio_file.read()
 
     audio = speech.RecognitionAudio(content=audio_content)
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.ENCODING_UNSPECIFIED,
-        sample_rate_hertz=128000,
+        sample_rate_hertz=16000,
         language_code="en-US",
+        enable_automatic_punctuation=True,
     )
 
     response = await client.recognize(config=config, audio=audio)
@@ -96,36 +111,9 @@ async def transcribe_file(audio_file: Any) -> str:
     # Each result is for a consecutive portion of the audio. Iterate through
     # them to get the transcripts for the entire audio file.
     text = ""
-    async for result in response.results:
+    for result in response.results:
         text += result.alternatives[0].transcript
     return text
-
-
-speaking_assessor = cf.Agent(
-    # model=settings.AI_MODEL,
-    name="SpeakingAssessor",
-    instructions="""
-    You are an English examiner. Evaluate the following English language record essay audio file, focusing on the following criteria:
-    - Content: Relevance, coherence, and depth of ideas.
-    - Organization: Logical flow, paragraph structure, and use of transitions.
-    - Language Use: Vocabulary, grammar, and sentence structure.
-    - Mechanics: Punctuation, spelling, and capitalization.
-    Please provide specific feedback on each criterion.
-    """,
-)
-scoring_assessor = cf.Agent(
-    # model=settings.AI_MODEL,
-    name="SpeakingAssessor",
-    instructions="""
-    Please grade essay score by following weights.
-    - Content: weight 20%
-    - Argumentation: weight 20%
-    - Organization: weight 20%
-    - Language use: weight 20%
-    - Mechnics: weight 20%
-    Please provide a score for each criterion and an overall score for the essay.
-    """,
-)
 
 
 @cf.flow
@@ -152,15 +140,15 @@ def assess_writing_essay(description: str, question: str, essay: str) -> Assessm
 
 
 @cf.flow
-def assess_speaking_essay(description: str, question: str, transcribed_essay) -> AssessmentResult:
+def assess_speaking_essay(description: str, question: str, transcribed_speech: str) -> AssessmentResult:
     assessment = speaking_assessor.run(
-        'Asset the following transcribed essay in response to the description and folowing question',
+        'Asset the following transcribed speech in response to the description and following question',
         result_type=Assessment,
-        context=dict(description=description, question=question, transcribed_essay=transcribed_essay)
+        context=dict(description=description, question=question, transcribed_essay=transcribed_speech)
     )
 
     score = scoring_assessor.run(
-        "Grade essay with score from 0 to 10 for provided assessment",
+        "Grade speech with score from 0 to 10 for provided assessment",
         context=dict(assessment=assessment),
         result_type=AssessmentScore
     )

@@ -37,6 +37,7 @@ import type {
 	Body_candidate_add_speaking_record,
 	CandidateExamPublic,
 	CandidateExamRegister,
+	CandidateExamStatus,
 	EssayIn,
 	EssayPublic,
 	ExamFinished,
@@ -1090,6 +1091,11 @@ export type TDataRegisterExam = {
 	id: string;
 	requestBody: CandidateExamRegister;
 };
+export type TDataReadRegisteredExams = {
+	limit?: number;
+	skip?: number;
+	status?: CandidateExamStatus | null;
+};
 export type TDataReadRegisteredExam = {
 	id: string;
 };
@@ -1189,10 +1195,21 @@ export class CandidateService {
 	 * @returns RegisteredExamsPublic Successful Response
 	 * @throws ApiError
 	 */
-	public static readRegisteredExams(): CancelablePromise<RegisteredExamsPublic> {
+	public static readRegisteredExams(
+		data: TDataReadRegisteredExams = {},
+	): CancelablePromise<RegisteredExamsPublic> {
+		const { limit = 100, skip = 0, status } = data;
 		return __request(OpenAPI, {
 			method: "GET",
 			url: "/api/v1/registered_exams/",
+			query: {
+				status,
+				skip,
+				limit,
+			},
+			errors: {
+				422: `Validation Error`,
+			},
 		});
 	}
 

@@ -4,10 +4,10 @@ import uuid
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, UploadFile
 from sqlalchemy.exc import IntegrityError
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func
 
 from app.api.deps import MinioDep, SessionDep, CurrentUser, get_minio_client
-from app.models import CandidateExam, CandidateExamAnswer, CandidateExamEssay, CandidateExamStatus, Question, Skill
+from app.models import CandidateExam, CandidateExamAnswer, CandidateExamEssay, CandidateExamStatus, EssayStatus, Question, Skill
 from app.services.ai_service import AssessmentResult, assess_speaking_essay, assess_writing_essay, transcribe_file
 from app.view_models import (
     AnswerIn,
@@ -26,11 +26,28 @@ router = APIRouter()
 def read_registered_exams(
     session: SessionDep,
     current_user: CurrentUser,
+    status: CandidateExamStatus | None = None,
+    skip: int = 0, limit: int = 100
 ) -> Any:
     """
     Retrieve exams.
     """
-    return RegisteredExamsPublic(data=current_user.exams, count=len(current_user.exams))  # type: ignore
+
+    count_statement = (select(func.count())
+                       .select_from(CandidateExam)
+                       .where(CandidateExam.candidate_id == current_user.id))
+    statement = (select(CandidateExam)
+                 .where(CandidateExam.candidate_id == current_user.id)
+                 .offset(skip).limit(limit))
+
+    if status:
+        count_statement = count_statement.where(CandidateExam.status == status)
+        statement = statement.where(CandidateExam.status == status)
+
+    count = session.exec(count_statement).one()
+    exams = session.exec(statement).all()
+
+    return RegisteredExamsPublic(data=exams, count=count)  # type: ignore
 
 
 @router.get("/{id}", response_model=RegisteredExamPublic)
@@ -89,29 +106,25 @@ def add_answers(session: SessionDep,
     return exam.selected_answers
 
 
-async def upload_speaking_essay(candidate_exam_id: uuid.UUID, essay, file):
-    minio = get_minio_client()
-    text = await transcribe_file(file)
-    _, fext = os.path.splitext(file.filename or "")
-    stored_file_name = f"{candidate_exam_id}/{essay.id}{fext}"
-    minio.put_object("vrun",
-                     stored_file_name,
-                     file.file, file.size or -1)
+async def rate_speaking_essay(essay):
     from app.core.db import engine
 
     with Session(engine) as session:
         essay = session.get(CandidateExamEssay, essay.id)
-        essay.resource = stored_file_name
+        # TODO: minio file to transcribe_file
+        file = get_minio_client().get_object("vrun", essay.resource or "")
+        text = await transcribe_file(file)
         essay.content = text
         result: AssessmentResult = assess_speaking_essay(
             description=essay.question.question_group.description,
             question=essay.question.description,
-            essay=essay.content)
+            transcribed_speech=essay.content)
         essay.score = result.score.summary
         essay.score_info = result.score.model_dump()
 
         essay.assessment = result.assessment.summary
         essay.assessment_info = result.assessment.model_dump()
+        essay.status = EssayStatus.ASSESSED
 
         session.add(essay)
         session.commit()
@@ -131,6 +144,7 @@ def rate_writing_essay(essay):
 
         essay.assessment = result.assessment.summary
         essay.assessment_info = result.assessment.model_dump()
+        essay.status = EssayStatus.ASSESSED
 
         session.add(essay)
         session.commit()
@@ -200,49 +214,38 @@ def add_speaking_record(session: SessionDep,
 
     if question.question_group.skill != Skill.SPEAKING:
         raise HTTPException(status_code=400, detail="Not a speaking question")
-    if file.content_type != "audio/mpeg":
+    allowed_mimes = ("audio/mpeg", "audio/wav")
+    if file.content_type != allowed_mimes:
         raise HTTPException(
-            status_code=400, detail="Invalid content type, please upload audio file.")
+            status_code=400, detail=f"Invalid content type, please upload audio file.")
     _, fext = os.path.splitext(file.filename or "")
-    if fext != ".mp3":
+    allowed_types = (".mp3", ".wav")
+    if fext.lower() not in allowed_types:
         raise HTTPException(
-            status_code=400, detail="Invalid file type, please upload mp3 file")
+            status_code=400, detail=f"Invalid file type, please upload {allowed_types} file")
     if file.size is None:
         raise HTTPException(status_code=400, detail="Invalid file size")
     if file.size > 100 * 2**20:
         raise HTTPException(status_code=400, detail="File too large.")
-
-    essay = CandidateExamEssay(candidate_exam_id=id, question_id=question_id,
-                               content=None, resource=None, score=None, assessment=None)
+    essay = session.exec(
+        select(CandidateExamEssay)
+        .where(CandidateExamEssay.question_id == question.id, CandidateExamEssay.candidate_exam_id == id)
+    ).first()
+    if not essay:
+        essay = CandidateExamEssay(
+            id=uuid.uuid4(), candidate_exam_id=id, question_id=question_id)
+    _, fext = os.path.splitext(file.filename or "")
+    stored_file_name = f"{id}/{essay.id}{fext}"
+    essay.resource = stored_file_name
     session.add(essay)
     session.commit()
     session.refresh(essay)
-    background_tasks.add_task(upload_speaking_essay, id, essay, file)
+    minio.put_object("vrun",
+                     stored_file_name,
+                     file.file, file.size or -1)
+    background_tasks.add_task(rate_speaking_essay, essay)
 
     return essay
-
-
-def grade_exam(session: SessionDep, candidate_exam: CandidateExam):
-    for essay in candidate_exam.essays:
-        # TODO: status between user added essay but not completed processing
-        if essay.question.question_group.skill == Skill.SPEAKING:
-            result: AssessmentResult = assess_speaking_essay(
-                essay.question.description,
-                essay.content
-            )
-        else:
-            result: AssessmentResult = assess_writing_essay(
-                essay.question.description,
-                essay.content
-            )
-        essay.score = result.score.summary
-        essay.assetsment = str(result.assessment)
-
-    # final score
-
-    session.commit()
-    candidate_exam.status = CandidateExamStatus.FINISHED
-    # update status
 
 
 @router.post("/{id}/submit", response_model=CandidateExamPublic)
@@ -262,5 +265,4 @@ def submit_answer(session: SessionDep,
     exam.status = CandidateExamStatus.FINISHED
     session.commit()
     session.refresh(exam)
-    background_tasks.add_task(grade_exam, session, exam)
     return exam
