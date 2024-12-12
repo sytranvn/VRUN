@@ -9,7 +9,7 @@ import { Button, Flex } from 'antd';
 import { AudioOutlined, PlayCircleOutlined } from '@ant-design/icons';
 
 const VoiceRecorder = ({
-  disabled, onStart, onStop, replay = true,
+  disabled, onStart, onStop, fileName, replay = true,
 }) => {
   const containerRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -34,7 +34,7 @@ const VoiceRecorder = ({
   );
   record?.on('record-end', (blob) => {
     const recordUrl = URL.createObjectURL(blob);
-    const recordFile = new File([blob], new Date().getTime().toString());
+    const recordFile = new File([blob], fileName);
     setAudioUrl(recordUrl);
     if (blob.size > 0) {
       onStop && onStop({ url: recordUrl, file: recordFile });

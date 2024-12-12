@@ -12,12 +12,11 @@ import WritingPart from '@/components/sections/WritingPart';
 import SpeakingPart from '@/components/sections/SpeakingPart';
 import disableBodyScroll from '@/utils/scroll/disableBodyScroll';
 import enableBodyScroll from '@/utils/scroll/enableBodyScroll';
-import { useSelector } from 'react-redux';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import getApiService from '@/services';
-import dayjs from 'dayjs';
-import examSample from '@/assets/data/examSample.json';
 import AuthProvider from '@/components/sections/Provider/AuthProvider';
+import { EXAM_KEY } from '@/utils/constants';
+import Cookies from 'js-cookie';
 
 const { Countdown } = Statistic;
 
@@ -39,8 +38,6 @@ const Exam = () => {
   const { CandidateService } = getApiService();
   const [modal, modalContext] = Modal.useModal();
   const router = useRouter();
-  const params = useParams();
-  const userInfo = useSelector((state) => state.user.userInfo);
   const [id, setId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [exam, setExam] = useState(null);
@@ -66,48 +63,63 @@ const Exam = () => {
   };
 
   const submitExam = async () => {
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
 
-    await Promise.all([
-      CandidateService.addAnswers({
-        id,
-        requestBody: submitQuestions,
-      }),
-      submitEssays.forEach((essay) => {
-        CandidateService.addSpeakingRecord({
-          id,
-          requestBody: essay,
-        });
-      }),
-      submitRecords.forEach((record) => {
-        CandidateService.addSpeakingRecord({
-          id,
-          requestBody: record,
-        });
-      }),
-    ]);
+      console.log({
+        submitQuestions,
+        submitEssays,
+        submitRecords,
+      });
 
-    await submitAnswer({ id: xxx });
-    setIsLoading(false);
+      await Promise.all([
+        CandidateService.addAnswers({
+          id,
+          requestBody: submitQuestions,
+        }),
+        submitEssays.forEach((essay) => {
+          CandidateService.addWritingRecord({
+            id,
+            requestBody: essay,
+          });
+        }),
+        submitRecords.forEach((record) => {
+          CandidateService.addSpeakingRecord({
+            id,
+            questionId: record.question_id,
+            formData: { file: record.file },
+          });
+        }),
+      ]);
+
+      const resp = await submitAnswer({ id });
+
+      if (!resp.id) {
+        throw new Error();
+      }
+
+      Cookies.set(EXAM_KEY, '');
+      router.push('/finish');
+    } catch (e) {
+      modal.error({
+        title: 'Không thể nộp bài, vui lòng liên hệ giám khảo coi thi.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const onFinish = () => {
     modal.confirm({
       title: 'Bạn có chắc muốn kết thúc bài thi?',
-      async onOk() {
-        await submitExam();
-        // router.push('/finish');
-      },
+      onOk: submitExam,
     });
   };
 
   const onTimeout = () => {
     modal.warning({
       title: 'Hết giờ làm bài.',
-      async onOk() {
-        await submitExam();
-        // router.push('/finish');
-      },
+      onOk: submitExam,
     });
   };
 
@@ -116,16 +128,19 @@ const Exam = () => {
 
     if (!exam) {
       try {
-        CandidateService.registerExam({
-          id,
-          requestBody: {
-            start_time: dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
-          },
-        });
+        const examKey = Cookies.get(EXAM_KEY);
+        if (!examKey) {
+          return modal.error({
+            title: 'Bạn chưa đăng ký bài thi nào.',
+            onOk() {
+              router.push('/');
+            },
+          });
+        }
 
-        /* TODO */
-        Promise.resolve(examSample[0])
-        // CandidateService.readRegisteredExam({ id: userInfo.id })
+        setId(examKey);
+
+        CandidateService.readRegisteredExam({ id: examKey })
           .then((data) => {
             setId(data.id);
             let duration = 0;

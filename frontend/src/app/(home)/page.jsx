@@ -1,22 +1,49 @@
 'use client';
 
 import {
-  Button, Row, Col, Typography, Flex, Card,
+  Button, Row, Col, Typography, Flex, Card, Modal,
 } from 'antd';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import VoiceRecorder from '@/components/elements/VoiceRecorder';
 import getApiService from '@/services';
 import { useEffect, useState } from 'react';
 import randomInt from '@/utils/math/randomInt';
+import Cookies from 'js-cookie';
+import dayjs from 'dayjs';
+import { EXAM_KEY } from '@/utils/constants';
 
 const { Text } = Typography;
 
 const Index = () => {
   const { CandidateService } = getApiService();
   const [examId, setExamId] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [modal, modalContext] = Modal.useModal();
+
+  const startExam = () => {
+    setLoading(true);
+    const examKey = Cookies.get(EXAM_KEY);
+    if (!examKey) {
+      CandidateService.registerExam({
+        id: examId,
+        requestBody: {
+          start_time: dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
+        },
+      }).then((data) => {
+        Cookies.set(EXAM_KEY, data.id);
+        setLoading(false);
+        router.push('/exam');
+      });
+    } else {
+      /* Already registered */
+      router.push('/exam');
+    }
+  };
 
   useEffect(() => {
     if (!examId) {
+      setLoading(true);
       CandidateService.readAvailableExams({
         limit: 100,
         skip: 0,
@@ -26,13 +53,22 @@ const Index = () => {
 
         if (randomExam) {
           setExamId(randomExam.id);
+        } else {
+          modal.error({
+            title: 'Không tìm thấy bài thi phù hợp.',
+          });
         }
+
+        setLoading(false);
       });
     }
   }, []);
 
   return (
-    <div>
+    <Flex
+      gap="middle"
+      vertical
+    >
       <Row
         gutter={[30, 30]}
         align="stretch"
@@ -124,17 +160,18 @@ const Index = () => {
         </Col>
       </Row>
       <Flex justify="center">
-        <Link href={`/exam/${examId}`}>
-          <Button
-            size="large"
-            type="primary"
-            disabled={!examId}
-          >
-            Bắt đầu thi
-          </Button>
-        </Link>
+        <Button
+          size="large"
+          type="primary"
+          disabled={!examId}
+          onClick={startExam}
+          loading={loading}
+        >
+          Bắt đầu thi - {JSON.stringify(loading)}
+        </Button>
       </Flex>
-    </div>
+      {modalContext}
+    </Flex>
   );
 };
 

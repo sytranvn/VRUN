@@ -1,4 +1,5 @@
 export const TOKEN_KEY = 'vlxx';
+export const EXAM_KEY = 'exam-vlxx';
 
 export const ROLE_OPTIONS = [
   { label: 'Học viên', value: 'CANDIDATE' },
@@ -24,3 +25,5 @@ export const STATUS_OPTIONS = [
   { label: 'Nháp', value: 'DRAFT' },
   { label: 'Đã duyệt', value: 'ACTIVE' },
 ];
+
+export const RECORD_EXT = '.wav';

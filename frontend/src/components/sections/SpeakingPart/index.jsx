@@ -2,11 +2,12 @@
 
 import { Flex, Splitter } from 'antd';
 import VoiceRecorder from '@/components/elements/VoiceRecorder';
+import { RECORD_EXT } from '@/utils/constants';
 import style from './style.module.scss';
 
 const { Panel } = Splitter;
 
-const ReadingPart = ({
+const SpeakingPart = ({
   id, task, questions, onAnswer,
 }) => {
   const handleStop = (question, payload) => {
@@ -45,6 +46,7 @@ const ReadingPart = ({
                   />
                   <VoiceRecorder
                     onStop={(payload) => handleStop(question, payload)}
+                    fileName={`${question.id}${RECORD_EXT}`}
                   />
                 </Flex>
               ))}
@@ -56,4 +58,4 @@ const ReadingPart = ({
   );
 };
 
-export default ReadingPart;
+export default SpeakingPart;
