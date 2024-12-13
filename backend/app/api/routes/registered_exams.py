@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 import os
 from typing import Any, List
 import uuid
@@ -263,6 +264,7 @@ def submit_answer(session: SessionDep,
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
     exam.status = CandidateExamStatus.FINISHED
+    exam.end_time = datetime.now(tz=timezone.utc)
     session.commit()
     session.refresh(exam)
     return exam

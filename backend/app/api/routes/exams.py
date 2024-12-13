@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Any
 import uuid
 
@@ -76,6 +77,8 @@ def register_exam(
             exam_id=exam.id,
             **register_in.model_dump()
         )
+    if register_in.start_time <= datetime.now(tz=timezone.utc):
+        registered_exam.status = CandidateExamStatus.STARTED
     session.add(registered_exam)
     session.commit()
     session.refresh(current_user)
