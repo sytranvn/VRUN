@@ -92,7 +92,7 @@ const Exam = () => {
         }),
       ]);
 
-      const resp = await submitAnswer({ id });
+      const resp = await CandidateService.submitAnswer({ id });
 
       if (!resp.id) {
         throw new Error();
