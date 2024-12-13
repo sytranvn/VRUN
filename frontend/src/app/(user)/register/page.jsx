@@ -1,12 +1,14 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import {
   Flex, Form, Input, Button, Typography, Modal,
 } from 'antd';
 import Link from 'next/link';
 import getApiService from '@/services';
 import { useRouter } from 'next/navigation';
-import AuthProvider from '@/components/sections/Provider/AuthProvider';
+import Cookies from 'js-cookie';
+import { TOKEN_KEY } from '@/utils/constants';
 
 const { Item } = Form;
 const { Password } = Input;
@@ -16,6 +18,7 @@ const Register = () => {
   const [modal, modalContext] = Modal.useModal();
   const router = useRouter();
   const { MeService } = getApiService();
+  const [isRegisterAllowed, setIsRegisterAllowed] = useState(false);
   const [form] = Form.useForm();
 
   const RULES = {
@@ -81,87 +84,100 @@ const Register = () => {
       });
   };
 
+  useEffect(() => {
+    const token = Cookies.get(TOKEN_KEY);
+    if (token) {
+      router.push('/');
+    } else {
+      setIsRegisterAllowed(true);
+    }
+  }, []);
+
   return (
-    <AuthProvider onReady={() => router.push('/')}>
-      <Title level={3} style={{ textAlign: 'center' }}>
-        Đăng ký
-      </Title>
-      <Form
-        form={form}
-        onFinish={handleSubmit}
-        style={{ width: '100vw', maxWidth: '500px' }}
-        labelCol={{ span: 8, style: { textAlign: 'left' }}}
-        scrollToFirstError
-      >
-        <Flex vertical gap="small">
-          <Item
-            name="full_name"
-            label="Họ và tên"
-            rules={RULES.full_name}
-            hasFeedback
+    <div>
+      {isRegisterAllowed && (
+        <>
+          <Title level={3} style={{ textAlign: 'center' }}>
+            Đăng ký
+          </Title>
+          <Form
+            form={form}
+            onFinish={handleSubmit}
+            style={{ width: '100vw', maxWidth: '500px' }}
+            labelCol={{ span: 8, style: { textAlign: 'left' }}}
+            scrollToFirstError
           >
-            <Input
-              autoComplete="fullname"
-              size="large"
-            />
-          </Item>
-          <Item
-            name="email"
-            label="Email"
-            rules={RULES.email}
-            hasFeedback
-          >
-            <Input
-              autoComplete="email"
-              size="large"
-            />
-          </Item>
-          <Item
-            name="password"
-            label="Mật khẩu"
-            rules={RULES.password}
-            hasFeedback
-          >
-            <Password
-              autoComplete="new-password"
-              size="large"
-            />
-          </Item>
-          <Item
-            name="retypePassword"
-            label="Nhập lại mật khẩu"
-            rules={RULES.retypePassword}
-            hasFeedback
-          >
-            <Password
-              autoComplete="new-password"
-              size="large"
-            />
-          </Item>
-          <Item>
-            <Flex
-              justify="center"
-              vertical
-              align="center"
-              gap="middle"
-            >
-              <Button
-                htmlType="submit"
-                type="primary"
-                style={{ width: '100%' }}
-                size="large"
+            <Flex vertical gap="small">
+              <Item
+                name="full_name"
+                label="Họ và tên"
+                rules={RULES.full_name}
+                hasFeedback
               >
-                Đăng ký
-              </Button>
-              <Link href="/login" style={{ textAlign: 'right' }}>
-                Đăng nhập
-              </Link>
+                <Input
+                  autoComplete="fullname"
+                  size="large"
+                />
+              </Item>
+              <Item
+                name="email"
+                label="Email"
+                rules={RULES.email}
+                hasFeedback
+              >
+                <Input
+                  autoComplete="email"
+                  size="large"
+                />
+              </Item>
+              <Item
+                name="password"
+                label="Mật khẩu"
+                rules={RULES.password}
+                hasFeedback
+              >
+                <Password
+                  autoComplete="new-password"
+                  size="large"
+                />
+              </Item>
+              <Item
+                name="retypePassword"
+                label="Nhập lại mật khẩu"
+                rules={RULES.retypePassword}
+                hasFeedback
+              >
+                <Password
+                  autoComplete="new-password"
+                  size="large"
+                />
+              </Item>
+              <Item>
+                <Flex
+                  justify="center"
+                  vertical
+                  align="center"
+                  gap="middle"
+                >
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    style={{ width: '100%' }}
+                    size="large"
+                  >
+                    Đăng ký
+                  </Button>
+                  <Link href="/login" style={{ textAlign: 'right' }}>
+                    Đăng nhập
+                  </Link>
+                </Flex>
+              </Item>
             </Flex>
-          </Item>
-        </Flex>
-      </Form>
-      {modalContext}
-    </AuthProvider>
+          </Form>
+          {modalContext}
+        </>
+      )}
+    </div>
   );
 };
 

@@ -9,7 +9,6 @@ import getApiService from '@/services';
 import { useEffect, useState } from 'react';
 import randomInt from '@/utils/math/randomInt';
 import Cookies from 'js-cookie';
-import dayjs from 'dayjs';
 import { EXAM_KEY } from '@/utils/constants';
 
 const { Text } = Typography;

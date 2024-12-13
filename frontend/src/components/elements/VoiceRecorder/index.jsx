@@ -34,7 +34,7 @@ const VoiceRecorder = ({
   );
   record?.on('record-end', (blob) => {
     const recordUrl = URL.createObjectURL(blob);
-    const recordFile = new File([blob], fileName);
+    const recordFile = new File([blob], fileName, { type: 'audio/wav' });
     setAudioUrl(recordUrl);
     if (blob.size > 0) {
       onStop && onStop({ url: recordUrl, file: recordFile });
