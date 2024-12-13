@@ -11,6 +11,7 @@ from .models import (
     AnswerBase,
     CandidateExam,
     CandidateExamStatus,
+    EssayType,
     ExamBase,
     ExamStatus,
     QuestionBase,
@@ -199,6 +200,7 @@ class CandidateExamEssayResult(SQLModel):
     id: uuid.UUID
     question_id: uuid.UUID
     content: str | None
+    essay_type: EssayType
     # link to voice record
     resource: str | None
     score: float | None

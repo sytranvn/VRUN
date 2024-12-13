@@ -1,5 +1,9 @@
 services:
-
+  workflow:
+    image: prefecthq/prefect
+    ports:
+      - 8440:8440
+    profiles: [core,backend]
   db:
     image: database:latest
     build:
