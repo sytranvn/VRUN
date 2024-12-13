@@ -165,6 +165,10 @@ export const $CandidateExamEssayResult = {
 			],
 			isRequired: true,
 		},
+		essay_type: {
+			type: "EssayType",
+			isRequired: true,
+		},
 		resource: {
 			type: "any-of",
 			contains: [
@@ -379,6 +383,11 @@ export const $EssayPublic = {
 			isRequired: true,
 		},
 	},
+} as const;
+
+export const $EssayType = {
+	type: "Enum",
+	enum: ["SPEAKING", "WRITING"],
 } as const;
 
 export const $ExamCreate = {

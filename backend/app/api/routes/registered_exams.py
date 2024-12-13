@@ -8,7 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select, func
 
 from app.api.deps import MinioDep, SessionDep, CurrentUser, get_minio_client
-from app.models import CandidateExam, CandidateExamAnswer, CandidateExamEssay, CandidateExamStatus, EssayStatus, Question, Skill
+from app.models import CandidateExam, CandidateExamAnswer, CandidateExamEssay, CandidateExamStatus, EssayStatus, EssayType, Question, Skill
 from app.services.ai_service import AssessmentResult, assess_speaking_essay, assess_writing_essay, transcribe_file
 from app.view_models import (
     AnswerIn,
@@ -78,9 +78,8 @@ def read_exam_result(session: SessionDep,
         raise HTTPException(status_code=404, detail="Exam not found")
     if exam.status != CandidateExamStatus.ASSESSED:
         raise HTTPException(status_code=404, detail="Result not available")
-    # PERF: this is slow
 
-    return ExamFinished(**exam.model_dump(), score=score + essay_score)
+    return exam
 
 
 @router.post("/{id}/answers", response_model=List[AnswerIn])
@@ -181,8 +180,11 @@ def add_writing_record(session: SessionDep,
     if essay:
         essay.sqlmodel_update(essay.model_dump(), update=essay_in.model_dump())
     else:
-        essay = CandidateExamEssay.model_validate(
-            dict(candidate_exam_id=id, **essay_in.model_dump()))
+        essay = CandidateExamEssay(
+            candidate_exam_id=id, essay_type=EssayType.WRITING,
+            question_id=essay_in.question_id,
+            content=essay_in.content
+        )
         session.add(essay)
     session.commit()
     session.refresh(essay)
@@ -234,7 +236,8 @@ def add_speaking_record(session: SessionDep,
     ).first()
     if not essay:
         essay = CandidateExamEssay(
-            id=uuid.uuid4(), candidate_exam_id=id, question_id=question_id)
+            id=uuid.uuid4(), essay_type=EssayType.SPEAKING,
+            candidate_exam_id=id, question_id=question_id)
     _, fext = os.path.splitext(file.filename or "")
     stored_file_name = f"{id}/{essay.id}{fext}"
     essay.resource = stored_file_name
@@ -265,6 +268,9 @@ def submit_answer(session: SessionDep,
         raise HTTPException(status_code=404, detail="Exam not found")
     exam.status = CandidateExamStatus.FINISHED
     exam.end_time = datetime.now(tz=timezone.utc)
+    essays = {
+        'speaking' if essay.resource else 'writing': 1 for essay in exam.essays
+    }
     session.commit()
     session.refresh(exam)
     return exam

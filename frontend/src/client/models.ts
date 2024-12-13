@@ -41,6 +41,7 @@ export type CandidateExamEssayResult = {
 	id: string;
 	question_id: string;
 	content: string | null;
+	essay_type: EssayType;
 	resource: string | null;
 	score: number | null;
 	assessment: string | null;
@@ -83,6 +84,11 @@ export type EssayPublic = {
 	content: string | null;
 	resource: string | null;
 };
+
+export enum EssayType {
+	SPEAKING = "SPEAKING",
+	WRITING = "WRITING",
+}
 
 export type ExamCreate = {
 	title: string;

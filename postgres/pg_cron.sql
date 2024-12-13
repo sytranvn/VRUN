@@ -64,7 +64,7 @@ from (
 	join candidate_exam ce 
 	on ce.exam_id = e.id and ce.status  = 'FINISHED'
 	and ce.listening_score is null and ce.reading_score is null  
-	left join candiate_exam_answer cea
+	left join candidate_exam_answer cea
 	on cea.answer_id  = a.id
 	group by ce.id, qg.skill 
 	order  by qg.skill
