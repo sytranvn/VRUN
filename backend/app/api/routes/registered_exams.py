@@ -268,9 +268,12 @@ def submit_answer(session: SessionDep,
         raise HTTPException(status_code=404, detail="Exam not found")
     exam.status = CandidateExamStatus.FINISHED
     exam.end_time = datetime.now(tz=timezone.utc)
-    essays = {
-        'speaking' if essay.resource else 'writing': 1 for essay in exam.essays
-    }
+    essays = [essay.essay_type for essay in exam.essays]
+    count = {t: essays.count(t) for t in essays}
+    if not count.get(EssayType.SPEAKING):
+        exam.speaking_score = 0.0
+    if not count.get(EssayType.WRITING):
+        exam.writing_score = 0.0
     session.commit()
     session.refresh(exam)
     return exam

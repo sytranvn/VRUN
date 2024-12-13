@@ -40,6 +40,8 @@ services:
         condition: service_healthy
     env_file:
       - .env
+    volumes:
+      - ./credentials:/credentials
     environment:
       - DOMAIN=${DOMAIN}
       - FRONTEND_HOST=${FRONTEND_HOST?Variable not set}
