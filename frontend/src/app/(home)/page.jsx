@@ -28,7 +28,6 @@ const Index = () => {
       CandidateService.registerExam({
         id: examId,
         requestBody: {
-          start_time: dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
         },
       }).then((data) => {
         Cookies.set(EXAM_KEY, data.id);
