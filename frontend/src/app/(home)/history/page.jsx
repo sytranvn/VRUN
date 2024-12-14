@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import {
   Table, Typography, Button, Empty,
 } from 'antd';
+import { RedoOutlined } from '@ant-design/icons';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import getApiService from '@/services';
@@ -14,7 +15,7 @@ const { Title } = Typography;
 
 const History = () => {
   const { CandidateService } = getApiService();
-  const [list, loadList] = usePagination(CandidateService.readRegisteredExams);
+  const [list, loadList, reset] = usePagination(CandidateService.readRegisteredExams);
 
   useEffect(() => {
     if (!list.isFullyLoaded && !list.length) {
@@ -58,7 +59,7 @@ const History = () => {
       align: 'center',
       width: '200px',
       render(text) {
-        return dayjs(text).format('DD-MM-YYYY');
+        return text ? dayjs(text).format('DD-MM-YYYY HH:mm:ss') : '-';
       },
     },
     {
@@ -66,7 +67,13 @@ const History = () => {
       dataIndex: 'settings',
       width: '150px',
       align: 'center',
-      render: (_, record) => (
+      render: (_, record) => (['STARTED', 'SCHEDULED'].includes(record.status) ? (
+        <Link href="/exam">
+          <Button type="primary">
+            Tiếp tục thi
+          </Button>
+        </Link>
+      ) : (
         <Link href={`/history/${record.id}`}>
           <Button
             type="primary"
@@ -75,14 +82,20 @@ const History = () => {
             Xem lại
           </Button>
         </Link>
-      ),
+      )),
     },
   ];
 
   return (
     <>
       <Title level={3} style={{ textAlign: 'center' }}>
-        Lịch sử thi
+        Lịch sử thi&nbsp;
+        <Button
+          onClick={() => reset()}
+          icon={<RedoOutlined rotate={270} />}
+          type="text"
+          title="Nhấn refresh nếu bài thi của bạn chưa có điểm"
+        />
       </Title>
       <Table
         dataSource={list.records}

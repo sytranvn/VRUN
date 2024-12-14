@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
-  Flex, Splitter, Input, Typography,
+  Flex, Splitter, Input, Typography, Card,
 } from 'antd';
 import countWords from '@/utils/math/countWords';
 import style from './style.module.scss';
@@ -11,8 +11,8 @@ const { Panel } = Splitter;
 const { TextArea } = Input;
 const { Text } = Typography;
 
-const ReadingPart = ({
-  id, task, questions, onAnswer,
+const WritingPart = ({
+  id, task, questions = [], hasResult, onAnswer,
 }) => {
   const [text, setText] = useState();
   const [wordCount, setWordCount] = useState(0);
@@ -24,11 +24,17 @@ const ReadingPart = ({
   };
 
   const saveEssay = (question) => {
-    onAnswer({
+    onAnswer && onAnswer({
       question_id: question.id,
       content: text,
     });
   };
+
+  useEffect(() => {
+    if (hasResult && questions[0]) {
+      setText(questions[0].selected?.content);
+    }
+  }, []);
 
   return (
     <Flex
@@ -37,23 +43,27 @@ const ReadingPart = ({
       align="center"
       className={style.section}
     >
-      <div className={style.exam}>
+      <Card className={style.exam}>
         <Splitter resizable>
           <Panel defaultSize="50%">
             <div
               className={style.content}
+              style={{ height: hasResult ? 'auto' : '' }}
               dangerouslySetInnerHTML={{ __html: task }}
             />
           </Panel>
           <Panel defaultSize="50%">
-            <div className={style.content}>
+            <div
+              className={style.content}
+              style={{ height: hasResult ? 'auto' : '' }}
+            >
               <Flex
                 vertical
                 gap="small"
                 style={{ marginBottom: '20px' }}
               >
                 <Text>
-                  {questions[0].description}
+                  {questions[0]?.description}
                 </Text>
                 <TextArea
                   placeholder="Điền vào đây"
@@ -61,6 +71,7 @@ const ReadingPart = ({
                   style={{ minHeight: '300px' }}
                   autoSize
                   value={text}
+                  readOnly={hasResult}
                   onChange={handleChange}
                   onBlur={() => saveEssay(questions[0])}
                 />
@@ -69,13 +80,18 @@ const ReadingPart = ({
                     Word Count: {wordCount}
                   </Text>
                 </div>
+                {hasResult && (
+                  <Text mark>
+                    <strong>Đánh giá:</strong> {questions[0].selected?.assessment || 'Không có'}
+                  </Text>
+                )}
               </Flex>
             </div>
           </Panel>
         </Splitter>
-      </div>
+      </Card>
     </Flex>
   );
 };
 
-export default ReadingPart;
+export default WritingPart;

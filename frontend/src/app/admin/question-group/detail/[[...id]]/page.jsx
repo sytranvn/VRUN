@@ -89,10 +89,7 @@ const AdminQuestionGroupDetail = () => {
   const loadQuestionGroup = (groupId) => {
     AdminService.readQuestionGroup({ id: groupId })
       .then((resp) => {
-        form.setFieldsValue({
-          ...resp,
-          status: STATUS_OPTIONS[0].value,
-        });
+        form.setFieldsValue(resp);
       });
   };
 

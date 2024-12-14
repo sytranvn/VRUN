@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Flex, Splitter } from 'antd';
+import { Flex, Splitter, Card } from 'antd';
 import Question from '@/components/elements/Question';
 import shuffle from '@/utils/math/shuffle';
 import style from './style.module.scss';
@@ -9,9 +9,9 @@ import style from './style.module.scss';
 const { Panel } = Splitter;
 
 const ListeningPart = ({
-  id, task, questions, resource, onAnswer,
+  id, task, questions = [], hasResult, resource, onAnswer,
 }) => {
-  const displayQuestions = useMemo(() => shuffle(questions || []), [questions]);
+  const displayQuestions = useMemo(() => shuffle(questions), [questions]);
 
   return (
     <Flex
@@ -29,16 +29,20 @@ const ListeningPart = ({
           />
         </audio>
       </div>
-      <div className={style.exam}>
+      <Card className={style.exam}>
         <Splitter resizable>
           <Panel>
             <div
               className={style.content}
+              style={{ height: hasResult ? 'auto' : '' }}
               dangerouslySetInnerHTML={{ __html: task }}
             />
           </Panel>
           <Panel>
-            <div className={style.content}>
+            <div
+              className={style.content}
+              style={{ height: hasResult ? 'auto' : '' }}
+            >
               <Flex vertical gap="middle">
                 {displayQuestions.map((question, index) => (
                   <Question
@@ -46,7 +50,8 @@ const ListeningPart = ({
                     title={question.description}
                     answers={question.answers}
                     order={index + 1}
-                    onCheck={(answer) => onAnswer({
+                    selected={question.selected}
+                    onCheck={(answer) => onAnswer && onAnswer({
                       question_id: question.id,
                       answer_id: answer.id,
                     })}
@@ -56,7 +61,7 @@ const ListeningPart = ({
             </div>
           </Panel>
         </Splitter>
-      </div>
+      </Card>
     </Flex>
   );
 };

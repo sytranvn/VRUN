@@ -1,17 +1,20 @@
 'use client';
 
-import { Flex, Splitter } from 'antd';
+import {
+  Flex, Splitter, Typography, Card,
+} from 'antd';
 import VoiceRecorder from '@/components/elements/VoiceRecorder';
 import { RECORD_EXT } from '@/utils/constants';
 import style from './style.module.scss';
 
 const { Panel } = Splitter;
+const { Text } = Typography;
 
 const SpeakingPart = ({
-  id, task, questions, onAnswer,
+  id, task, questions = [], hasResult, onAnswer,
 }) => {
   const handleStop = (question, payload) => {
-    onAnswer({
+    onAnswer && onAnswer({
       question_id: question.id,
       file: payload.file,
     });
@@ -24,16 +27,20 @@ const SpeakingPart = ({
       align="center"
       className={style.section}
     >
-      <div className={style.exam}>
+      <Card className={style.exam}>
         <Splitter resizable>
           <Panel defaultSize="50%">
             <div
               className={style.content}
+              style={{ height: hasResult ? 'auto' : '' }}
               dangerouslySetInnerHTML={{ __html: task }}
             />
           </Panel>
           <Panel defaultSize="50%">
-            <div className={style.content}>
+            <div
+              className={style.content}
+              style={{ height: hasResult ? 'auto' : '' }}
+            >
               {questions.map((question) => (
                 <Flex
                   vertical
@@ -44,16 +51,28 @@ const SpeakingPart = ({
                   <div
                     dangerouslySetInnerHTML={{ __html: question.description }}
                   />
-                  <VoiceRecorder
-                    onStop={(payload) => handleStop(question, payload)}
-                    fileName={`${question.id}${RECORD_EXT}`}
-                  />
+                  {hasResult ? (
+                    <>
+                      <Text mark>
+                        <strong>Nội dung đã ghi âm:</strong> {question.selected?.content || 'Không có'}
+                      </Text>
+                      <Text mark>
+                        <strong>Đánh giá:</strong> {question.selected?.assessment || 'Không có'}
+                      </Text>
+                    </>
+                  ) : (
+                    <VoiceRecorder
+                      onStop={(payload) => handleStop(question, payload)}
+                      fileName={`${question.id}${RECORD_EXT}`}
+                    />
+                  )}
+
                 </Flex>
               ))}
             </div>
           </Panel>
         </Splitter>
-      </div>
+      </Card>
     </Flex>
   );
 };

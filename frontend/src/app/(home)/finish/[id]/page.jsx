@@ -17,7 +17,10 @@ const Finish = () => {
   useEffect(() => {
     CandidateService.readRegisteredExam({ id })
       .then((data) => {
-        setIsCompleted(data.status == 'FINISHED');
+        if (!['FINISHED', 'ASSESSED'].includes(data.status)) {
+          throw new Error();
+        }
+        setIsCompleted(true);
       })
       .catch((e) => router.push('/'));
   }, []);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { Flex, Splitter } from 'antd';
+import { Flex, Splitter, Card } from 'antd';
 import Question from '@/components/elements/Question';
 import shuffle from '@/utils/math/shuffle';
 import style from './style.module.scss';
@@ -9,9 +9,9 @@ import style from './style.module.scss';
 const { Panel } = Splitter;
 
 const ReadingPart = ({
-  id, task, questions, onAnswer,
+  id, task, questions = [], hasResult, onAnswer,
 }) => {
-  const displayQuestions = useMemo(() => shuffle(questions || []), [questions]);
+  const displayQuestions = useMemo(() => shuffle(questions), [questions]);
 
   return (
     <Flex
@@ -20,16 +20,20 @@ const ReadingPart = ({
       align="center"
       className={style.section}
     >
-      <div className={style.exam}>
+      <Card className={style.exam}>
         <Splitter resizable>
           <Panel defaultSize="50%">
             <div
               className={style.content}
+              style={{ height: hasResult ? 'auto' : '' }}
               dangerouslySetInnerHTML={{ __html: task }}
             />
           </Panel>
           <Panel defaultSize="50%">
-            <div className={style.content}>
+            <div
+              className={style.content}
+              style={{ height: hasResult ? 'auto' : '' }}
+            >
               <Flex vertical gap="middle">
                 {displayQuestions.map((question, index) => (
                   <Question
@@ -37,7 +41,8 @@ const ReadingPart = ({
                     title={question.description}
                     answers={question.answers}
                     order={index + 1}
-                    onCheck={(answer) => onAnswer({
+                    selected={question.selected}
+                    onCheck={(answer) => onAnswer && onAnswer({
                       question_id: question.id,
                       answer_id: answer.id,
                     })}
@@ -47,7 +52,7 @@ const ReadingPart = ({
             </div>
           </Panel>
         </Splitter>
-      </div>
+      </Card>
     </Flex>
   );
 };
