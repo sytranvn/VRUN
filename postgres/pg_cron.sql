@@ -37,7 +37,8 @@ $$
 
 SELECT cron.schedule(
 'score_exam',
-'* * * * *',
+-- '* * * * *',
+'20 seconds',
 $$
 
 update candidate_exam ce

@@ -1,10 +1,7 @@
 services:
-  workflow:
-    image: prefecthq/prefect
-    ports:
-      - 8440:8440
-    profiles: [core,backend]
   db:
+    # networks:
+    #   - vrun_network
     image: database:latest
     build:
       context: ./postgres
@@ -31,13 +28,11 @@ services:
   backend:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     restart: always
-    networks:
-      - default
+    # networks:
+    #   - vrun_network
     depends_on:
-      db:
-        condition: service_healthy
-      minio:
-        condition: service_healthy
+      - db
+      - minio
     env_file:
       - .env
     volumes:
@@ -74,6 +69,8 @@ services:
     profiles: [backend]
 
   minio:
+    # networks:
+    #   - vrun_network
     image: quay.io/minio/minio
     restart: always
     command: server /data --console-address ":9001"
@@ -83,10 +80,15 @@ services:
       - MINIO_ACCESS_KEY=${MINIO_KEY?Variable not set}
       - MINIO_SECRET_KEY=${MINIO_SECRET?Variable not set}
     ports:
-      - 9000:9000
+      # - 9000:9000
       - 9001:9001
     healthcheck:
       test: curl -f http://localhost:9001
     profiles: [core,backend]
 volumes:
   app-db-data:
+
+
+# networks:
+#   vrun_network:
+#     driver: bridge
