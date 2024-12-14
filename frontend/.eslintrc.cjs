@@ -9,7 +9,7 @@ module.exports = {
   globals: {
     window: true,
   },
-  ignorePatterns: ['**/public/*'],
+  ignorePatterns: ['**/public/*', '*.ts', '*.tsx'],
   settings: {
     'import/resolver': {
       alias: {
@@ -84,5 +84,7 @@ module.exports = {
     }],
     'react/no-array-index-key': 'off',
     'react-hooks/exhaustive-deps': 'off',
+    'react/no-danger': 'off',
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
   },
 };

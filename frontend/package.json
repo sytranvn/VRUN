@@ -32,6 +32,7 @@
     "react-froala-wysiwyg": "^4.3.0",
     "react-redux": "^9.1.2",
     "sass": "^1.80.3",
+    "typescript": "^5.7.2",
     "wavesurfer.js": "^7.8.8"
   }
 }
