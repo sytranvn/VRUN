@@ -119,15 +119,19 @@ async def rate_speaking_essay(essay):
         file = get_minio_client().get_object("vrun", essay.resource or "")
         text = await transcribe_file(file)
         essay.content = text
-        result: AssessmentResult = assess_speaking_essay(
-            description=essay.question.question_group.description,
-            question=essay.question.description,
-            transcribed_speech=essay.content)
-        essay.score = result.score.summary
-        essay.score_info = result.score.model_dump()
+        try:
+            result: AssessmentResult = assess_speaking_essay(
+                description=essay.question.question_group.description,
+                question=essay.question.description,
+                transcribed_speech=essay.content)
+            essay.score = result.score.summary
+            essay.score_info = result.score.model_dump()
 
-        essay.assessment = result.assessment.summary
-        essay.assessment_info = result.assessment.model_dump()
+            essay.assessment = result.assessment.summary
+            essay.assessment_info = result.assessment.model_dump()
+        except Exception:
+            essay.score = 0
+        
         essay.status = EssayStatus.ASSESSED
 
         session.add(essay)
@@ -139,15 +143,18 @@ def rate_writing_essay(essay):
 
     with Session(engine) as session:
         essay = session.get(CandidateExamEssay, essay.id)
-        result: AssessmentResult = assess_writing_essay(
-            description=essay.question.question_group.description,
-            question=essay.question.description,
-            essay=essay.content)
-        essay.score = result.score.summary
-        essay.score_info = result.score.model_dump()
+        try:
+            result: AssessmentResult = assess_writing_essay(
+                description=essay.question.question_group.description,
+                question=essay.question.description,
+                essay=essay.content)
+            essay.score = result.score.summary
+            essay.score_info = result.score.model_dump()
 
-        essay.assessment = result.assessment.summary
-        essay.assessment_info = result.assessment.model_dump()
+            essay.assessment = result.assessment.summary
+            essay.assessment_info = result.assessment.model_dump()
+        except Exception:
+            essay.score = 0
         essay.status = EssayStatus.ASSESSED
 
         session.add(essay)
