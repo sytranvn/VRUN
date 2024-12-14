@@ -22,10 +22,10 @@ const HistoryDetail = () => {
 
   useEffect(() => {
     if (!exam) {
-      CandidateService.readAvailableExam({ id })
+      CandidateService.readExamResult({ id })
         .then((data) => {
           /* Group parts */
-          const groupedExam = (data.parts || [])
+          const groupedExam = (data.exam?.parts || [])
             .reduce((current, obj) => {
               if (!Array.isArray(current[obj.question_group.skill])) {
                 current[obj.question_group.skill] = [];
@@ -44,7 +44,7 @@ const HistoryDetail = () => {
             .map(([key, parts]) => {
               let totalQuestions = 0;
               for (const part of parts) {
-                totalQuestions += part.answers?.length || 0;
+                totalQuestions += part.questions?.length || 0;
               }
 
               return {

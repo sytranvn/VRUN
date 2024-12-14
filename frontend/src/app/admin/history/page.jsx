@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import {
-  Card, Flex, Button, Table, Modal,
+  Card, Flex, Button, Table, Modal, Empty,
 } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 
@@ -72,6 +72,9 @@ const AdminExamHistoryManagement = () => {
           bordered
           rowKey="id"
           scroll={{ x: 'max-content' }}
+          locale={{
+            emptyText: <Empty description="Không tìm thấy bài thi nào" />,
+          }}
         />
       </Flex>
       {modalContext}

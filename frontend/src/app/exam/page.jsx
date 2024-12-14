@@ -16,6 +16,8 @@ import { useRouter } from 'next/navigation';
 import getApiService from '@/services';
 import AuthProvider from '@/components/sections/Provider/AuthProvider';
 import { EXAM_KEY } from '@/utils/constants';
+import dayjs from 'dayjs';
+import countWords from '@/utils/math/countWords';
 import Cookies from 'js-cookie';
 
 const { Countdown } = Statistic;
@@ -32,6 +34,11 @@ const headerStyle = {
 const contentStyle = {
   minHeight: 'calc(100vh - 64px)',
   paddingBottom: '80px',
+};
+
+const anchorStyle = {
+  maxHeight: 'calc(100vh - 64px)',
+  overflow: 'auto',
 };
 
 const Exam = () => {
@@ -64,6 +71,12 @@ const Exam = () => {
 
   const submitExam = async () => {
     try {
+      if (submitEssays.some((essay) => countWords(essay.content) < 120)) {
+        return modal.error({
+          title: 'Phần viết Writing Task bắt buộc tối thiểu 120 từ.',
+        });
+      }
+
       setIsLoading(true);
 
       console.log({
@@ -77,14 +90,14 @@ const Exam = () => {
           id,
           requestBody: submitQuestions,
         }),
-        submitEssays.forEach((essay) => {
-          CandidateService.addWritingRecord({
+        ...submitEssays.map((essay) => {
+          return CandidateService.addWritingRecord({
             id,
             requestBody: essay,
           });
         }),
-        submitRecords.forEach((record) => {
-          CandidateService.addSpeakingRecord({
+        ...submitRecords.map((record) => {
+          return CandidateService.addSpeakingRecord({
             id,
             questionId: record.question_id,
             formData: { file: record.file },
@@ -139,7 +152,7 @@ const Exam = () => {
       CandidateService.readRegisteredExam({ id: examKey })
         .then((data) => {
           setId(data.id);
-          let duration = 0;
+          let duration = dayjs(data.start_time).toDate().getTime();
 
           /* Group parts */
           const groupedExam = (data.exam?.parts || [])
@@ -178,7 +191,7 @@ const Exam = () => {
               };
             });
 
-          setTotalTime(+(new Date().getTime()) + duration);
+          setTotalTime(duration);
           setExamAnchor(anchor);
           setExam(groupedExam);
         });
@@ -274,7 +287,10 @@ const Exam = () => {
                 ))}
               </Col>
               <Col span={3}>
-                <div className="padding_top_bottom_3 padding_left_right_1">
+                <div
+                  className="padding_top_bottom_3 padding_left_right_1"
+                  style={anchorStyle}
+                >
                   <Anchor
                     offsetTop={60}
                     items={examAnchor}

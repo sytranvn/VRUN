@@ -3,6 +3,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from fastapi.exceptions import ValidationException
+from sqlmodel import select
 
 from app.api.deps import SessionDep
 from app.models import Answer, Question, QuestionGroup
@@ -74,6 +75,8 @@ def create_question(
     return question
 
 
+# TODO: sort answers
+# sort questions
 @router.put("/{id}", response_model=QuestionPublic)
 def update_question(
     *,
@@ -89,8 +92,18 @@ def update_question(
     if not question:
         raise HTTPException(status_code=404, detail="Question not found")
     update_dict = question_in.model_dump(exclude_unset=True)
+    answers = update_dict.pop('answers')
     question.sqlmodel_update(update_dict)
     session.add(question)
+    if answers:
+        for ans in answers:
+            if ans.get("id"):
+                old_ans = session.exec(
+                    select(Answer).where(Answer.id == ans["id"])
+                ).first()
+                old_ans.sqlmodel_update(ans)
+            else:
+                session.add(Answer(**ans, question_id=question.id))
     session.commit()
     session.refresh(question)
     return question

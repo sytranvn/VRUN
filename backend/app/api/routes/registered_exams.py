@@ -34,12 +34,16 @@ def read_registered_exams(
     Retrieve exams.
     """
 
-    count_statement = (select(func.count())
-                       .select_from(CandidateExam)
-                       .where(CandidateExam.candidate_id == current_user.id))
-    statement = (select(CandidateExam)
-                 .where(CandidateExam.candidate_id == current_user.id)
-                 .offset(skip).limit(limit))
+    count_statement = (
+        select(func.count())
+        .select_from(CandidateExam)
+        .where(CandidateExam.candidate_id == current_user.id)
+    )
+    statement = (
+        select(CandidateExam)
+        .where(CandidateExam.candidate_id == current_user.id)
+        .order_by(CandidateExam.created_time.desc())  # type: ignore
+        .offset(skip).limit(limit))
 
     if status:
         count_statement = count_statement.where(CandidateExam.status == status)

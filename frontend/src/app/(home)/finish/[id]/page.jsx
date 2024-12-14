@@ -15,9 +15,9 @@ const Finish = () => {
   const id = params.id;
 
   useEffect(() => {
-    CandidateService.readExamResult({ id })
+    CandidateService.readRegisteredExam({ id })
       .then((data) => {
-        setIsCompleted(!!data.id);
+        setIsCompleted(data.status == 'FINISHED');
       })
       .catch((e) => router.push('/'));
   }, []);
@@ -28,10 +28,10 @@ const Finish = () => {
         <Result
           status="success"
           title="Chúc mừng bạn đã hoàn thành bài thi"
-          subTitle="Bạn làm như cc."
+          subTitle="Kết quả sẽ được cập nhật trong một vài phút nữa."
           extra={[
             <Flex key="finish" justify="center" gap="middle">
-              <Link href={`/history/${id}`} key="history">
+              <Link href="/history" key="history">
                 <Button
                   icon={<HistoryOutlined />}
                   size="large"

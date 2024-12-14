@@ -30,7 +30,10 @@ def read_question_groups(
     Retrieve question groups.
     """
 
-    count_statement = select(func.count()).select_from(QuestionGroup)
+    count_statement = (
+        select(func.count())
+        .select_from(QuestionGroup)
+    )
     filters = []
     if skill:
         filters.append(QuestionGroup.skill == skill)
@@ -40,7 +43,7 @@ def read_question_groups(
     count_statement = count_statement.where(*filters)
     count = session.exec(count_statement).one()
 
-    statement = select(QuestionGroup).where(*filters).offset(skip).limit(limit)
+    statement = select(QuestionGroup).where(*filters).offset(skip).limit(limit).order_by(QuestionGroup.created_time.desc())  # type: ignore
     question_groups = session.exec(statement).all()
 
     return QuestionGroupsPublic(data=question_groups, count=count)  # type: ignore

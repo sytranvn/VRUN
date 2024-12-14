@@ -1,5 +1,9 @@
+'use client';
+
+import { useMemo } from 'react';
 import { Flex, Splitter } from 'antd';
 import Question from '@/components/elements/Question';
+import shuffle from '@/utils/math/shuffle';
 import style from './style.module.scss';
 
 const { Panel } = Splitter;
@@ -7,6 +11,8 @@ const { Panel } = Splitter;
 const ListeningPart = ({
   id, task, questions, resource, onAnswer,
 }) => {
+  const displayQuestions = useMemo(() => shuffle(questions || []), [questions]);
+
   return (
     <Flex
       id={id}
@@ -34,11 +40,12 @@ const ListeningPart = ({
           <Panel>
             <div className={style.content}>
               <Flex vertical gap="middle">
-                {questions.map((question) => (
+                {displayQuestions.map((question, index) => (
                   <Question
                     key={question.id}
                     title={question.description}
                     answers={question.answers}
+                    order={index + 1}
                     onCheck={(answer) => onAnswer({
                       question_id: question.id,
                       answer_id: answer.id,

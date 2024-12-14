@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Table, Typography, Button } from 'antd';
+import {
+  Table, Typography, Button, Empty,
+} from 'antd';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 import getApiService from '@/services';
@@ -22,6 +24,15 @@ const History = () => {
 
   const COLUMN_CONFIG = [
     {
+      key: 'exam',
+      dataIndex: 'exam',
+      title: 'Đề thi',
+      align: 'center',
+      render(exam) {
+        return exam.title;
+      },
+    },
+    {
       key: 'status',
       dataIndex: 'status',
       title: 'Trạng thái',
@@ -35,8 +46,9 @@ const History = () => {
       dataIndex: 'start_time',
       title: 'Giờ làm bài',
       align: 'center',
+      width: '200px',
       render(text) {
-        return dayjs(text).format('DD-MM-YYYY');
+        return dayjs(text).format('DD-MM-YYYY HH:mm:ss');
       },
     },
     {
@@ -44,6 +56,7 @@ const History = () => {
       dataIndex: 'end_time',
       title: 'Giờ nộp bài',
       align: 'center',
+      width: '200px',
       render(text) {
         return dayjs(text).format('DD-MM-YYYY');
       },
@@ -55,7 +68,10 @@ const History = () => {
       align: 'center',
       render: (_, record) => (
         <Link href={`/history/${record.id}`}>
-          <Button type="primary">
+          <Button
+            type="primary"
+            disabled={record.status != 'ASSESSED'}
+          >
             Xem lại
           </Button>
         </Link>
@@ -80,6 +96,9 @@ const History = () => {
         bordered
         rowKey="id"
         scroll={{ x: 'max-content' }}
+        locale={{
+          emptyText: <Empty description="Không tìm thấy bài thi nào" />,
+        }}
       />
     </>
   );

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import {
-  Card, Flex, Button, Table, Modal,
+  Card, Flex, Button, Table, Modal, Empty,
 } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import Link from 'next/link';
@@ -103,6 +103,9 @@ const AdminExamManagement = () => {
           bordered
           rowKey="id"
           scroll={{ x: 'max-content' }}
+          locale={{
+            emptyText: <Empty description="Không tìm thấy bài thi nào" />,
+          }}
         />
       </Flex>
       {modalContext}

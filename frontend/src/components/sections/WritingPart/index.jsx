@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   Flex, Splitter, Input, Typography,
 } from 'antd';
+import countWords from '@/utils/math/countWords';
 import style from './style.module.scss';
 
 const { Panel } = Splitter;
@@ -19,12 +20,7 @@ const ReadingPart = ({
   const handleChange = (event) => {
     const value = event.target.value;
     setText(value);
-
-    if (value) {
-      setWordCount(value.split(/[\n\r]/g).join(' ').split(/[\s]/g).filter(Boolean).length);
-    } else {
-      setWordCount(0);
-    }
+    setWordCount(value ? countWords(value) : 0);
   };
 
   const saveEssay = (question) => {

@@ -1,14 +1,18 @@
 'use client';
 
+import { useMemo, useState } from 'react';
 import {
   Flex, Typography, Space, Radio,
 } from 'antd';
-import { useState } from 'react';
+import shuffle from '@/utils/math/shuffle';
 
 const { Title } = Typography;
 
-const Question = ({ title, answers, onCheck }) => {
+const Question = ({
+  title, answers, order, onCheck,
+}) => {
   const [value, setValue] = useState('');
+  const displayAnswers = useMemo(() => shuffle(answers || []), [answers]);
 
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -19,13 +23,13 @@ const Question = ({ title, answers, onCheck }) => {
   return (
     <Flex vertical gap="small">
       <Title level={5}>
-        {title}
+        {order}. {title}
       </Title>
       <Radio.Group value={value} onChange={handleChange}>
         <Space direction="vertical">
-          {answers.map((ans, index) => (
+          {displayAnswers.map((ans, index) => (
             <Radio value={ans.id} key={index}>
-              {ans.description}
+              {String.fromCharCode(65 + index)}. {ans.description}
             </Radio>
           ))}
         </Space>

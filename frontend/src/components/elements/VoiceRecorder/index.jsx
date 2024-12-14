@@ -72,6 +72,7 @@ const VoiceRecorder = ({
           icon={<AudioOutlined />}
           type="primary"
           size="large"
+          danger={isRecording}
           onClick={startRecord}
           disabled={disabled}
         >

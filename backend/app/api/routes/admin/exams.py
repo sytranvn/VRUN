@@ -6,7 +6,7 @@ from sqlmodel import col, func, select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.models import Exam, Part, QuestionGroup
-from app.view_models import ExamCreate, ExamPublic, ExamUpdate, ExamsPublic, Message, ExamQuestionGroupCreate, PartCreate
+from app.view_models import ExamCreate, ExamPublic, ExamUpdate, ExamsPublic, Message, PartCreate
 
 router = APIRouter()
 
@@ -24,7 +24,12 @@ def read_exams(
 
     count_statement = select(func.count()).select_from(Exam)
     count = session.exec(count_statement).one()
-    statement = select(Exam).offset(skip).limit(limit)
+    statement = (
+        select(Exam)
+        .offset(skip)
+        .limit(limit)
+        .order_by(Exam.created_time.desc())  # type: ignore
+    )
     exams = session.exec(statement).all()
 
     return ExamsPublic(data=exams, count=count)  # type: ignore

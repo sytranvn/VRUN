@@ -247,8 +247,6 @@ class ExamsReadonly(SQLModel):
 
 
 class QuestionGroupCreate(QuestionGroupBase):
-    pass
-
     @field_validator('description')
     @classmethod
     def safe_html(cls, v: str):
@@ -264,6 +262,7 @@ class QuestionGroupUpdate(QuestionGroupBase):
 class QuestionGroupPublic(QuestionGroupBase):
     id: uuid.UUID
     questions: List["QuestionPublic"]
+    status: QuestionStatusEnum | None
 
     @field_serializer('resource')
     def presign_url(self, v: str, _info: SerializationInfo):
@@ -309,8 +308,8 @@ class QuestionCreate(QuestionBase):
 
 
 class QuestionUpdate(QuestionBase):
-    id: uuid.UUID | None
     description: str | None  # type: ignore
+    answers: List["AnswerUpdate"] | None = None
 
 
 class QuestionPublic(QuestionBase):
@@ -342,8 +341,8 @@ class AnswerCreate(AnswerBase):
 
 
 class AnswerUpdate(AnswerBase):
-    id: uuid.UUID
-    description: str | None  # type: ignore
+    id: uuid.UUID | None = None
+    description: str | None = None  # type: ignore
     is_correct_answer: bool
 
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Table } from 'antd';
+import { Table, Empty } from 'antd';
 import Link from 'next/link';
 import getApiService from '@/services';
 import usePagination from '@/hooks/usePagniation';
@@ -79,6 +79,9 @@ const QuestionGroupList = ({ skill, onSelect }) => {
       bordered
       rowKey="id"
       scroll={{ x: 'max-content' }}
+      locale={{
+        emptyText: <Empty description="Không tìm thấy câu hỏi nào" />,
+      }}
     />
   );
 };

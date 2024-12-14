@@ -15,8 +15,8 @@ export type AnswerPublic = {
 };
 
 export type AnswerUpdate = {
-	description: string | null;
-	id: string;
+	description?: string | null;
+	id?: string | null;
 	is_correct_answer: boolean;
 };
 
@@ -181,6 +181,7 @@ export type QuestionGroupCreate = {
 	resource: string | null;
 	skill: Skill;
 	duration: number;
+	questions: Array<QuestionCreate>;
 };
 
 export type QuestionGroupPublic = {
@@ -225,7 +226,7 @@ export enum QuestionStatusEnum {
 
 export type QuestionUpdate = {
 	description: string | null;
-	id: string | null;
+	answers?: Array<AnswerUpdate> | null;
 };
 
 export type QuestionsPublic = {

@@ -112,7 +112,11 @@ const AdminExamDetail = () => {
       modal.success({
         title: 'Đã lưu thành công!',
         onOk() {
-          router.push('/admin/exam');
+          if (!id && resp.id) {
+            router.push(`/admin/exam/detail/${resp.id}`);
+          } else {
+            // router.push('/admin/exam');
+          }
         },
       });
     } catch (e) {

@@ -56,12 +56,18 @@ export const $AnswerUpdate = {
 					type: "null",
 				},
 			],
-			isRequired: true,
 		},
 		id: {
-			type: "string",
-			isRequired: true,
-			format: "uuid",
+			type: "any-of",
+			contains: [
+				{
+					type: "string",
+					format: "uuid",
+				},
+				{
+					type: "null",
+				},
+			],
 		},
 		is_correct_answer: {
 			type: "boolean",
@@ -708,6 +714,13 @@ export const $QuestionGroupCreate = {
 			type: "number",
 			isRequired: true,
 		},
+		questions: {
+			type: "array",
+			contains: {
+				type: "QuestionCreate",
+			},
+			isRequired: true,
+		},
 	},
 } as const;
 
@@ -878,18 +891,19 @@ export const $QuestionUpdate = {
 			],
 			isRequired: true,
 		},
-		id: {
+		answers: {
 			type: "any-of",
 			contains: [
 				{
-					type: "string",
-					format: "uuid",
+					type: "array",
+					contains: {
+						type: "AnswerUpdate",
+					},
 				},
 				{
 					type: "null",
 				},
 			],
-			isRequired: true,
 		},
 	},
 } as const;

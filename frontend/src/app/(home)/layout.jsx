@@ -7,7 +7,7 @@ import {
 } from 'antd';
 import Link from 'next/link';
 import {
-  UserOutlined, LogoutOutlined, SettingOutlined, HistoryOutlined,
+  UserOutlined, LogoutOutlined, SettingOutlined, HistoryOutlined, DatabaseOutlined,
 } from '@ant-design/icons';
 import AuthProvider from '@/components/sections/Provider/AuthProvider';
 import Logo from '@/components/elements/Logo';
@@ -49,6 +49,16 @@ const HomeLayout = ({ children }) => {
 
   const userMenu = () => (
     <Flex vertical gap="small">
+      {userInfo.is_superuser && (
+        <Link href="/admin">
+          <Button
+            style={{ width: '100%', justifyContent: 'flex-start' }}
+            icon={<DatabaseOutlined />}
+          >
+            Admin
+          </Button>
+        </Link>
+      )}
       <Link href="/profile">
         <Button
           style={{ width: '100%', justifyContent: 'flex-start' }}

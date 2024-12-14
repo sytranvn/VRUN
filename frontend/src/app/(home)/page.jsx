@@ -9,16 +9,18 @@ import getApiService from '@/services';
 import { useEffect, useState } from 'react';
 import randomInt from '@/utils/math/randomInt';
 import Cookies from 'js-cookie';
-import { EXAM_KEY } from '@/utils/constants';
+import { EXAM_KEY, SOUND_CHECK_KEY, MIC_CHECK_KEY } from '@/utils/constants';
 
 const { Text } = Typography;
 
 const Index = () => {
   const { CandidateService } = getApiService();
+  const [modal, modalContext] = Modal.useModal();
+  const [isSoundChecked, setIsSoundChecked] = useState(false);
+  const [isMicChecked, setIsMicChecked] = useState(false);
   const [examId, setExamId] = useState(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const [modal, modalContext] = Modal.useModal();
 
   const startExam = () => {
     setLoading(true);
@@ -39,7 +41,20 @@ const Index = () => {
     }
   };
 
+  const handleSoundCheck = () => {
+    setIsSoundChecked(true);
+    Cookies.set(SOUND_CHECK_KEY, true);
+  };
+
+  const handleMicCheck = () => {
+    setIsMicChecked(true);
+    Cookies.set(MIC_CHECK_KEY, true);
+  };
+
   useEffect(() => {
+    setIsSoundChecked(Cookies.get(SOUND_CHECK_KEY) === 'true');
+    setIsMicChecked(Cookies.get(MIC_CHECK_KEY) === 'true');
+
     if (!examId) {
       setLoading(true);
       CandidateService.readAvailableExams({
@@ -109,13 +124,19 @@ const Index = () => {
                 <Text>
                   <strong>Bước 1:</strong> Đeo tai nghe và nghe một đoạn audio bên dưới
                 </Text>
-                <audio controls>
+                <audio
+                  controls
+                  onPlay={handleSoundCheck}
+                >
                   <track kind="captions" />
                   <source
                     src="/static/audio/dummy.mp3"
                     type="audio/mp3"
                   />
                 </audio>
+                {!isSoundChecked && (
+                  <Text type="danger">Vui lòng kiểm tra loa trước khi thi</Text>
+                )}
               </Flex>
               <Flex gap="middle" vertical>
                 <Text>
@@ -126,7 +147,12 @@ const Index = () => {
                 <Text>
                   <strong>Bước 3:</strong> Nhấp vào nút &ldquo;Thu âm&rdquo; để thu âm
                 </Text>
-                <VoiceRecorder />
+                <VoiceRecorder
+                  onStart={handleMicCheck}
+                />
+                {!isMicChecked && (
+                  <Text type="danger">Vui lòng kiểm tra mic trước khi thi</Text>
+                )}
               </Flex>
               <Flex gap="middle" vertical>
                 <Text>
@@ -161,7 +187,7 @@ const Index = () => {
         <Button
           size="large"
           type="primary"
-          disabled={!examId}
+          disabled={!examId || !isSoundChecked || !isMicChecked}
           onClick={startExam}
           loading={loading}
         >

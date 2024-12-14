@@ -1,5 +1,7 @@
 export const TOKEN_KEY = 'vlxx';
 export const EXAM_KEY = 'exam-vlxx';
+export const SOUND_CHECK_KEY = 'sound-check';
+export const MIC_CHECK_KEY = 'mic-check';
 
 export const ROLE_OPTIONS = [
   { label: 'Học viên', value: 'CANDIDATE' },
@@ -27,3 +29,4 @@ export const STATUS_OPTIONS = [
 ];
 
 export const RECORD_EXT = '.wav';
+export const RECORD_UPLOAD_EXT = '.mp3';
