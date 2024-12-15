@@ -30,7 +30,7 @@ const Login = () => {
           throw new Error();
         }
         Cookies.set(TOKEN_KEY, data.access_token, { expires: 1 });
-        router.push('/');
+        router.replace('/');
       })
       .catch(() => {
         modal.error({
