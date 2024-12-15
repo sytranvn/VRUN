@@ -1,13 +1,10 @@
-from minio import Minio, S3Error
-from .config import settings
+from minio import S3Error
+
+from app.api.deps import get_minio_client
+
 
 def init_storage():
-    client = Minio(
-        settings.MINIO_ENDPOINT,
-        access_key=settings.MINIO_KEY,
-        secret_key=settings.MINIO_SECRET,
-        secure=settings.ENVIRONMENT != "local"
-    )
+    client = get_minio_client()
     if not client.bucket_exists("vrun"):
         try:
             client.make_bucket("vrun")

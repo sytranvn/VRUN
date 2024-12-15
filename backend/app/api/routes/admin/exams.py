@@ -2,10 +2,11 @@ from typing import Any, List, cast
 import uuid
 
 from fastapi import APIRouter, HTTPException
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import col, func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Exam, Part, QuestionGroup
+from app.models import Exam, ExamStatus, Part, QuestionGroup
 from app.view_models import ExamCreate, ExamPublic, ExamUpdate, ExamsPublic, Message, PartCreate
 
 router = APIRouter()
@@ -22,10 +23,10 @@ def read_exams(
     if not current_user.is_superuser:
         raise HTTPException(status_code=400, detail="Not enough permissions")
 
-    count_statement = select(func.count()).select_from(Exam)
+    count_statement = select(func.count()).select_from(Exam).where(Exam.status != ExamStatus.DELETED)
     count = session.exec(count_statement).one()
     statement = (
-        select(Exam)
+        select(Exam).where(Exam.status != ExamStatus.DELETED)
         .offset(skip)
         .limit(limit)
         .order_by(Exam.created_time.desc())  # type: ignore
@@ -97,8 +98,12 @@ def delete_exam(
     exam = session.get(Exam, id)
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
-    session.delete(exam)
-    session.commit()
+    try:
+        session.delete(exam)
+        session.commit()
+    except IntegrityError:
+        # cannot hard delete because exam has been used, soft delete
+        exam.status = ExamStatus.DELETED
     return Message(message="Exam deleted successfully")
 
 

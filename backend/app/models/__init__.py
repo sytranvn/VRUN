@@ -39,6 +39,7 @@ class AnswerStatus(StrEnum):
 class ExamStatus(StrEnum):
     DRAFT = "DRAFT"
     ACTIVE = "ACTIVE"
+    DELETED = "DELETED"
 
 
 class CandidateExamAnswer(SQLModel, table=True):
@@ -60,6 +61,7 @@ class CandidateExamAnswer(SQLModel, table=True):
 class EssayStatus(StrEnum):
     SUBMITTED = "SUBMITTED"
     ASSESSED = "ASSESSED"
+
 
 class EssayType(StrEnum):
     SPEAKING = "SPEAKING"
@@ -84,14 +86,16 @@ class CandidateExamEssay(CandidateExamEssayBase, table=True):
         nullable=False, default_factory=uuid.uuid4, primary_key=True)
 
     essay_type: EssayType = Field(default=EssayStatus.SUBMITTED,
-                                       sa_column=Column(Enum(EssayType, native_enum=False)))
+                                  sa_column=Column(Enum(EssayType, native_enum=False)))
     candidate_exam_id: uuid.UUID = Field(
         foreign_key="candidate_exam.id", nullable=False)
     question_id: uuid.UUID = Field(nullable=False, foreign_key="question.id")
     status: EssayStatus | None = Field(default=EssayStatus.SUBMITTED,
                                        sa_column=Column(Enum(EssayStatus, native_enum=False)))
-    score_info: Optional[dict] = Field(default_factory=dict, sa_column=Column(JSON))
-    assessment_info: Optional[dict] = Field(default_factory=dict, sa_column=Column(JSON))
+    score_info: Optional[dict] = Field(
+        default_factory=dict, sa_column=Column(JSON))
+    assessment_info: Optional[dict] = Field(
+        default_factory=dict, sa_column=Column(JSON))
     question: "Question" = Relationship()
     candidate_exam: "CandidateExam" = Relationship(back_populates="essays")
 
@@ -139,8 +143,6 @@ class CandidateExam(BaseTable, SQLModel, table=True):
     @property
     def question_groups(self):
         return [p.question_group for p in self.exam.parts]
-
-
 
 
 event.listen(
@@ -200,7 +202,11 @@ class Exam(BaseTable, ExamBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     status: ExamStatus = Field(default=ExamStatus.DRAFT.value,
                                sa_column=Column(Enum(ExamStatus, native_enum=False)))
-    parts: List[Part] = Relationship()
+    parts: List[Part] = Relationship(
+        sa_relationship_kwargs={
+            "cascade": "delete"
+        }
+    )
 
 
 class Skill(StrEnum):

@@ -65,7 +65,7 @@ def get_minio_client():
         settings.MINIO_ENDPOINT,
         access_key=settings.MINIO_KEY,
         secret_key=settings.MINIO_SECRET,
-        secure=settings.ENVIRONMENT != "local"
+        secure=settings.ENVIRONMENT == "production"
     )
 
 
