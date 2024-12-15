@@ -22,6 +22,8 @@ COPY ./pyproject.toml ./pdm.lock ./alembic.ini /app/
 
 COPY ./app /app/app
 
-COPY ./app/tests/files/ ./app/tests/files/
+ENV PYTHONPATH=/app
+
+COPY ./app/tests/files/real.mp3 ./app/tests/files/real.mp3
 
 CMD ["fastapi", "run", "--workers", "4", "app/main.py"]
