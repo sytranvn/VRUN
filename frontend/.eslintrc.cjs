@@ -29,8 +29,9 @@ module.exports = {
     'no-undef': 'off',
     'consistent-return': 'off',
     'default-param-last': 'warn',
+    'import/no-unresolved': ['warn', { ignore: ['/client$'] }],
     'import/extensions': [
-      'error',
+      'warn',
       'ignorePackages',
       {
         js: 'never',

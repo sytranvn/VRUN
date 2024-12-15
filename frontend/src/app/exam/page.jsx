@@ -79,12 +79,6 @@ const Exam = () => {
 
       setIsLoading(true);
 
-      console.log({
-        submitQuestions,
-        submitEssays,
-        submitRecords,
-      });
-
       await Promise.all([
         CandidateService.addAnswers({
           id,

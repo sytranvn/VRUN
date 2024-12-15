@@ -44,7 +44,6 @@ const ResetPassword = () => {
   };
 
   const handleSubmit = (formData) => {
-    console.log('formData', formData);
     setUserInfo(formData);
   };
 

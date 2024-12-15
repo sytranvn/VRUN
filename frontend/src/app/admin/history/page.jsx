@@ -26,7 +26,7 @@ const COLUMN_CONFIG = [
 
 const AdminExamHistoryManagement = () => {
   const [modal, modalContext] = Modal.useModal();
-  const [records, setRecords] = useState([
+  const [records] = useState([
     {
       id: 1, date: '2020-11-11', examType: 'B2', author: 'Admin', totalPoint: 8.5,
     },
@@ -46,7 +46,7 @@ const AdminExamHistoryManagement = () => {
     modal.confirm({
       title: 'Xác nhận xoá?',
       onOk() {
-        console.log('delete');
+        /* Delete history */
       },
     });
   };

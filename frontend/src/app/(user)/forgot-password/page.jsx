@@ -16,7 +16,6 @@ const ForgotPassword = () => {
   });
 
   const handleSubmit = (formData) => {
-    console.log('formData', formData);
     setUserInfo(formData);
   };
 

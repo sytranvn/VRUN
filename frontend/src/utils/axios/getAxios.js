@@ -37,7 +37,6 @@ function responsePreprocess(response) {
 }
 
 async function handleAxiosError(error) {
-  console.log('error', error);
   return Promise.reject(error);
 }
 

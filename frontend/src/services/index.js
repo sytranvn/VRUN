@@ -9,5 +9,4 @@ const getApiService = () => {
   return api;
 };
 
-
 export default getApiService;
