@@ -1,7 +1,5 @@
 services:
   db:
-    # networks:
-    #   - vrun_network
     image: database:latest
     build:
       context: ./postgres
@@ -23,7 +21,7 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_DB=${POSTGRES_DB?Variable not set}
-    profiles: [core]
+    profiles: [backend]
 
   prestart:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
@@ -58,11 +56,25 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
       - SENTRY_DSN=${SENTRY_DSN}
 
+  minio:
+    image: quay.io/minio/minio
+    restart: always
+    command: server /data --console-address ":9001"
+    env_file:
+    - .env
+    environment:
+      - MINIO_ACCESS_KEY=${MINIO_KEY?Variable not set}
+      - MINIO_SECRET_KEY=${MINIO_SECRET?Variable not set}
+    ports:
+      - 9000:9000
+      - 9001:9001
+    healthcheck:
+      test: curl -f http://localhost:9001
+    profiles: [backend]
+
   backend:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     restart: always
-    # networks:
-    #   - vrun_network
     depends_on:
       - prestart
     env_file:
@@ -100,27 +112,18 @@ services:
       context: ./backend
     profiles: [backend]
 
-  minio:
-    # networks:
-    #   - vrun_network
-    image: quay.io/minio/minio
+  frontend:
+    image: '${DOCKER_IMAGE_FRONTEND?Variable not set}:${TAG-latest}'
+    build:
+      context: ./frontend
     restart: always
-    command: server /data --console-address ":9001"
-    env_file:
-    - .env
-    environment:
-      - MINIO_ACCESS_KEY=${MINIO_KEY?Variable not set}
-      - MINIO_SECRET_KEY=${MINIO_SECRET?Variable not set}
-    ports:
-      # - 9000:9000
-      - 9001:9001
     healthcheck:
-      test: curl -f http://localhost:9001
-    profiles: [core,backend]
+      test: ["CMD-SHELL", "curl http://localhost:3000"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    profiles: [frontend]
+
 volumes:
   app-db-data:
-
-
-# networks:
-#   vrun_network:
-#     driver: bridge
