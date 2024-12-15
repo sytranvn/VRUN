@@ -206,6 +206,22 @@ class CandidateExamEssayResult(SQLModel):
     score: float | None
     assessment: str | None
 
+    @field_serializer('resource')
+    def presign_url(self, v: str, _info: SerializationInfo):
+        if not v:
+            return v
+        global context
+        if context is None:
+            context = get_context()
+        minio = context["minio"]
+        mybucket = context["bucket"]
+        return minio.get_presigned_url(
+            "GET",
+            mybucket,
+            v,
+            expires=timedelta(days=1)
+        )
+
 
 class ExamFinished(SQLModel):
     id: uuid.UUID
