@@ -27,8 +27,6 @@ services:
     image: '${DOCKER_IMAGE_BACKEND?Variable not set}:${TAG-latest}'
     build:
       context: ./backend
-    networks:
-      - default
     depends_on:
       db:
         condition: service_healthy
@@ -55,6 +53,7 @@ services:
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
       - SENTRY_DSN=${SENTRY_DSN}
+    profiles: [backend]
 
   minio:
     image: quay.io/minio/minio
@@ -124,6 +123,8 @@ services:
       start_period: 30s
       timeout: 10s
     profiles: [frontend]
+    ports:
+      - 3000:3000
 
 volumes:
   app-db-data:
