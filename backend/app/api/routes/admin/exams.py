@@ -1,12 +1,12 @@
-from typing import Any, List, cast
+from typing import Any, List
 import uuid
 
 from fastapi import APIRouter, HTTPException
 from sqlalchemy.exc import IntegrityError
-from sqlmodel import col, func, select
+from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
-from app.models import Exam, ExamStatus, Part, QuestionGroup
+from app.models import Exam, ExamStatus, Part
 from app.view_models import ExamCreate, ExamPublic, ExamUpdate, ExamsPublic, Message, PartCreate
 
 router = APIRouter()
@@ -23,7 +23,8 @@ def read_exams(
     if not current_user.is_superuser:
         raise HTTPException(status_code=400, detail="Not enough permissions")
 
-    count_statement = select(func.count()).select_from(Exam).where(Exam.status != ExamStatus.DELETED)
+    count_statement = select(func.count()).select_from(
+        Exam).where(Exam.status != ExamStatus.DELETED)
     count = session.exec(count_statement).one()
     statement = (
         select(Exam).where(Exam.status != ExamStatus.DELETED)
@@ -126,9 +127,11 @@ def update_exam_question_groups(
     exam = session.get(Exam, id)
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
+    for part in exam.parts:
+        session.delete(part)
     parts = [Part.model_validate(dict(**part_in.model_dump(), exam_id=exam.id))
              for part_in in parts_in]
-    exam.parts = parts
+    session.add_all(parts)
     session.commit()
     session.refresh(exam)
     return exam
