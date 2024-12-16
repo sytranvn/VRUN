@@ -124,13 +124,13 @@ export type ExamReadonly = {
 export enum ExamStatus {
 	DRAFT = "DRAFT",
 	ACTIVE = "ACTIVE",
+	DELETED = "DELETED",
 }
 
 export type ExamUpdate = {
 	title: string | null;
 	description: string | null;
 	status: ExamStatus | null;
-	question_groups: Array<string>;
 };
 
 export type ExamsPublic = {
@@ -181,7 +181,6 @@ export type QuestionGroupCreate = {
 	resource: string | null;
 	skill: Skill;
 	duration: number;
-	questions: Array<QuestionCreate>;
 };
 
 export type QuestionGroupPublic = {
@@ -191,6 +190,7 @@ export type QuestionGroupPublic = {
 	duration: number;
 	id: string;
 	questions: Array<QuestionPublic>;
+	status: QuestionStatusEnum | null;
 };
 
 export type QuestionGroupReadonly = {

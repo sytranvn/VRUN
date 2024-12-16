@@ -512,7 +512,7 @@ export const $ExamReadonly = {
 
 export const $ExamStatus = {
 	type: "Enum",
-	enum: ["DRAFT", "ACTIVE"],
+	enum: ["DRAFT", "ACTIVE", "DELETED"],
 } as const;
 
 export const $ExamUpdate = {
@@ -552,14 +552,6 @@ export const $ExamUpdate = {
 					type: "null",
 				},
 			],
-			isRequired: true,
-		},
-		question_groups: {
-			type: "array",
-			contains: {
-				type: "string",
-				format: "uuid",
-			},
 			isRequired: true,
 		},
 	},
@@ -714,13 +706,6 @@ export const $QuestionGroupCreate = {
 			type: "number",
 			isRequired: true,
 		},
-		questions: {
-			type: "array",
-			contains: {
-				type: "QuestionCreate",
-			},
-			isRequired: true,
-		},
 	},
 } as const;
 
@@ -760,6 +745,18 @@ export const $QuestionGroupPublic = {
 			contains: {
 				type: "QuestionPublic",
 			},
+			isRequired: true,
+		},
+		status: {
+			type: "any-of",
+			contains: [
+				{
+					type: "QuestionStatusEnum",
+				},
+				{
+					type: "null",
+				},
+			],
 			isRequired: true,
 		},
 	},
