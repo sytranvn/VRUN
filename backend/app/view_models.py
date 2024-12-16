@@ -123,7 +123,6 @@ class ExamUpdate(SQLModel):
     title: str | None = Field(max_length=255)  # type: ignore
     description: str | None  # type: ignore
     status: ExamStatus | None
-    question_groups: List[uuid.UUID]
 
 
 class ExamPublic(ExamBase):
