@@ -47,11 +47,23 @@ const AdminQuestionGroup = () => {
     {
       key: 'description',
       dataIndex: 'description',
-      title: 'Chú thích',
+      title: 'Đề bài',
       width: '600px',
       ellipse: true,
       render(text) {
-        return text.length > 100 ? `${text.slice(0, 100)}...` : text;
+        return (
+          <div
+            dangerouslySetInnerHTML={{ __html: text }}
+            style={{
+              display: '-webkit-box',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2,
+              maxHeight: '40px',
+            }}
+          />
+        );
       },
     },
     {

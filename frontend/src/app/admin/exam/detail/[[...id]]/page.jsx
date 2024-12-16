@@ -82,6 +82,30 @@ const AdminExamDetail = () => {
     ],
   };
 
+  const loadExam = (examId) => {
+    AdminService.readExam({ id: examId })
+      .then((resp) => {
+        const { parts, ...payload } = resp;
+        form.setFieldsValue(payload);
+
+        if (parts?.length > 0) {
+          setExamParts(SKILL_OPTIONS.reduce((current, skill) => {
+            if (!Array.isArray(current[skill.value])) {
+              current[skill.value] = [];
+            }
+
+            const filteredParts = parts
+              .filter((i) => i.question_group?.skill === skill)
+              .map((i) => i.question_group);
+
+            current[skill.value] = filteredParts;
+
+            return current;
+          }, {}));
+        }
+      });
+  };
+
   const handleDelete = () => {
     modal.confirm({
       title: 'Xác nhận xoá?',
@@ -101,6 +125,19 @@ const AdminExamDetail = () => {
           id,
           requestBody: formData,
         });
+
+        const groups = [];
+        for (const key of Object.keys(examParts)) {
+          groups.push(...examParts[key].map((g, idx) => ({
+            question_group_id: g.id,
+            order: idx,
+          })));
+        }
+
+        await AdminService.updateExamQuestionGroups({
+          id,
+          requestBody: groups,
+        });
       } else {
         resp = await AdminService.createExam({
           requestBody: formData,
@@ -115,6 +152,7 @@ const AdminExamDetail = () => {
           if (!id && resp.id) {
             router.push(`/admin/exam/detail/${resp.id}`);
           } else {
+            loadExam(id);
             // router.push('/admin/exam');
           }
         },
@@ -128,10 +166,7 @@ const AdminExamDetail = () => {
 
   useEffect(() => {
     if (id) {
-      AdminService.readExam({ id })
-        .then((resp) => {
-          form.setFieldsValue(resp);
-        });
+      loadExam(id);
     }
   }, []);
 

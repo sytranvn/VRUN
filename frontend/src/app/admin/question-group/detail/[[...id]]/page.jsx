@@ -27,7 +27,7 @@ const AdminQuestionGroupDetail = () => {
   const id = params.id?.[0];
 
   const [form] = Form.useForm();
-  const [errorMsg, setErrorMsg] = useState('');
+  const [errorStack, setErrorStack] = useState({});
   const [uploadFile, setUploadFile] = useState(null);
   const initValues = {
     status: STATUS_OPTIONS[0].value,
@@ -60,24 +60,24 @@ const AdminQuestionGroupDetail = () => {
               const currentQuestion = values.questions[qIndex];
               const answers = currentQuestion?.answers || [];
 
-              if (!answers.some((i) => i.is_correct_answer)) {
-                setErrorMsg('Câu hỏi phải có đáp án đúng');
+              if (!answers.some((i) => i && i.is_correct_answer)) {
+                setErrorStack({ ...errorStack, [currentQuestion.id]: 'Câu hỏi phải có đáp án đúng' });
                 return Promise.resolve();
               }
 
               let count = 0;
               for (const ans of answers) {
-                if (ans.is_correct_answer) {
+                if (ans?.is_correct_answer) {
                   count++;
                 }
               }
 
               if (count > 1) {
-                setErrorMsg('Câu hỏi chỉ được duy nhất một đáp án đúng');
+                setErrorStack({ ...errorStack, [currentQuestion.id]: 'Câu hỏi chỉ được duy nhất một đáp án đúng' });
                 return Promise.resolve();
               }
 
-              setErrorMsg('');
+              setErrorStack({ ...errorStack, [currentQuestion.id]: '' });
               return Promise.resolve();
             },
           },
@@ -141,9 +141,9 @@ const AdminQuestionGroupDetail = () => {
 
   const handleSubmit = async (formData) => {
     try {
-      if (errorMsg) {
+      if (Object.values(errorStack)[0]) {
         return modal.error({
-          title: errorMsg,
+          title: Object.values(errorStack)[0],
         });
       }
 
