@@ -53,6 +53,18 @@ const SpeakingPart = ({
                   />
                   {hasResult ? (
                     <>
+                      {question.selected?.resource && (
+                        <audio
+                          controls
+                          style={{ width: '100%' }}
+                        >
+                          <track kind="captions" />
+                          <source
+                            src={question.selected?.resource}
+                            type="audio/mp3"
+                          />
+                        </audio>
+                      )}
                       <Text mark>
                         <strong>Nội dung đã ghi âm:</strong> {question.selected?.content || 'Không có'}
                       </Text>
@@ -66,7 +78,6 @@ const SpeakingPart = ({
                       fileName={`${question.id}${RECORD_EXT}`}
                     />
                   )}
-
                 </Flex>
               ))}
             </div>

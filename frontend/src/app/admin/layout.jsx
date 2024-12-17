@@ -39,11 +39,11 @@ const items = [
       },
     ],
   },
-  {
-    key: 'history-management',
-    icon: React.createElement(ExceptionOutlined),
-    label: <Link href="/admin/history">Lịch sử dự thi</Link>,
-  },
+  // {
+  //   key: 'history-management',
+  //   icon: React.createElement(ExceptionOutlined),
+  //   label: <Link href="/admin/history">Lịch sử dự thi</Link>,
+  // },
   {
     key: 'user-management',
     icon: React.createElement(UserOutlined),

@@ -95,7 +95,7 @@ const AdminExamDetail = () => {
             }
 
             const filteredParts = parts
-              .filter((i) => i.question_group?.skill === skill)
+              .filter((i) => i.question_group?.skill === skill.value)
               .map((i) => i.question_group);
 
             current[skill.value] = filteredParts;
