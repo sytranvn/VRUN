@@ -41,7 +41,7 @@ const AuthProvider = ({ children, onReady }) => {
       setIsReady(true);
       onReady && onReady(userInfo);
     }
-  }, [userInfo]);
+  }, []);
 
   return (
     <div>

@@ -24,19 +24,22 @@ const Login = () => {
   });
 
   const handleSubmit = async (formData) => {
-    LoginService.loginAccessToken({ formData })
-      .then((data) => {
-        if (!data.access_token) {
-          throw new Error();
-        }
-        Cookies.set(TOKEN_KEY, data.access_token, { expires: 1 });
-        router.replace('/');
-      })
-      .catch(() => {
-        modal.error({
-          title: 'Tài khoản hoặc mật khẩu không đúng.',
-        });
+    try {
+      const data = await LoginService.loginAccessToken({ formData });
+
+      if (!data.access_token) {
+        throw new Error();
+      }
+
+      Cookies.set(TOKEN_KEY, data.access_token, { expires: 1 });
+      console.log('Logged in');
+      router.replace('/');
+    } catch (e) {
+      console.error(e);
+      modal.error({
+        title: 'Tài khoản hoặc mật khẩu không đúng.',
       });
+    }
   };
 
   return (
