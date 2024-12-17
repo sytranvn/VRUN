@@ -7,7 +7,6 @@ import {
 import Link from 'next/link';
 import getApiService from '@/services';
 import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
 import { TOKEN_KEY } from '@/utils/constants';
 
 const { Item } = Form;
@@ -15,7 +14,6 @@ const { Password } = Input;
 const { Title } = Typography;
 
 const Login = () => {
-  const router = useRouter();
   const [modal, modalContext] = Modal.useModal();
   const { LoginService } = getApiService();
   const [userInfo] = useState({
@@ -32,8 +30,7 @@ const Login = () => {
       }
 
       Cookies.set(TOKEN_KEY, data.access_token, { expires: 1 });
-      console.log('Logged in');
-      router.replace('/');
+      window.location.href = '/';
     } catch (e) {
       console.error(e);
       modal.error({
