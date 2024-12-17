@@ -62,7 +62,8 @@ const Index = () => {
         skip: 0,
       }).then((resp) => {
         /* Pick random exam to test */
-        const randomExam = resp.data[randomInt(0, resp.data.length - 1)];
+        const validExams = (resp.data || []).filter((e) => e.parts?.length > 0);
+        const randomExam = validExams[randomInt(0, validExams.length - 1)];
 
         if (randomExam) {
           setExamId(randomExam.id);
