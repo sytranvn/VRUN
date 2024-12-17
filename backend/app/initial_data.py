@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def init() -> None:
     with Session(engine) as session:
         init_db(session)
-        init_storage()
+    init_storage()
 
 
 def main() -> None:
