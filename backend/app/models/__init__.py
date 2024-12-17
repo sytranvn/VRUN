@@ -237,6 +237,7 @@ class QuestionGroup(BaseTable, QuestionGroupBase, table=True):
                                        sa_column=Column(
                                            Enum(QuestionStatusEnum,
                                                 native_enum=False)))
+    duration: int = Field()
     questions: List["Question"] = Relationship(back_populates="question_group",
                                                cascade_delete=True,
                                                sa_relationship_kwargs={
