@@ -18,12 +18,17 @@ RUN pdm install --check --prod --no-editable
 
 COPY ./scripts /app/scripts
 
-COPY ./pyproject.toml ./pdm.lock ./alembic.ini /app/
+COPY ./pyproject.toml ./pdm.lock ./alembic.ini ./entrypoint.sh /app/
 
 COPY ./app /app/app
+ADD ./entrypoint.sh /app/entrypoint.sh
+
+RUN chmod +x /app/entrypoint.sh
 
 ENV PYTHONPATH=/app
 
 COPY ./app/tests/files/real.mp3 ./app/tests/files/real.mp3
 
-CMD ["fastapi", "run", "--workers", "4", "app/main.py"]
+CMD ["bash", "/app/entrypoint.sh"]
+
+

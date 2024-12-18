@@ -100,6 +100,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
       - SENTRY_DSN=${SENTRY_DSN}
+      - PREFECT_API_KEY=${PREFECT_API_KEY}
+      - PREFECT_WORKSPACE=${PREFECT_WORKSPACE}
     ports:
       - 8000:8000
 
