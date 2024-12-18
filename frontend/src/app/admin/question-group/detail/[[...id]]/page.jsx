@@ -181,9 +181,9 @@ const AdminQuestionGroupDetail = () => {
               questionGroupId: id,
               requestBody: {
                 description: q.description,
-                answers: q.answers.map((i) => ({
-                  description: i.description,
-                  is_correct_answer: i.is_correct_answer || false,
+                answers: (q.answers || []).map((i) => ({
+                  description: i?.description,
+                  is_correct_answer: i?.is_correct_answer || false,
                 })),
               },
             });
