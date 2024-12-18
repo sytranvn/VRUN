@@ -80,7 +80,7 @@ def register_exam(
     if register_in.start_time <= datetime.now(tz=timezone.utc):
         registered_exam.status = CandidateExamStatus.STARTED
         duration = sum(p.question_group.duration for p in exam.parts)
-        registered_exam.end_time = register_in.start_time + timedelta(minutes=duration) 
+        registered_exam.end_time = registered_exam.start_time + timedelta(minutes=duration) 
     session.add(registered_exam)
     session.commit()
     session.refresh(current_user)

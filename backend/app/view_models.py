@@ -1,15 +1,14 @@
 from datetime import datetime, timedelta, timezone
-from typing import Annotated, List, Union
+from typing import List
 import uuid
 from html.parser import HTMLParser
 
-from pydantic import BaseModel, EmailStr, SerializationInfo, field_serializer, field_validator, model_serializer, model_validator
+from pydantic import BaseModel, EmailStr, SerializationInfo, field_serializer, field_validator, model_validator
 from sqlmodel import Field, SQLModel
 
 
 from .models import (
     AnswerBase,
-    CandidateExam,
     CandidateExamStatus,
     EssayType,
     ExamBase,
@@ -245,6 +244,12 @@ class RegisteredExamPublic(SQLModel):
     end_time: datetime | None
     exam: "ExamPublic"
 
+    @field_serializer('start_time', 'end_time', when_used='json-unless-none')
+    def utc_date(self, v: datetime | None, info):
+        if not v:
+            return v
+        return v.replace(tzinfo=timezone.utc).isoformat()
+
 
 class RegisteredExamsPublic(SQLModel):
     data: List[RegisteredExamPublic]
@@ -416,3 +421,9 @@ class CandidateExamPublic(SQLModel):
     writing_score: float | None
     # selected_answers: List[AnswerIn]
     # essays: List["EssayIn"]
+
+    @field_serializer('start_time', 'end_time', when_used='json-unless-none')
+    def utc_date(self, v: datetime | None, info):
+        if not v:
+            return v
+        return v.replace(tzinfo=timezone.utc).isoformat()
