@@ -17,7 +17,6 @@ jobs:
         workload_identity_provider: projects/393517768996/locations/global/workloadIdentityPools/main-pool/providers/github
         service_account: 'sa-xtrading-strategy-service@xtrading-engine-beta.iam.gserviceaccount.com'
         create_credentials_file: true
-        activate_credentials_file: true
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v2'
